@@ -877,7 +877,7 @@
                 if (isFullscreen) { element.scrollTop = 0; }
             });
             
-            // CÓDIGO CORREGIDO Y LIMPIO
+            // CÓDIGO CLAVE PARA LA VISTA DE ESCRITORIO
             if(window.innerWidth > 768) {
                element.classList.add('draggable');
                element.style.left = `${zone.x || 50}px`;
@@ -885,7 +885,8 @@
                element.style.width = `${zone.width || 400}px`;
                element.style.height = `${zone.height || 300}px`;
                this.makeDraggable(element, zone);
-               this.makeResizable(element, zone); // Esta es la línea clave, ahora en el lugar correcto.
+               // ¡Y aquí se activa la función para cambiar el tamaño!
+               this.makeResizable(element, zone);
             }
             return element;
         },
