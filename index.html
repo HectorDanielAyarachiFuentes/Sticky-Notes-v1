@@ -28,7 +28,8 @@
     <meta name="twitter:title" content="Dashboard de Productividad | Impulsa tu Enfoque">
     <meta name="twitter:description" content="Organiza tus tareas, gestiona tu tiempo y aumenta tu enfoque con este dashboard de productividad personal.">
     <meta name="twitter:image" content="https://hectordanielayarachifuentes.github.io/Sticky-Notes-v1/img/luna.jpg">
-    
+        <script src="https://www.youtube.com/iframe_api"></script>
+
     <style>
         :root {
             --bg-color: #f4f7f9;
@@ -226,6 +227,86 @@
             .modal-content p { font-size: 14px; }
             .set-timer-inputs input { width: 50px; padding: 8px; font-size: 20px; }
         }
+
+        /* ======================================= */
+/* === ESTILOS PARA REPRODUCTOR YOUTUBE === */
+/* ======================================= */
+#youtube-player-container {
+    position: relative;
+    width: 220px; /* Ancho ajustado para el dashboard */
+    height: 124px; /* Proporción 16:9 */
+    background: #000;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+#youtube-player-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+#youtube-controls {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.3);
+    opacity: 0; /* Oculto por defecto */
+    transition: opacity 0.3s ease;
+    pointer-events: none; /* No interfiere con el click al video por defecto */
+}
+
+/* Mostrar controles al pasar el mouse o cuando el video está pausado/terminado */
+#youtube-player-container:hover #youtube-controls,
+#youtube-player-container.paused #youtube-controls {
+    opacity: 1;
+    pointer-events: all; /* Permite hacer clic en los botones */
+}
+
+.yt-control-btn {
+    background-color: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.yt-control-btn:hover {
+    transform: scale(1.1);
+    background-color: #fff;
+}
+
+.yt-control-btn svg {
+    width: 24px;
+    height: 24px;
+    fill: var(--text-dark);
+}
+/* Para el reproductor en la barra lateral móvil, lo hacemos más simple y pequeño */
+.sidebar-content #youtube-player-container {
+    width: 100%;
+    height: 140px;
+}
+.sidebar-content .yt-control-btn {
+    width: 45px;
+    height: 45px;
+}
+.sidebar-content .yt-control-btn svg {
+    width: 20px;
+    height: 20px;
+}
     </style>
 </head>
 <body class="logged-out">
@@ -261,7 +342,20 @@
         <div id="bottom-dashboard">
             <div id="stats-widget" class="dashboard-widget"><h3>Notas</h3><span id="note-count">0</span></div>
             <div id="calendar-widget" class="dashboard-widget"><div class="calendar-header"><button id="prev-month"><</button><h3 id="month-year"></h3><button id="next-month">></button></div><div class="calendar-grid" id="calendar-days"></div></div>
-            <div id="youtube-widget" class="dashboard-widget"><h3>Música de Fondo</h3><input type="text" id="youtube-url-input" placeholder="Pega link de YouTube"><div id="youtube-player"></div></div>
+           
+<div id="youtube-widget" class="dashboard-widget">
+    <h3>Música de Fondo</h3>
+    <input type="text" id="youtube-url-input" placeholder="Pega link de YouTube">
+    <!-- Contenedor principal para el reproductor y los controles -->
+    <div id="youtube-player-container">
+        <!-- El reproductor de YouTube será inyectado aquí por la API -->
+        <div id="youtube-player"></div>
+        <!-- Nuestros controles personalizados -->
+        <div id="youtube-controls">
+            <button id="yt-play-pause-btn" class="yt-control-btn" title="Reproducir/Pausar"></button>
+        </div>
+    </div>
+</div>            
             <div id="timer-widget" class="dashboard-widget">
                 <h3>Cronómetro</h3>
                 <div class="timer-display-container">
@@ -329,7 +423,7 @@
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
     import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-    // --- CONFIGURACIÓN DE FIREBASE RESTAURADA ---
+    // --- CONFIGURACIÓN DE FIREBASE (sin cambios) ---
     const firebaseConfig = {
         apiKey: "AIzaSyCptS0stYpYu5GGLNXgtjNJD8NFzKZdEj0",
         authDomain: "mi-dashboard-de-notas.firebaseapp.com",
@@ -347,6 +441,7 @@
             notes: [],
             zones: [],
             youtubeUrl: '',
+            youtubePlayer: null, // NUEVO: Para guardar la instancia del reproductor de YouTube
             selectedDate: null,
             isDataLoaded: false,
             calendarDate: new Date(),
@@ -357,6 +452,11 @@
             pendingTimerAction: null,
         },
         DOM: {},
+        // NUEVO: Constantes para los iconos SVG del reproductor
+        ICONS: {
+            PLAY: `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>`,
+            PAUSE: `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>`
+        },
         
         init() {
             this.cacheDOM();
@@ -391,17 +491,14 @@
             this.DOM.closeSidebarBtn = document.getElementById('close-sidebar-btn');
         },
 
-     // VERSIÓN CORREGIDA
-setupMobileUI() {
-    const widgets = this.DOM.bottomDashboard.querySelectorAll('.dashboard-widget');
-    widgets.forEach(widget => {
-        // Simplemente clonamos el widget y lo añadimos directamente.
-        // Ya no eliminamos los IDs, permitiendo que todas las funciones de inicialización
-        // (setupCalendar, setupClock, etc.) funcionen correctamente en la barra lateral.
-        const clone = widget.cloneNode(true);
-        this.DOM.sidebarContent.appendChild(clone);
-    });
-},
+        // VERSIÓN CORREGIDA (sin cambios en esta iteración)
+        setupMobileUI() {
+            const widgets = this.DOM.bottomDashboard.querySelectorAll('.dashboard-widget');
+            widgets.forEach(widget => {
+                const clone = widget.cloneNode(true);
+                this.DOM.sidebarContent.appendChild(clone);
+            });
+        },
 
         initFirebase() {
             const firebaseApp = initializeApp(firebaseConfig);
@@ -444,7 +541,6 @@ setupMobileUI() {
             this.DOM.confirmModal.cancelBtn.addEventListener('click', () => this.closeConfirmModal());
             this.DOM.confirmModal.overlay.addEventListener('click', e => { if (e.target === this.DOM.confirmModal.overlay) this.closeConfirmModal(); });
             
-            // Asignar eventos a los botones originales y a los clonados
             document.querySelectorAll('#start-timer').forEach(btn => btn.addEventListener('click', () => this.requestConfirm('Iniciar Temporizador', '¿Estás seguro de que quieres iniciar el tiempo?', this.startTimer)));
             document.querySelectorAll('#stop-timer').forEach(btn => btn.addEventListener('click', () => this.requestConfirm('Pausar Temporizador', '¿Quieres pausar el tiempo?', this.stopTimer)));
             document.querySelectorAll('#reset-timer').forEach(btn => btn.addEventListener('click', () => this.requestConfirm('Reiniciar Temporizador', 'Esto restablecerá el tiempo a su valor inicial. ¿Continuar?', this.resetTimer)));
@@ -506,15 +602,103 @@ setupMobileUI() {
                 }
             });
         },
-        setupAllYoutubePlayers() { document.querySelectorAll('#youtube-widget').forEach(container => this.setupYoutubePlayer(container)); },
-        setupYoutubePlayer(container) {
-            const input = container.querySelector('#youtube-url-input');
-            const player = container.querySelector('#youtube-player');
-            if (!input || !player) return;
-            const loadVideo = (url) => { const videoId = (u => { const m = u.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/); return (m && m[2].length === 11) ? m[2] : null; })(url); if (videoId) { player.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}&controls=0" frameborder="0" allow="autoplay"></iframe>`; if (this.state.youtubeUrl !== url) { this.state.youtubeUrl = url; this.saveData(); } } };
-            input.addEventListener('change', e => loadVideo(e.target.value));
-            if (this.state.youtubeUrl) { input.value = this.state.youtubeUrl; loadVideo(this.state.youtubeUrl); }
+        setupAllYoutubePlayers() { 
+            // ACTUALIZADO: Se llama a la función principal. La lógica de inicialización está ahora dentro de setupYoutubePlayer.
+            this.setupYoutubePlayer(); 
         },
+
+        // REEMPLAZADO: Toda la lógica del reproductor de YouTube ha sido actualizada para usar la API.
+        setupYoutubePlayer() {
+            // Nota: Esta función ahora inicializa todos los reproductores, pero asumimos que solo hay uno principal.
+            const container = document.querySelector('#youtube-widget');
+            const input = container.querySelector('#youtube-url-input');
+            const playerContainer = container.querySelector('#youtube-player-container');
+            
+            if (!input || !playerContainer) return;
+
+            const loadVideo = (url) => {
+                const videoId = (u => {
+                    const m = u.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/);
+                    return (m && m[2].length === 11) ? m[2] : null;
+                })(url);
+
+                if (videoId) {
+                    if (this.state.youtubePlayer && typeof this.state.youtubePlayer.loadVideoById === 'function') {
+                        this.state.youtubePlayer.loadVideoById(videoId);
+                    } else {
+                        // Si el objeto YT está disponible, crea el reproductor.
+                        if (typeof YT !== 'undefined' && YT.Player) {
+                            this.state.youtubePlayer = new YT.Player('youtube-player', {
+                                height: '100%',
+                                width: '100%',
+                                videoId: videoId,
+                                playerVars: { 'playsinline': 1, 'controls': 0, 'modestbranding': 1, 'rel': 0 },
+                                events: {
+                                    'onReady': this.onPlayerReady.bind(this),
+                                    'onStateChange': this.onPlayerStateChange.bind(this)
+                                }
+                            });
+                        }
+                    }
+                    if (this.state.youtubeUrl !== url) {
+                        this.state.youtubeUrl = url;
+                        this.saveData();
+                    }
+                }
+            };
+
+            input.addEventListener('change', e => loadVideo(e.target.value));
+
+            if (this.state.isDataLoaded && this.state.youtubeUrl) {
+                input.value = this.state.youtubeUrl;
+                
+                window.onYouTubeIframeAPIReady = () => {
+                    loadVideo(this.state.youtubeUrl);
+                };
+                
+                if (typeof YT !== 'undefined' && YT.loaded) {
+                    window.onYouTubeIframeAPIReady();
+                }
+            } else if (!this.state.youtubeUrl) {
+                 // Asegura que onYouTubeIframeAPIReady esté definido incluso si no hay URL inicial
+                 window.onYouTubeIframeAPIReady = () => {};
+            }
+        },
+
+        // NUEVO: Callback para cuando el reproductor está listo.
+        onPlayerReady(event) {
+            document.querySelectorAll('#yt-play-pause-btn').forEach(btn => {
+                btn.innerHTML = this.ICONS.PLAY;
+                btn.onclick = () => {
+                    const playerState = this.state.youtubePlayer.getPlayerState();
+                    if (playerState === YT.PlayerState.PLAYING) {
+                        this.state.youtubePlayer.pauseVideo();
+                    } else {
+                        this.state.youtubePlayer.playVideo();
+                    }
+                };
+            });
+        },
+
+        // NUEVO: Callback para cuando cambia el estado del reproductor (play, pausa, etc.)
+        onPlayerStateChange(event) {
+            document.querySelectorAll('#yt-play-pause-btn').forEach(btn => {
+                 if (event.data === YT.PlayerState.PLAYING) {
+                    btn.innerHTML = this.ICONS.PAUSE;
+                } else {
+                    btn.innerHTML = this.ICONS.PLAY;
+                }
+            });
+
+            document.querySelectorAll('#youtube-player-container').forEach(container => {
+                if (event.data === YT.PlayerState.PLAYING) {
+                    container.classList.remove('paused');
+                } else {
+                    container.classList.add('paused');
+                }
+            });
+        },
+
         setupAllTimers() { document.querySelectorAll('#timer-widget').forEach(container => this.setupTimer(container)); },
         setupTimer(container) { const editBtn = container.querySelector('#edit-timer-btn'); if (!editBtn) return; editBtn.addEventListener('click', () => this.showTimerModal()); this.DOM.timerModal.saveBtn.addEventListener('click', () => this.saveTimerSettings()); this.updateTimerDisplay(); },
         updateTimerDisplay() { const h = String(Math.floor(this.state.timerSeconds / 3600)).padStart(2, '0'); const m = String(Math.floor((this.state.timerSeconds % 3600) / 60)).padStart(2, '0'); const s = String(this.state.timerSeconds % 60).padStart(2, '0'); const timeString = `${h}:${m}:${s}`; document.querySelectorAll('#timer-display').forEach(el => el.textContent = timeString); },
