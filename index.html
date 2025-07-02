@@ -391,19 +391,17 @@
             this.DOM.closeSidebarBtn = document.getElementById('close-sidebar-btn');
         },
 
-        setupMobileUI() {
-            const widgets = this.DOM.bottomDashboard.querySelectorAll('.dashboard-widget');
-            widgets.forEach(widget => {
-                const clone = widget.cloneNode(true);
-                clone.querySelectorAll('[id]').forEach(el => {
-                    // Prevenimos conflictos de ID, pero mantenemos los IDs en los botones del timer para que los eventos funcionen
-                    if (!el.matches('button')) {
-                       el.id = '';
-                    }
-                });
-                this.DOM.sidebarContent.appendChild(clone);
-            });
-        },
+     // VERSIÓN CORREGIDA
+setupMobileUI() {
+    const widgets = this.DOM.bottomDashboard.querySelectorAll('.dashboard-widget');
+    widgets.forEach(widget => {
+        // Simplemente clonamos el widget y lo añadimos directamente.
+        // Ya no eliminamos los IDs, permitiendo que todas las funciones de inicialización
+        // (setupCalendar, setupClock, etc.) funcionen correctamente en la barra lateral.
+        const clone = widget.cloneNode(true);
+        this.DOM.sidebarContent.appendChild(clone);
+    });
+},
 
         initFirebase() {
             const firebaseApp = initializeApp(firebaseConfig);
