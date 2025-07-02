@@ -68,20 +68,16 @@
         .profile-dropdown .user-name { font-weight: 600; color: var(--text-dark); margin: 0; font-size: 16px; }
         .profile-dropdown .signout-btn { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px; border: none; background-color: transparent; font-size: 14px; font-weight: 500; color: var(--danger-color); border-radius: 8px; cursor: pointer; transition: background-color 0.2s ease; }
         .profile-dropdown .signout-btn:hover { background-color: #fef2f2; }
-        .draggable { position: absolute; cursor: move; }
+        .draggable { position: absolute; z-index: 10; }
         .dragging { z-index: 999 !important; }
-        #app > .note { z-index: 10; }
-        #app > .zone { z-index: 1; }
-        .note { background-color: var(--note-color); box-shadow: 0 8px 25px var(--note-shadow); border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; width: 240px; height: 240px; }
+        .note { width: 240px; height: 240px; background-color: var(--note-color); box-shadow: 0 8px 25px var(--note-shadow); border-radius: 8px; padding: 15px; box-sizing: border-box; cursor: move; display: flex; flex-direction: column; }
         .note textarea { flex-grow: 1; border: none; background: transparent; resize: none; font-family: 'Caveat', cursive; font-size: 22px; line-height: 1.5; color: var(--text-dark); outline: none; cursor: text; margin-top: 15px; }
-        .zone { background-color: var(--zone-bg); backdrop-filter: blur(5px); border: 1px solid var(--zone-border); border-radius: 12px; box-sizing: border-box; padding: 45px 15px 15px 15px; min-width: 250px; min-height: 200px; display: flex; flex-direction: column;}
-        .zone-title { position: absolute; top: 12px; left: 15px; font-weight: 600; font-size: 16px; color: var(--primary-accent-dark); border: none; background: transparent; width: calc(100% - 60px); outline: none; z-index: 2; }
-        .delete-btn { position: absolute; top: 8px; right: 8px; width: 24px; height: 24px; text-align: center; line-height: 24px; font-size: 20px; border-radius: 50%; cursor: pointer; user-select: none; transition: background-color 0.2s, color 0.2s; color: var(--text-light); z-index: 2; }
+        .zone { background-color: var(--zone-bg); backdrop-filter: blur(5px); border: 1px solid var(--zone-border); border-radius: 12px; box-sizing: border-box; cursor: move; z-index: 1; padding: 45px 15px 15px 15px; min-width: 250px; min-height: 200px; }
+        .zone-title { position: absolute; top: 12px; left: 15px; font-weight: 600; font-size: 16px; color: var(--primary-accent-dark); border: none; background: transparent; width: calc(100% - 60px); outline: none; }
+        .delete-btn { position: absolute; top: 8px; right: 8px; width: 24px; height: 24px; text-align: center; line-height: 24px; font-size: 20px; border-radius: 50%; cursor: pointer; user-select: none; transition: background-color 0.2s, color 0.2s; color: var(--text-light); }
         .delete-btn:hover { background-color: var(--highlight-color); color: white; }
         .resize-handle { position: absolute; bottom: 0; right: 0; width: 20px; height: 20px; cursor: nwse-resize; z-index: 11; }
         .resize-handle::after { content: ''; position: absolute; right: 5px; bottom: 5px; width: 8px; height: 8px; border-bottom: 2px solid var(--primary-accent); border-right: 2px solid var(--primary-accent); opacity: 0.5; }
-        .zone .zone-notes-container { flex-grow: 1; position: relative; width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden; }
-        .zone .zone-notes-container .note { position: absolute !important; }
         #bottom-dashboard { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(239, 243, 245, 0.7); backdrop-filter: blur(10px); border-top: 1px solid rgba(255, 255, 255, 0.8); box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.05); display: flex; align-items: flex-start; justify-content: center; padding: 30px 20px; box-sizing: border-box; z-index: 1002; gap: 25px; }
         .dashboard-widget { height: auto; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; color: var(--text-dark); text-align: center; background-color: rgba(255, 255, 255, 0.8); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.07); padding: 15px; border: 1px solid rgba(255, 255, 255, 0.9); transition: all 0.3s ease; transform: translateY(0); }
         .dashboard-widget:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
@@ -148,6 +144,7 @@
         body.dashboard-hidden #dashboard-toggle svg { transform: rotate(0deg); }
         body:not(.dashboard-hidden) #app { height: calc(100vh - 230px); }
         body:not(.dashboard-hidden) #dashboard-toggle svg { transform: rotate(180deg); }
+        
         #mobile-fab-container { display: none; position: fixed; bottom: 20px; right: 20px; z-index: 1050; flex-direction: column-reverse; align-items: center; gap: 15px; }
         .fab-actions { display: flex; flex-direction: column-reverse; gap: 15px; }
         .fab-action { width: 48px; height: 48px; background-color: var(--primary-accent-dark); color: white; border-radius: 50%; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s; transform: scale(0.5); opacity: 0; }
@@ -166,11 +163,39 @@
             #sidebar-toggle-btn { display: block; }
             #mobile-sidebar-container { display: block; }
             #dashboard-toggle { display: none; }
-            #top-controls { position: fixed; top: 0; left: 0; width: 100%; height: 60px; padding: 0 10px; box-sizing: border-box; display: flex; align-items: center; gap: 8px; background: rgba(239, 243, 245, 0.8); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255, 255, 255, 0.9); z-index: 1001; }
-            #workspace-title { position: static; flex-grow: 1; margin: 0; padding: 0 5px; text-align: left; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: none; }
+            
+            #top-controls {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 60px;
+                padding: 0 10px;
+                box-sizing: border-box;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                background: rgba(239, 243, 245, 0.8);
+                backdrop-filter: blur(10px);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.9);
+                z-index: 1001;
+            }
+            #workspace-title {
+                position: static;
+                flex-grow: 1;
+                margin: 0;
+                padding: 0 5px;
+                text-align: left;
+                font-size: 16px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: none;
+            }
             #addZoneBtn, #addNoteBtn { display: none; }
             .profile-avatar { width: 40px; height: 40px; }
             .control-btn.secondary { padding: 6px 10px; font-size: 13px; display: flex; }
+            
             .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1099; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
             #mobile-sidebar { position: fixed; top: 0; left: -300px; width: 300px; max-width: 85%; height: 100%; background: #ffffff; z-index: 1100; box-shadow: 5px 0 15px rgba(0,0,0,0.1); transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; }
             body.sidebar-active .sidebar-overlay { opacity: 1; visibility: visible; }
@@ -190,25 +215,34 @@
             .sidebar-content .calendar-header { padding: 0 5px; }
             .sidebar-content .calendar-grid { gap: 1px; }
             .sidebar-content .day { padding: 4px 0; }
+            
             #app { display: flex; flex-direction: column; gap: 16px; padding: 75px 15px 100px 15px; height: auto; }
-            .draggable, .note { position: static !important; width: 100% !important; height: auto !important; transform: none !important; cursor: default !important; }
-            .note { min-height: 120px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-            .zone { position: relative !important; min-height: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.08); padding: 15px; padding-top: 55px !important; background: var(--zone-bg); }
+            #notesContainer, #zonesContainer { display: none; }
+            
+            .draggable, .note { position: static !important; left: auto !important; top: auto !important; width: 100% !important; height: auto !important; min-height: 120px; transform: none !important; cursor: default !important; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+            .zone { position: relative !important; left: auto !important; top: auto !important; width: 100% !important; height: auto !important; min-height: 0; transform: none !important; cursor: default !important; box-shadow: 0 4px 12px rgba(0,0,0,0.08); padding: 15px; padding-top: 55px; background: var(--zone-bg); }
             .resize-handle { display: none !important; }
             .note textarea { min-height: 100px; font-size: 18px; }
             .modal-content { padding: 25px 20px; width: 90%; }
             .modal-content h2 { font-size: 22px; }
             .modal-content p { font-size: 14px; }
             .set-timer-inputs input { width: 50px; padding: 8px; font-size: 20px; }
+            .zone .zone-notes-container-mobile { margin-top: 15px; display: flex; flex-direction: column; gap: 12px; padding-left: 15px; border-left: 3px solid var(--primary-accent); }
             #mobile-fab-container { display: flex; }
-            .zone .zone-notes-container { margin-top: 15px; display: flex; flex-direction: column; gap: 12px; padding-left: 15px; border-left: 3px solid var(--primary-accent); overflow-y: visible; height: auto; }
-            .zone .zone-notes-container .note { position: static !important; width: 100% !important; height: auto !important; min-height: 120px; }
+
             .zone .add-note-in-zone-btn { display: flex; align-items: center; justify-content: center; position: absolute; top: 14px; right: 48px; width: 28px; height: 28px; background-color: var(--success-color); color: white; border: none; border-radius: 50%; cursor: pointer; font-size: 22px; line-height: 1; font-weight: 600; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease; }
             .zone .add-note-in-zone-btn:hover { background-color: #2ecc71; transform: scale(1.05); }
-            .zone .view-full-zone-btn { display: block; position: absolute; top: 14px; right: 85px; padding: 4px 10px; font-size: 11px; font-weight: 600; background-color: var(--primary-accent-dark); color: white; border: none; border-radius: 20px; cursor: pointer; transition: background-color 0.2s; z-index: 2; }
+            
+            /* NEW: Button to view zone in fullscreen */
+            .zone .view-full-zone-btn { display: block; position: absolute; top: 14px; right: 85px; padding: 4px 10px; font-size: 11px; font-weight: 600; background-color: var(--primary-accent-dark); color: white; border: none; border-radius: 20px; cursor: pointer; transition: background-color 0.2s; }
             .zone .view-full-zone-btn:hover { background-color: var(--primary-accent); }
             .zone .zone-title { width: calc(100% - 165px) !important; }
-            body.zone-view-active #app > .zone:not(.zone-fullscreen), body.zone-view-active #app > .note, body.zone-view-active #mobile-fab-container { display: none !important; }
+
+            /* NEW: Styles for fullscreen zone view */
+            body.zone-view-active #app > .zone:not(.zone-fullscreen),
+            body.zone-view-active #app > .note,
+            body.zone-view-active #mobile-fab-container { display: none !important; }
+
             .zone.zone-fullscreen { position: fixed !important; top: 60px !important; left: 0 !important; width: 100% !important; height: calc(100vh - 60px) !important; z-index: 1060; overflow-y: auto; background: var(--bg-color); border-radius: 0 !important; border: none !important; padding: 20px !important; padding-top: 60px !important; }
             .zone.zone-fullscreen .zone-title { top: 20px !important; left: 20px !important; width: calc(100% - 180px) !important; }
             .zone.zone-fullscreen .view-full-zone-btn { top: 14px !important; right: 15px !important; width: auto; background-color: var(--danger-color); font-size: 13px; }
@@ -241,7 +275,10 @@
                 </div>
             </div>
         </div>
-        <div id="app"></div>
+        <div id="app">
+            <div id="zonesContainer"></div>
+            <div id="notesContainer"></div>
+        </div>
         
         <div id="bottom-dashboard">
             <button id="dashboard-toggle" title="Ocultar/Mostrar Dashboard">
@@ -333,6 +370,8 @@
             this.DOM.body = document.body;
             this.DOM.app = document.getElementById('app');
             this.DOM.signInBtn = document.getElementById('google-signin-btn');
+            this.DOM.notesContainer = document.getElementById('notesContainer');
+            this.DOM.zonesContainer = document.getElementById('zonesContainer');
             this.DOM.workspaceTitle = document.getElementById('workspace-title');
             this.DOM.addNoteBtn = document.getElementById('addNoteBtn');
             this.DOM.addZoneBtn = document.getElementById('addZoneBtn');
@@ -385,6 +424,46 @@
             this.DOM.fabAddZoneBtn.addEventListener('click', () => { this.addZone(); this.DOM.fabContainer.classList.remove('fab-active'); });
         },
         
+        makeDraggable(element, item) {
+            element.addEventListener('mousedown', e => {
+                const target = e.target;
+                if (target.tagName.toLowerCase() === 'textarea' || target.tagName.toLowerCase() === 'input' || target.classList.contains('delete-btn') || target.classList.contains('resize-handle')) return;
+                element.classList.add('dragging');
+                const offsetX = e.clientX - element.offsetLeft;
+                const offsetY = e.clientY - element.offsetTop;
+                const onMouseMove = (moveEvent) => {
+                    let newX = moveEvent.clientX - offsetX;
+                    let newY = moveEvent.clientY - offsetY;
+                    const appRect = this.DOM.app.getBoundingClientRect();
+                    element.style.left = `${Math.max(0, Math.min(newX, appRect.width - element.offsetWidth))}px`;
+                    element.style.top = `${Math.max(0, Math.min(newY, appRect.height - element.offsetHeight))}px`;
+                };
+                const onMouseUp = () => {
+                    document.removeEventListener('mousemove', onMouseMove);
+                    document.removeEventListener('mouseup', onMouseUp);
+                    element.classList.remove('dragging');
+                    item.x = parseInt(element.style.left);
+                    item.y = parseInt(element.style.top);
+                    if (element.classList.contains('note')) {
+                        const parentZone = this.findParentZone(item);
+                        item.zoneId = parentZone ? parentZone.id : null;
+                    }
+                    this.saveData();
+                };
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mouseup', onMouseUp);
+            });
+        },
+        findParentZone(note) {
+            const noteCenterX = note.x + 120; // Ancho de la nota / 2
+            const noteCenterY = note.y + 120; // Alto de la nota / 2
+            return this.state.zones.find(zone =>
+                note.date === zone.date &&
+                noteCenterX >= zone.x && noteCenterX <= (zone.x + zone.width) &&
+                noteCenterY >= zone.y && noteCenterY <= (zone.y + zone.height)
+            );
+        },
+        
         renderWorkspace() {
             const isMobile = window.innerWidth <= 768;
             this.DOM.app.innerHTML = ''; 
@@ -406,49 +485,37 @@
         },
 
         renderDesktopLayout() {
-            this.DOM.app.innerHTML = ''; 
+            this.DOM.app.innerHTML = `<div id="zonesContainer"></div><div id="notesContainer"></div>`;
+            this.cacheDOM(); 
 
-            const notesToShow = this.state.notes.filter(note => note.date === this.state.selectedDate);
-            const zonesToShow = this.state.zones.filter(zone => zone.date === this.state.selectedDate);
-
-            zonesToShow.forEach(zone => {
-                const zoneEl = this.createZoneElement(zone);
-                const notesContainerInZone = zoneEl.querySelector('.zone-notes-container');
-                
-                this.makeDraggable(zoneEl, zone, this.DOM.app);
-                this.makeResizable(zoneEl, zone);
-                
-                const notesInThisZone = notesToShow.filter(note => note.zoneId === zone.id);
-                notesInThisZone.forEach(note => {
-                    const noteEl = this.createNoteElement(note);
-                    this.makeDraggable(noteEl, note, notesContainerInZone);
-                    notesContainerInZone.appendChild(noteEl);
-                });
-                this.DOM.app.appendChild(zoneEl);
-            });
-
-            const standaloneNotes = notesToShow.filter(note => !note.zoneId);
-            standaloneNotes.forEach(note => {
-                const noteEl = this.createNoteElement(note);
-                this.makeDraggable(noteEl, note, this.DOM.app);
-                this.DOM.app.appendChild(noteEl);
-            });
-        },
-        
-        renderMobileLayout() {
-            this.DOM.app.innerHTML = '';
             const notesToShow = this.state.notes.filter(note => note.date === this.state.selectedDate);
             const zonesToShow = this.state.zones.filter(zone => zone.date === this.state.selectedDate);
             
             zonesToShow.forEach(zone => {
                 const zoneEl = this.createZoneElement(zone);
-                const mobileNotesContainer = zoneEl.querySelector('.zone-notes-container');
+                this.DOM.zonesContainer.appendChild(zoneEl);
+            });
+
+            notesToShow.forEach(note => {
+                const noteEl = this.createNoteElement(note);
+                this.DOM.notesContainer.appendChild(noteEl);
+            });
+        },
+        
+        renderMobileLayout() {
+            const notesToShow = this.state.notes.filter(note => note.date === this.state.selectedDate);
+            const zonesToShow = this.state.zones.filter(zone => zone.date === this.state.selectedDate);
+            
+            zonesToShow.forEach(zone => {
+                const zoneEl = this.createZoneElement(zone);
+                const mobileNotesContainer = zoneEl.querySelector('.zone-notes-container-mobile');
                 
                 const notesInThisZone = notesToShow.filter(note => note.zoneId === zone.id);
                 notesInThisZone.forEach(note => {
                     const noteEl = this.createNoteElement(note);
                     mobileNotesContainer.appendChild(noteEl);
                 });
+
                 this.DOM.app.appendChild(zoneEl);
             });
 
@@ -461,48 +528,44 @@
         
         createNoteElement(note) {
             const element = document.createElement('div');
-            element.className = 'note draggable';
-            element.style.left = `${note.x || 20}px`;
-            element.style.top = `${note.y || 20}px`;
-             
+            element.className = 'note'; 
             element.innerHTML = `<button class="delete-btn">×</button><textarea placeholder="Escribe algo...">${note.content || ''}</textarea>`;
             
             element.querySelector('textarea').addEventListener('input', e => { note.content = e.target.value; this.saveData(); });
-            element.querySelector('.delete-btn').addEventListener('click', (e) => { e.stopPropagation(); this.state.notes = this.state.notes.filter(n => n.id !== note.id); this.saveData(); this.renderWorkspace(); this.renderCalendar(); });
-
+            element.querySelector('.delete-btn').addEventListener('click', () => { this.state.notes = this.state.notes.filter(n => n.id !== note.id); this.saveData(); this.renderWorkspace(); this.renderCalendar(); });
+            
+            if (window.innerWidth > 768) {
+                element.classList.add('draggable');
+                element.style.left = `${note.x || 20}px`;
+                element.style.top = `${note.y || 20}px`;
+                this.makeDraggable(element, note);
+            }
             return element;
         },
-
         createZoneElement(zone) {
             const element = document.createElement('div');
-            element.className = 'zone draggable';
-            element.dataset.id = zone.id;
-            element.style.left = `${zone.x || 50}px`;
-            element.style.top = `${zone.y || 50}px`;
-            element.style.width = `${zone.width || 400}px`;
-            element.style.height = `${zone.height || 300}px`;
-
+            element.className = 'zone'; 
             element.innerHTML = `
                 <input class="zone-title" value="${zone.title}" placeholder="Título de la Zona">
                 <span class="delete-btn">×</span>
                 <button class="add-note-in-zone-btn" title="Añadir Nota a Zona">+</button>
                 <button class="view-full-zone-btn">Ver Zona</button>
                 <div class="resize-handle"></div>
-                <div class="zone-notes-container"></div>
+                <div class="zone-notes-container-mobile"></div>
             `;
             
             element.querySelector('.zone-title').addEventListener('input', e => { zone.title = e.target.value; this.saveData(); });
-            element.querySelector('.delete-btn').addEventListener('click', (e) => {
-                e.stopPropagation(); 
+            element.querySelector('.delete-btn').addEventListener('click', () => { 
                 this.state.zones = this.state.zones.filter(z => z.id !== zone.id); 
                 this.state.notes.forEach(n => { if (n.zoneId === zone.id) n.zoneId = null; }); 
                 this.saveData(); 
                 this.renderWorkspace(); 
             });
-            element.querySelector('.add-note-in-zone-btn').addEventListener('click', (e) => {
-                e.stopPropagation();
+            element.querySelector('.add-note-in-zone-btn').addEventListener('click', () => {
                 this.addNote(zone.id);
             });
+
+            // NEW: Event listener for fullscreen view
             const viewFullBtn = element.querySelector('.view-full-zone-btn');
             viewFullBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -513,68 +576,19 @@
                     element.scrollTop = 0;
                 }
             });
-
+            
+            if(window.innerWidth > 768) {
+               element.classList.add('draggable');
+               element.style.left = `${zone.x || 50}px`;
+               element.style.top = `${zone.y || 50}px`;
+               element.style.width = `${zone.width || 400}px`;
+               element.style.height = `${zone.height || 300}px`;
+               this.makeDraggable(element, zone);
+               this.makeResizable(element, zone);
+            }
             return element;
         },
 
-        makeDraggable(element, item, boundsElement = this.DOM.app) {
-            element.addEventListener('mousedown', e => {
-                if (e.target.closest('button, textarea, input, .resize-handle')) return;
-                
-                element.classList.add('dragging');
-                
-                const startX = element.offsetLeft;
-                const startY = element.offsetTop;
-                const mouseStartX = e.clientX;
-                const mouseStartY = e.clientY;
-
-                const onMouseMove = (moveEvent) => {
-                    const dx = moveEvent.clientX - mouseStartX;
-                    const dy = moveEvent.clientY - mouseStartY;
-                    let newX = startX + dx;
-                    let newY = startY + dy;
-
-                    let boundW = (boundsElement === this.DOM.app) ? boundsElement.clientWidth : boundsElement.scrollWidth;
-                    let boundH = (boundsElement === this.DOM.app) ? boundsElement.clientHeight : boundsElement.scrollHeight;
-                    
-                    newX = Math.max(0, Math.min(newX, boundW - element.offsetWidth));
-                    newY = Math.max(0, Math.min(newY, boundH - element.offsetHeight));
-
-                    element.style.left = `${newX}px`;
-                    element.style.top = `${newY}px`;
-                };
-
-                const onMouseUp = (upEvent) => {
-                    document.removeEventListener('mousemove', onMouseMove);
-                    document.removeEventListener('mouseup', onMouseUp);
-                    element.classList.remove('dragging');
-                    
-                    if (element.classList.contains('note') && boundsElement === this.DOM.app) {
-                        const droppedOnZoneEl = upEvent.target.closest('.zone');
-                        if(droppedOnZoneEl) {
-                            const parentZoneData = this.state.zones.find(z => String(z.id) === droppedOnZoneEl.dataset.id);
-                            if (parentZoneData) {
-                                item.zoneId = parentZoneData.id;
-                                const zoneRect = droppedOnZoneEl.getBoundingClientRect();
-                                item.x = upEvent.clientX - zoneRect.left - (mouseStartX - element.offsetLeft);
-                                item.y = upEvent.clientY - zoneRect.top - 45 - (mouseStartY - element.offsetTop) + droppedOnZoneEl.querySelector('.zone-notes-container').scrollTop;
-                                this.saveData();
-                                this.renderWorkspace();
-                                return;
-                            }
-                        }
-                    }
-
-                    item.x = parseInt(element.style.left);
-                    item.y = parseInt(element.style.top);
-                    this.saveData();
-                };
-
-                document.addEventListener('mousemove', onMouseMove);
-                document.addEventListener('mouseup', onMouseUp);
-            });
-        },
-        
         updateTopControlsVisibility() {
             const isMobile = window.innerWidth <= 768;
             const generalBtn = document.getElementById('show-general-btn');
