@@ -629,36 +629,62 @@
             this.DOM.fabAddZoneBtn.addEventListener('click', () => { this.addZone(); this.DOM.fabContainer.classList.remove('fab-active'); });
         },
         
-        makeDraggable(element, item) {
-            element.addEventListener('mousedown', e => {
-                const target = e.target;
-                if (target.tagName.toLowerCase() === 'textarea' || target.tagName.toLowerCase() === 'input' || target.classList.contains('delete-btn') || target.classList.contains('resize-handle')) return;
-                element.classList.add('dragging');
-                const offsetX = e.clientX - element.offsetLeft;
-                const offsetY = e.clientY - element.offsetTop;
-                const onMouseMove = (moveEvent) => {
-                    let newX = moveEvent.clientX - offsetX;
-                    let newY = moveEvent.clientY - offsetY;
-                    const appRect = this.DOM.app.getBoundingClientRect();
-                    element.style.left = `${Math.max(0, Math.min(newX, appRect.width - element.offsetWidth))}px`;
-                    element.style.top = `${Math.max(0, Math.min(newY, appRect.height - element.offsetHeight))}px`;
-                };
-                const onMouseUp = () => {
-                    document.removeEventListener('mousemove', onMouseMove);
-                    document.removeEventListener('mouseup', onMouseUp);
-                    element.classList.remove('dragging');
-                    item.x = parseInt(element.style.left);
-                    item.y = parseInt(element.style.top);
-                    if (element.classList.contains('note')) {
-                        const parentZone = this.findParentZone(item);
-                        item.zoneId = parentZone ? parentZone.id : null;
-                    }
-                    this.saveData();
-                };
-                document.addEventListener('mousemove', onMouseMove);
-                document.addEventListener('mouseup', onMouseUp);
-            });
-        },
+    // ========= PEGA ESTA NUEVA VERSIÓN EN SU LUGAR =========
+makeDraggable(element, item) {
+    element.addEventListener('mousedown', e => {
+        // Ignorar clics en elementos interactivos dentro del draggable
+        const target = e.target;
+        if (target.isContentEditable || target.tagName === 'TEXTAREA' || target.tagName === 'INPUT' || target.classList.contains('delete-btn') || target.classList.contains('resize-handle')) {
+            return;
+        }
+        // Prevenir la selección de texto accidental al arrastrar
+        e.preventDefault();
+
+        element.classList.add('dragging');
+
+        // Usar getBoundingClientRect para un sistema de coordenadas consistente
+        const parentRect = this.DOM.app.getBoundingClientRect();
+        const elemRect = element.getBoundingClientRect();
+
+        // Calcular el desfase del puntero DENTRO del elemento que se arrastra
+        const offsetX = e.clientX - elemRect.left;
+        const offsetY = e.clientY - elemRect.top;
+
+        const onMouseMove = (moveEvent) => {
+            // Calcular la nueva posición del elemento relativa a su contenedor (#app)
+            // restando el desfase del ratón y la posición del contenedor
+            let newX = moveEvent.clientX - parentRect.left - offsetX;
+            let newY = moveEvent.clientY - parentRect.top - offsetY;
+
+            // Limitar el movimiento a los bordes del contenedor #app
+            const clampedX = Math.max(0, Math.min(newX, parentRect.width - element.offsetWidth));
+            const clampedY = Math.max(0, Math.min(newY, parentRect.height - element.offsetHeight));
+
+            element.style.left = `${clampedX}px`;
+            element.style.top = `${clampedY}px`;
+        };
+
+        const onMouseUp = () => {
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+            element.classList.remove('dragging');
+
+            // Guardar la nueva posición final
+            item.x = parseInt(element.style.left, 10);
+            item.y = parseInt(element.style.top, 10);
+
+            // Si es una nota, comprobar si está dentro de una zona
+            if (element.classList.contains('note')) {
+                const parentZone = this.findParentZone(item);
+                item.zoneId = parentZone ? parentZone.id : null;
+            }
+            this.saveData();
+        };
+
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+    });
+},
 
         findParentZone(note) {
             const noteCenterX = note.x + (note.width / 2);
