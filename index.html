@@ -49,11 +49,9 @@
         #google-signin-btn { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 15px 30px; font-size: 18px; font-weight: 600; color: white; background-color: #DB4437; border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.2); z-index: 10000; }
         .logged-in #google-signin-btn { display: none; }
         .logged-out .main-content { display: none; }
-        .main-content { opacity: 0; transition: opacity 0.5s ease-in-out; height: 100vh; display: flex; flex-direction: column; }
+        .main-content { opacity: 0; transition: opacity 0.5s ease-in-out; }
         .logged-in .main-content { opacity: 1; }
-        #app { width: 100%; box-sizing: border-box; overflow-y: auto; padding: 85px 20px 20px 20px; display: flex; gap: 20px; flex-grow: 1;}
-        #zones-container { flex: 2; display: flex; flex-direction: column; gap: 20px; }
-        #standalone-notes-container { flex: 1; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; align-content: start; }
+        #app { position: relative; width: 100%; height: calc(100vh - 180px); padding: 20px; padding-top: 70px; box-sizing: border-box; }
         #top-controls { position: fixed; top: 15px; left: 20px; right: 20px; z-index: 1001; display: flex; gap: 12px; align-items: center; }
         #workspace-title { font-size: 24px; font-weight: 600; color: var(--text-dark); flex-grow: 1; }
         #save-status { font-size: 14px; color: var(--text-light); transition: opacity 0.3s ease; margin-right: 10px; }
@@ -70,14 +68,16 @@
         .profile-dropdown .user-name { font-weight: 600; color: var(--text-dark); margin: 0; font-size: 16px; }
         .profile-dropdown .signout-btn { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px; border: none; background-color: transparent; font-size: 14px; font-weight: 500; color: var(--danger-color); border-radius: 8px; cursor: pointer; transition: background-color 0.2s ease; }
         .profile-dropdown .signout-btn:hover { background-color: #fef2f2; }
-        .note { width: 240px; height: 240px; background-color: var(--note-color); box-shadow: 0 8px 25px var(--note-shadow); border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; position: relative; }
+        .draggable { position: absolute; z-index: 10; }
+        .dragging { z-index: 999 !important; }
+        .note { width: 240px; height: 240px; background-color: var(--note-color); box-shadow: 0 8px 25px var(--note-shadow); border-radius: 8px; padding: 15px; box-sizing: border-box; cursor: move; display: flex; flex-direction: column; }
         .note textarea { flex-grow: 1; border: none; background: transparent; resize: none; font-family: 'Caveat', cursive; font-size: 22px; line-height: 1.5; color: var(--text-dark); outline: none; cursor: text; margin-top: 15px; }
-        .zone { background-color: var(--zone-bg); backdrop-filter: blur(5px); border: 1px solid var(--zone-border); border-radius: 12px; box-sizing: border-box; z-index: 1; padding: 15px; min-width: 250px; position: relative; }
-        .zone-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; position: relative; }
-        .zone-title { font-weight: 600; font-size: 16px; color: var(--primary-accent-dark); border: none; background: transparent; width: calc(100% - 40px); outline: none; padding: 5px; }
-        .zone .zone-notes-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 15px; }
-        .delete-btn { position: absolute; top: 8px; right: 8px; width: 24px; height: 24px; text-align: center; line-height: 24px; font-size: 20px; border-radius: 50%; cursor: pointer; user-select: none; transition: background-color 0.2s, color 0.2s; color: var(--text-light); z-index: 5; }
+        .zone { background-color: var(--zone-bg); backdrop-filter: blur(5px); border: 1px solid var(--zone-border); border-radius: 12px; box-sizing: border-box; cursor: move; z-index: 1; padding: 45px 15px 15px 15px; min-width: 250px; min-height: 200px; position: absolute; }
+        .zone-title { position: absolute; top: 12px; left: 15px; font-weight: 600; font-size: 16px; color: var(--primary-accent-dark); border: none; background: transparent; width: calc(100% - 60px); outline: none; }
+        .delete-btn { position: absolute; top: 8px; right: 8px; width: 24px; height: 24px; text-align: center; line-height: 24px; font-size: 20px; border-radius: 50%; cursor: pointer; user-select: none; transition: background-color 0.2s, color 0.2s; color: var(--text-light); }
         .delete-btn:hover { background-color: var(--highlight-color); color: white; }
+        .resize-handle { position: absolute; bottom: 0; right: 0; width: 20px; height: 20px; cursor: nwse-resize; z-index: 11; }
+        .resize-handle::after { content: ''; position: absolute; right: 5px; bottom: 5px; width: 8px; height: 8px; border-bottom: 2px solid var(--primary-accent); border-right: 2px solid var(--primary-accent); opacity: 0.5; }
         #bottom-dashboard { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(239, 243, 245, 0.7); backdrop-filter: blur(10px); border-top: 1px solid rgba(255, 255, 255, 0.8); box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.05); display: flex; align-items: flex-start; justify-content: center; padding: 30px 20px; box-sizing: border-box; z-index: 1002; gap: 25px; }
         .dashboard-widget { height: auto; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; color: var(--text-dark); text-align: center; background-color: rgba(255, 255, 255, 0.8); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.07); padding: 15px; border: 1px solid rgba(255, 255, 255, 0.9); transition: all 0.3s ease; transform: translateY(0); }
         .dashboard-widget:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
@@ -135,11 +135,15 @@
         .yt-control-btn:hover { transform: scale(1.1); background-color: #fff; }
         .yt-control-btn svg { width: 24px; height: 24px; fill: var(--text-dark); }
         #bottom-dashboard { transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+        #app { transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
         #dashboard-toggle { position: absolute; top: 0; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 30px; background-color: var(--primary-accent); border: none; border-radius: 15px 15px 0 0; box-shadow: 0 -4px 12px rgba(0,0,0,0.1); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background-color 0.3s ease; z-index: 1003; }
         #dashboard-toggle:hover { background-color: var(--primary-accent-dark); }
         #dashboard-toggle svg { width: 20px; height: 20px; stroke: white; transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
         body.dashboard-hidden #bottom-dashboard { transform: translateY(calc(100% - 30px)); }
-        body.dashboard-hidden #app { padding-bottom: 30px; }
+        body.dashboard-hidden #app { height: calc(100vh - 30px); }
+        body.dashboard-hidden #dashboard-toggle svg { transform: rotate(0deg); }
+        body:not(.dashboard-hidden) #app { height: calc(100vh - 230px); }
+        body:not(.dashboard-hidden) #dashboard-toggle svg { transform: rotate(180deg); }
         
         #mobile-fab-container { display: none; position: fixed; bottom: 20px; right: 20px; z-index: 1050; flex-direction: column-reverse; align-items: center; gap: 15px; }
         .fab-actions { display: flex; flex-direction: column-reverse; gap: 15px; }
@@ -158,8 +162,7 @@
             #sidebar-toggle-btn { display: block; }
             #mobile-sidebar-container { display: block; }
             #dashboard-toggle { display: none; }
-            #zones-container, #standalone-notes-container { flex: none; width: 100%; }
-            #app { display: flex; flex-direction: column; gap: 16px; padding: 75px 15px 100px 15px; height: auto; }
+            
             #top-controls { position: fixed; top: 0; left: 0; width: 100%; height: 60px; padding: 0 10px; box-sizing: border-box; display: flex; align-items: center; gap: 8px; background: rgba(239, 243, 245, 0.8); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255, 255, 255, 0.9); z-index: 1001; }
             #workspace-title { position: static; flex-grow: 1; margin: 0; padding: 0 5px; text-align: left; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: none; }
             #addZoneBtn, #addNoteBtn { display: none; }
@@ -186,18 +189,27 @@
             .sidebar-content .calendar-grid { gap: 1px; }
             .sidebar-content .day { padding: 4px 0; }
             
-            .note { width: 100% !important; min-height: 120px; height: auto; }
-            .note .delete-btn { right: 12px; top: 12px; }
+            #app { display: flex; flex-direction: column; gap: 16px; padding: 75px 15px 100px 15px; height: auto; }
+            /* MODIFICACIÓN: Las notas y zonas ya no son estáticas por defecto */
+            .zone { position: relative !important; left: auto !important; top: auto !important; width: 100% !important; height: auto !important; min-height: 0; transform: none !important; cursor: default !important; box-shadow: 0 4px 12px rgba(0,0,0,0.08); padding: 15px; padding-top: 55px; background: var(--zone-bg); }
+            .note { position: relative !important; width: 100% !important; height: auto !important; min-height: 120px; cursor: default !important; transform: none !important; margin: 0 !important; }
+            .note .delete-btn { right: 12px; top: 12px; z-index: 2; }
+            .resize-handle { display: none !important; }
             .note textarea { min-height: 100px; font-size: 18px; }
             .modal-content { padding: 25px 20px; width: 90%; }
             .modal-content h2 { font-size: 22px; }
             .modal-content p { font-size: 14px; }
             .set-timer-inputs input { width: 50px; padding: 8px; font-size: 20px; }
-            .zone-mobile-actions { display: flex; align-items: center; justify-content: flex-end; padding-top: 8px; margin-top: 8px; border-top: 1px dashed var(--zone-border); }
+            
+            /* MODIFICACIÓN: Estilos para la jerarquía móvil */
+            .zone .zone-notes-container { margin-top: 15px; display: flex; flex-direction: column; gap: 12px; }
+            .zone-mobile-actions { display: flex; align-items: center; justify-content: flex-end; padding: 8px 0; margin: 8px 0 -5px 0; border-top: 1px dashed var(--zone-border); }
             .add-note-to-zone-btn { background-color: var(--primary-accent); color: white; border: none; border-radius: 50%; width: 32px; height: 32px; font-size: 24px; font-weight: bold; line-height: 32px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background-color 0.2s ease; }
             .add-note-to-zone-btn:hover { background-color: var(--primary-accent-dark); }
+            .add-note-to-zone-btn.hidden { display: none; }
             
             #mobile-fab-container { display: flex; }
+            #notesContainer { display: flex; flex-direction: column; gap: 16px; } /* Contenedor para notas huerfanas */
         }
     </style>
 </head>
@@ -276,7 +288,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
             </button>
              <button id="fab-add-zone" class="fab-action" title="Añadir Zona">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line><line x1="15" y1="3" x2="15" y2="21"></line><line x1="3" y1="9" x2="21" y2="9"></line><line x1="3" y1="15" x2="21" y2="15"></line></svg>
             </button>
         </div>
         <button id="fab-toggle-btn" title="Añadir">
@@ -371,45 +383,111 @@
             this.DOM.fabAddZoneBtn.addEventListener('click', () => { this.addZone(); this.DOM.fabContainer.classList.remove('fab-active'); });
         },
         
+        makeDraggable(element, item) {
+            element.addEventListener('mousedown', e => {
+                if (window.innerWidth <= 768) return;
+                const target = e.target;
+                if (target.tagName.toLowerCase() === 'textarea' || target.tagName.toLowerCase() === 'input' || target.classList.contains('delete-btn') || target.classList.contains('resize-handle')) return;
+                
+                element.classList.add('dragging');
+                const isNote = element.classList.contains('note');
+                const appRect = this.DOM.app.getBoundingClientRect();
+                
+                // MODIFICACIÓN: Calcular offset relativo al #app, no al elemento padre directo
+                const elemRect = element.getBoundingClientRect();
+                const offsetX = e.clientX - elemRect.left;
+                const offsetY = e.clientY - elemRect.top;
+
+                const onMouseMove = (moveEvent) => {
+                    let newX = moveEvent.clientX - appRect.left - offsetX;
+                    let newY = moveEvent.clientY - appRect.top - offsetY;
+
+                    element.style.left = `${Math.max(0, Math.min(newX, appRect.width - element.offsetWidth))}px`;
+                    element.style.top = `${Math.max(0, Math.min(newY, appRect.height - element.offsetHeight))}px`;
+                };
+
+                const onMouseUp = () => {
+                    document.removeEventListener('mousemove', onMouseMove);
+                    document.removeEventListener('mouseup', onMouseUp);
+                    element.classList.remove('dragging');
+
+                    const newAbsX = parseInt(element.style.left);
+                    const newAbsY = parseInt(element.style.top);
+                    
+                    if (isNote) {
+                        const parentZone = this.findParentZone(element, newAbsX, newAbsY);
+                        item.zoneId = parentZone ? parentZone.id : null;
+                        if (parentZone) {
+                            item.x = newAbsX - parentZone.x;
+                            item.y = newAbsY - parentZone.y;
+                        } else {
+                            item.x = newAbsX;
+                            item.y = newAbsY;
+                        }
+                    } else { // Es una zona
+                        item.x = newAbsX;
+                        item.y = newAbsY;
+                    }
+                    this.saveData();
+                    this.renderWorkspace(); // Re-render para actualizar la jerarquía visual
+                };
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mouseup', onMouseUp);
+            });
+        },
+
+        findParentZone(noteElement, absX, absY) {
+            const noteCenterX = absX + (noteElement.offsetWidth / 2);
+            const noteCenterY = absY + (noteElement.offsetHeight / 2);
+            return this.state.zones.find(zone =>
+                zone.date === this.state.selectedDate &&
+                noteCenterX >= zone.x && noteCenterX <= (zone.x + zone.width) &&
+                noteCenterY >= zone.y && noteCenterY <= (zone.y + zone.height)
+            );
+        },
+        
         renderWorkspace() {
             this.DOM.app.innerHTML = '';
             const isMobile = window.innerWidth <= 768;
-
+            
             const zonesToShow = this.state.zones.filter(zone => zone.date === this.state.selectedDate);
             const notesToShow = this.state.notes.filter(note => note.date === this.state.selectedDate);
 
-            let zonesContainer, standaloneNotesContainer;
-
+            // 1. Crear contenedores y cachearlos
+            const zonesContainer = document.createElement('div');
+            const standaloneNotesContainer = document.createElement('div');
             if (isMobile) {
-                // En móvil, todo va en una sola columna. El orden es: Zonas, luego Notas Huerfanas.
-                zonesContainer = document.createElement('div');
-                standaloneNotesContainer = document.createElement('div');
-                this.DOM.app.appendChild(zonesContainer);
-                this.DOM.app.appendChild(standaloneNotesContainer);
-            } else {
-                // En escritorio, creamos la estructura de 2 columnas
-                zonesContainer = document.createElement('div');
-                zonesContainer.id = 'zones-container';
-                standaloneNotesContainer = document.createElement('div');
-                standaloneNotesContainer.id = 'standalone-notes-container';
-                this.DOM.app.appendChild(zonesContainer);
-                this.DOM.app.appendChild(standaloneNotesContainer);
+                standaloneNotesContainer.id = "notesContainer";
             }
+            this.DOM.app.appendChild(zonesContainer);
+            this.DOM.app.appendChild(standaloneNotesContainer);
             
+            // 2. Renderizar Zonas
             zonesToShow.forEach(zone => {
                 const zoneEl = this.createZoneElement(zone);
-                zoneEl.id = `zone-el-${zone.id}`;
+                zoneEl.id = `zone-el-${zone.id}`; // ID para encontrarlo después
                 zonesContainer.appendChild(zoneEl);
             });
 
+            // 3. Renderizar Notas y asignarlas a su contenedor correcto
             notesToShow.forEach(note => {
                 const noteEl = this.createNoteElement(note);
-                const parentZoneEl = note.zoneId ? this.DOM.app.querySelector(`#zone-el-${note.zoneId} .zone-notes-container`) : null;
-                
+                const parentZoneEl = note.zoneId ? this.DOM.app.querySelector(`#zone-el-${note.zoneId}`) : null;
+
                 if (parentZoneEl) {
-                    parentZoneEl.appendChild(noteEl);
+                    const notesContainer = parentZoneEl.querySelector('.zone-notes-container');
+                    notesContainer.appendChild(noteEl);
+                    if (!isMobile) {
+                        noteEl.style.left = `${note.x}px`;
+                        noteEl.style.top = `${note.y}px`;
+                    }
                 } else {
                     standaloneNotesContainer.appendChild(noteEl);
+                     if (!isMobile) {
+                        noteEl.style.position = 'absolute';
+                        noteEl.style.left = `${note.x}px`;
+                        noteEl.style.top = `${note.y}px`;
+                    }
                 }
             });
 
@@ -425,7 +503,7 @@
         
         createNoteElement(note) {
             const element = document.createElement('div');
-            element.className = 'note'; 
+            element.className = 'note draggable'; 
             element.innerHTML = `<button class="delete-btn">×</button><textarea placeholder="Escribe algo...">${note.content || ''}</textarea>`;
             
             element.querySelector('textarea').addEventListener('input', e => { note.content = e.target.value; this.saveData(); });
@@ -436,27 +514,26 @@
                 this.renderCalendar(); 
             });
             
+            this.makeDraggable(element, note);
             return element;
         },
         createZoneElement(zone) {
             const isMobile = window.innerWidth <= 768;
             const element = document.createElement('div');
-            element.className = 'zone'; 
+            element.className = 'zone draggable'; 
             element.innerHTML = `
-                <div class="zone-header">
-                    <input class="zone-title" value="${zone.title || 'Nueva Zona'}" placeholder="Título de la Zona">
-                    <span class="delete-btn">×</span>
-                </div>
-                <div class="zone-notes-container"></div>
+                <input class="zone-title" value="${zone.title || 'Nueva Zona'}" placeholder="Título de la Zona">
+                <span class="delete-btn">×</span>
+                <div class="resize-handle"></div>
                 ${isMobile ? `
                 <div class="zone-mobile-actions">
                     <button class="add-note-to-zone-btn" title="Añadir Nota a esta Zona">+</button>
                 </div>` : ''}
+                <div class="zone-notes-container"></div>
             `;
             
             element.querySelector('.zone-title').addEventListener('input', e => { zone.title = e.target.value; this.saveData(); });
-            element.querySelector('.delete-btn').addEventListener('click', (e) => { 
-                e.stopPropagation();
+            element.querySelector('.delete-btn').addEventListener('click', () => { 
                 this.state.zones = this.state.zones.filter(z => z.id !== zone.id); 
                 this.state.notes.forEach(n => { if (n.zoneId === zone.id) n.zoneId = null; }); 
                 this.saveData(); 
@@ -464,13 +541,17 @@
             });
 
             if(isMobile) {
-                const addBtn = element.querySelector('.add-note-to-zone-btn');
-                if (addBtn) {
-                   addBtn.addEventListener('click', e => {
-                        e.stopPropagation();
-                        this.addNote({ zoneId: zone.id });
-                    });
-                }
+                element.querySelector('.add-note-to-zone-btn').addEventListener('click', e => {
+                    e.stopPropagation();
+                    this.addNote({ zoneId: zone.id });
+                });
+            } else {
+               element.style.left = `${zone.x || 50}px`;
+               element.style.top = `${zone.y || 50}px`;
+               element.style.width = `${zone.width || 400}px`;
+               element.style.height = `${zone.height || 300}px`;
+               this.makeDraggable(element, zone);
+               this.makeResizable(element, zone);
             }
             return element;
         },
@@ -491,9 +572,22 @@
 
         addNote(options = {}) { 
             const { zoneId = null } = options;
+            let initialX = 20, initialY = 20;
+
+            if (zoneId && window.innerWidth > 768) {
+                // Posicionar la nueva nota dentro de la zona de forma aleatoria
+                const zone = this.state.zones.find(z => z.id === zoneId);
+                if (zone) {
+                    initialX = Math.random() * (zone.width - 260); // 260 = note width + padding
+                    initialY = Math.random() * (zone.height - 260);
+                }
+            }
+
             const newNote = { 
                 id: Date.now() + Math.random(), 
                 content: '', 
+                x: initialX, 
+                y: initialY, 
                 date: this.state.selectedDate, 
                 zoneId: zoneId 
             }; 
@@ -503,16 +597,7 @@
             this.updateStats(); 
             this.renderCalendar(); 
         },
-        addZone() { 
-            const newZone = { 
-                id: Date.now() + Math.random(), 
-                title: 'Nueva Zona', 
-                date: this.state.selectedDate 
-            }; 
-            this.state.zones.push(newZone); 
-            this.renderWorkspace(); 
-            this.saveData(); 
-        },
+        addZone() { const newZone = { id: Date.now() + Math.random(), title: 'Nueva Zona', x: 50, y: 50, width: 400, height: 300, date: this.state.selectedDate }; this.state.zones.push(newZone); this.renderWorkspace(); this.saveData(); },
         
         requestConfirm(title, message, action) { this.DOM.confirmModal.title.textContent = title; this.DOM.confirmModal.message.textContent = message; this.state.pendingTimerAction = action.bind(this); this.DOM.confirmModal.overlay.classList.add('visible'); },
         closeConfirmModal() { this.DOM.confirmModal.overlay.classList.remove('visible'); this.state.pendingTimerAction = null; },
@@ -522,6 +607,7 @@
         async loadData() { if (!this.state.currentUser) return; const userDocRef = doc(this.firebase.db, 'user_data', this.state.currentUser.uid); try { const docSnap = await getDoc(userDocRef); if (docSnap.exists()) { const data = docSnap.data(); this.state.notes = data.notes || []; this.state.zones = data.zones || []; this.state.youtubeUrl = data.youtubeUrl || ''; } else { this.state.notes = []; this.state.zones = []; this.state.youtubeUrl = ''; } this.state.isDataLoaded = true; this.renderWorkspace(); this.renderCalendar(); this.setupAllYoutubePlayers(); } catch (error) { console.error("Error al cargar datos:", error); } },
         clearWorkspace() { this.DOM.app.innerHTML = ''; this.DOM.workspaceTitle.textContent = ''; this.state.isDataLoaded = false; },
         updateStats() { const notesInView = this.state.notes.filter(n => n.date === this.state.selectedDate).length; document.querySelectorAll('#note-count').forEach(el => el.textContent = notesInView); },
+        makeResizable(element, item) { const handle = element.querySelector('.resize-handle'); handle.addEventListener('mousedown', e => { e.stopPropagation(); const startX = e.clientX; const startY = e.clientY; const startWidth = parseInt(document.defaultView.getComputedStyle(element).width, 10); const startHeight = parseInt(document.defaultView.getComputedStyle(element).height, 10); const onMouseMove = (moveEvent) => { element.style.width = `${Math.max(250, startWidth + moveEvent.clientX - startX)}px`; element.style.height = `${Math.max(200, startHeight + moveEvent.clientY - startY)}px`; }; const onMouseUp = () => { document.removeEventListener('mousemove', onMouseMove); document.removeEventListener('mouseup', onMouseUp); item.width = parseInt(element.style.width); item.height = parseInt(element.style.height); this.saveData(); }; document.addEventListener('mousemove', onMouseMove); document.addEventListener('mouseup', onMouseUp); }); },
         showGeneralDashboard() { this.state.selectedDate = null; this.saveData(); this.renderWorkspace(); this.renderCalendar(); },
         closeSidebar() { this.DOM.body.classList.remove('sidebar-active'); },
         setupAllWidgets() { this.setupAllClocks(); this.setupAllCalendars(); this.setupAllTimers(); this.setupAllYoutubePlayers(); },
