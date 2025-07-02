@@ -22,130 +22,416 @@
     <meta name="twitter:image" content="https://hectordanielayarachifuentes.github.io/Sticky-Notes-v1/img/luna.jpg">
     <script src="https://www.youtube.com/iframe_api"></script>
 
-    <style>
-        :root {
-            --bg-color: #f4f7f9;
-            --note-color: #fffde7;
-            --note-shadow: rgba(0, 0, 0, 0.1);
-            --primary-accent: #5a7dcb;
-            --primary-accent-dark: #405b9b;
-            --panel-bg: rgba(255, 255, 255, 0.6);
-            --panel-border: rgba(255, 255, 255, 0.8);
-            --text-dark: #2c3e50;
-            --text-light: #7f8c8d;
-            --zone-bg: rgba(90, 125, 203, 0.1);
-            --zone-border: rgba(90, 125, 203, 0.4);
-            --highlight-color: #ffc107;
-            --danger-color: #e74c3c;
-            --success-color: #27ae60;
-            --warning-color: #f39c12;
+   <style>
+    /* ==========================================================================
+       1. VARIABLES GLOBALES Y KEYFRAMES
+       ========================================================================== */
+    :root {
+        --bg-color: #f4f7f9;
+        --note-color: #fffde7;
+        --note-shadow: rgba(0, 0, 0, 0.1);
+        --primary-accent: #5a7dcb;
+        --primary-accent-dark: #405b9b;
+        --panel-bg: rgba(255, 255, 255, 0.6);
+        --panel-border: rgba(255, 255, 255, 0.8);
+        --text-dark: #2c3e50;
+        --text-light: #7f8c8d;
+        --zone-bg: rgba(90, 125, 203, 0.1);
+        --zone-border: rgba(90, 125, 203, 0.4);
+        --highlight-color: #ffc107;
+        --danger-color: #e74c3c;
+        --success-color: #27ae60;
+        --warning-color: #f39c12;
+    }
+
+    @keyframes pulse-green {
+        0% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.4); }
+        70% { box-shadow: 0 0 0 10px rgba(39, 174, 96, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0); }
+    }
+
+    /* ==========================================================================
+       2. ESTILOS BASE Y DE LAYOUT
+       ========================================================================== */
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: var(--bg-color);
+        background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23dce3eb" fill-opacity="0.4"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        height: 100vh;
+    }
+
+    /* Manejo del estado de login */
+    #google-signin-btn { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 15px 30px; font-size: 18px; font-weight: 600; color: white; background-color: #DB4437; border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.2); z-index: 10000; }
+    .logged-in #google-signin-btn { display: none; }
+    .logged-out .main-content { display: none; }
+    .main-content { opacity: 0; transition: opacity 0.5s ease-in-out; }
+    .logged-in .main-content { opacity: 1; }
+
+    #app { 
+        position: relative; 
+        width: 100%; 
+        box-sizing: border-box; 
+        transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        padding: 70px 20px 20px 20px; 
+    }
+    
+    .draggable { position: absolute; z-index: 10; cursor: move; }
+    .dragging { z-index: 999 !important; }
+
+    /* ==========================================================================
+       3. COMPONENTES: CONTROLES SUPERIORES Y PERFIL
+       ========================================================================== */
+    #top-controls { position: fixed; top: 15px; left: 20px; right: 20px; z-index: 1001; display: flex; gap: 12px; align-items: center; }
+    #workspace-title { font-size: 24px; font-weight: 600; color: var(--text-dark); flex-grow: 1; }
+    #save-status { font-size: 14px; color: var(--text-light); transition: opacity 0.3s ease; margin-right: 10px; }
+    
+    .control-btn { padding: 10px 22px; font-size: 14px; font-weight: 600; color: white; background-color: var(--primary-accent); border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 5px 15px rgba(90, 125, 203, 0.3); transition: all 0.3s ease; }
+    .control-btn:hover { background-color: var(--primary-accent-dark); transform: translateY(-2px); }
+    .control-btn.secondary { background-color: #95a5a6; }
+    .control-btn.secondary:hover { background-color: #7f8c8d; }
+    #sidebar-toggle-btn { display: none; }
+    
+    .profile-menu-container { position: relative; }
+    .profile-avatar { width: 45px; height: 45px; border-radius: 50%; cursor: pointer; border: 2px solid var(--panel-border); box-shadow: 0 2px 10px rgba(0,0,0,0.1); transition: transform 0.2s ease; }
+    .profile-avatar:hover { transform: scale(1.05); }
+    .profile-dropdown { position: absolute; top: 120%; right: 0; width: 220px; background-color: white; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); padding: 15px; box-sizing: border-box; opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); z-index: 1005; }
+    .profile-menu-container:hover .profile-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+    .profile-dropdown .user-info { text-align: center; padding-bottom: 15px; border-bottom: 1px solid #f0f0f0; margin-bottom: 10px; }
+    .profile-dropdown .user-name { font-weight: 600; color: var(--text-dark); margin: 0; font-size: 16px; }
+    .profile-dropdown .signout-btn { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px; border: none; background-color: transparent; font-size: 14px; font-weight: 500; color: var(--danger-color); border-radius: 8px; cursor: pointer; transition: background-color 0.2s ease; }
+    .profile-dropdown .signout-btn:hover { background-color: #fef2f2; }
+
+    /* ==========================================================================
+       4. COMPONENTES: NOTAS Y ZONAS
+       ========================================================================== */
+    .note {
+        box-shadow: 0 8px 25px var(--note-shadow);
+        border-radius: 8px;
+        background-color: var(--note-color);
+        overflow: hidden; /* Importante para el diseño con pestañas */
+        padding: 0;
+    }
+
+    .note textarea {
+        font-family: 'Caveat', cursive;
+        font-size: 22px;
+        line-height: 1.5;
+        color: var(--text-dark);
+        border: none;
+        background: transparent;
+        outline: none;
+        resize: none;
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        margin: 0;
+    }
+
+    .zone { 
+        background-color: var(--zone-bg); 
+        backdrop-filter: blur(5px); 
+        border: 1px solid var(--zone-border); 
+        border-radius: 12px; 
+        box-sizing: border-box; 
+        padding: 45px 15px 15px 15px; 
+        min-width: 250px; 
+        min-height: 200px;
+    }
+    .zone-title { position: absolute; top: 12px; left: 15px; font-weight: 600; font-size: 16px; color: var(--primary-accent-dark); border: none; background: transparent; width: calc(100% - 60px); outline: none; }
+    .add-note-in-zone-btn, .view-full-zone-btn { display: none; }
+    
+    .delete-btn { width: 24px; height: 24px; text-align: center; line-height: 24px; font-size: 20px; border-radius: 50%; cursor: pointer; user-select: none; transition: background-color 0.2s, color 0.2s; color: var(--text-light); }
+    .delete-btn:hover { background-color: var(--danger-color); color: white; }
+
+    /* ==========================================================================
+       5. COMPONENTES: DASHBOARD INFERIOR Y WIDGETS
+       ========================================================================== */
+    #bottom-dashboard { 
+        position: fixed; bottom: 0; left: 0; width: 100%; 
+        background: rgba(239, 243, 245, 0.7); backdrop-filter: blur(10px); 
+        border-top: 1px solid rgba(255, 255, 255, 0.8); box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.05); 
+        display: flex; align-items: flex-start; justify-content: center; 
+        padding: 30px 20px; box-sizing: border-box; 
+        z-index: 1002; gap: 25px; 
+        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); 
+    }
+    .dashboard-widget { height: auto; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; color: var(--text-dark); text-align: center; background-color: rgba(255, 255, 255, 0.8); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.07); padding: 15px; border: 1px solid rgba(255, 255, 255, 0.9); transition: all 0.3s ease; transform: translateY(0); }
+    .dashboard-widget:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+    .dashboard-widget h3 { margin: 0 0 12px 0; padding-bottom: 8px; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--text-light); letter-spacing: 0.8px; width: 100%; border-bottom: 1px solid rgba(0,0,0,0.08); }
+    #dashboard-toggle { position: absolute; top: 0; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 30px; background-color: var(--primary-accent); border: none; border-radius: 15px 15px 0 0; box-shadow: 0 -4px 12px rgba(0,0,0,0.1); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background-color 0.3s ease; z-index: 1003; }
+    #dashboard-toggle:hover { background-color: var(--primary-accent-dark); }
+    #dashboard-toggle svg { width: 20px; height: 20px; stroke: white; transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+    
+    /* Lógica de ocultar/mostrar dashboard */
+    body.dashboard-hidden #bottom-dashboard { transform: translateY(calc(100% - 30px)); }
+    body:not(.dashboard-hidden) #app { height: calc(100vh - 230px); }
+    body.dashboard-hidden #app { height: calc(100vh - 30px); }
+    body:not(.dashboard-hidden) #dashboard-toggle svg { transform: rotate(180deg); }
+
+    /* Widgets específicos */
+    #stats-widget span { font-size: 36px; font-weight: 600; }
+    #clock-widget #current-time { font-size: 36px; font-weight: 600; }
+    #clock-widget #current-date { font-size: 14px; color: var(--text-light); }
+    #calendar-widget { min-width: 270px; }
+    .calendar-header { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 8px; }
+    .calendar-header h3 { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
+    .calendar-header button { background: none; border: none; cursor: pointer; font-size: 18px; color: var(--primary-accent); }
+    #month-year { font-size: 14px; font-weight: 600; }
+    .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; width: 100%; }
+    .calendar-grid span { text-align: center; padding: 2px; font-size: 12px; position: relative; }
+    .day-name { font-weight: 600; color: var(--text-light); }
+    .day { cursor: pointer; border-radius: 50%; transition: background-color 0.2s; }
+    .day:hover { background-color: #e0e0e0; }
+    .day.current-day { background-color: var(--highlight-color); color: white; font-weight: 600; }
+    .day.selected-day { box-shadow: 0 0 0 2px var(--primary-accent); }
+    .day.has-notes::after { content: ''; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; background-color: var(--primary-accent); border-radius: 50%; }
+    
+    #timer-widget .timer-buttons { margin-top: 8px; }
+    #timer-widget .timer-buttons button { margin: 0 4px; padding: 5px 10px; font-size: 14px; cursor: pointer; border: 1px solid #ccc; border-radius: 4px; background: #fff; }
+    #timer-widget .timer-buttons .hidden { display: none; }
+    #timer-display-container { display: flex; align-items: center; justify-content: center; gap: 10px; }
+    #timer-display { font-size: 32px; font-weight: 600; font-family: 'Poppins', monospace; letter-spacing: 2px; color: var(--text-dark); transition: color 0.4s ease, text-shadow 0.4s ease; }
+    #timer-display.timer-running { color: var(--success-color); animation: pulse-green 2s infinite; }
+    #timer-display.timer-paused { color: var(--warning-color); }
+    #edit-timer-btn { background: none; border: none; cursor: pointer; font-size: 18px; color: var(--text-light); padding: 5px; border-radius: 50%; transition: background-color 0.2s; }
+    #edit-timer-btn:hover { background-color: #e0e0e0; }
+
+    #youtube-widget input { border: 1px solid #ccc; border-radius: 4px; padding: 6px 8px; width: 180px; font-size: 12px; margin-bottom: 0; }
+    #youtube-player-container { position: relative; width: 200px; height: 112px; background: #000; border-radius: 8px; overflow: hidden; margin-top: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    #youtube-player-container iframe { width: 100%; height: 100%; border: none; }
+    #youtube-controls { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background-color: rgba(0, 0, 0, 0.3); opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
+    #youtube-player-container:hover #youtube-controls, #youtube-player-container.paused #youtube-controls { opacity: 1; pointer-events: all; }
+    .yt-control-btn { background-color: rgba(255, 255, 255, 0.9); border: none; border-radius: 50%; width: 50px; height: 50px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.3); transition: transform 0.2s ease, background-color 0.2s ease; }
+    .yt-control-btn:hover { transform: scale(1.1); background-color: #fff; }
+    .yt-control-btn svg { width: 24px; height: 24px; fill: var(--text-dark); }
+    
+    /* ==========================================================================
+       6. COMPONENTES: MODALES
+       ========================================================================== */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 9999; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+    .modal-overlay.visible { opacity: 1; pointer-events: auto; }
+    .modal-content { background-color: white; padding: 40px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); text-align: center; max-width: 90%; width: 450px; transform: scale(0.9); transition: transform 0.3s ease; }
+    .modal-overlay.visible .modal-content { transform: scale(1); }
+    .modal-content h2 { margin-top: 0; color: var(--text-dark); font-size: 28px; }
+    .modal-content p { font-size: 16px; color: var(--text-light); margin-bottom: 25px; }
+    .modal-content .action-btn { padding: 12px 30px; font-size: 16px; font-weight: 600; color: white; background-color: var(--primary-accent); border: none; border-radius: 50px; cursor: pointer; transition: background-color 0.2s; }
+    .modal-content .action-btn:hover { background-color: var(--primary-accent-dark); }
+    .set-timer-inputs { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; }
+    .set-timer-inputs input { width: 70px; padding: 10px; font-size: 24px; text-align: center; border: 1px solid #ccc; border-radius: 8px; font-weight: 600; }
+    .set-timer-inputs input::-webkit-outer-spin-button, .set-timer-inputs input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .set-timer-inputs input[type=number] { -moz-appearance: textfield; }
+    .modal-actions { display: flex; justify-content: center; gap: 15px; }
+    .modal-actions .confirm-btn { background-color: var(--primary-accent); color: white; }
+    .modal-actions .confirm-btn:hover { background-color: var(--primary-accent-dark); }
+    .modal-actions .cancel-btn { background-color: #ecf0f1; color: var(--text-dark); }
+    .modal-actions .cancel-btn:hover { background-color: #bdc3c7; }
+
+    /* ==========================================================================
+       7. MEDIA QUERIES (VISTAS DE MÓVIL Y ESCRITORIO)
+       ========================================================================== */
+
+    /* --------------------------------------------------------------------------
+       7.1 VISTA DE ESCRITORIO (min-width: 769px)
+       -------------------------------------------------------------------------- */
+    @media (min-width: 769px) {
+        .note {
+            display: flex;
+            flex-direction: row;
         }
-        @keyframes pulse-green {
-            0% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(39, 174, 96, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0); }
+        .note .resize-handle {
+            position: absolute;
+            bottom: 0; right: 0;
+            width: 20px; height: 20px;
+            cursor: nwse-resize;
+            z-index: 12;
         }
-        body { font-family: 'Poppins', sans-serif; background-color: var(--bg-color); background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23dce3eb" fill-opacity="0.4"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E'); margin: 0; padding: 0; overflow: hidden; height: 100vh; }
-        #google-signin-btn { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 15px 30px; font-size: 18px; font-weight: 600; color: white; background-color: #DB4437; border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.2); z-index: 10000; }
-        .logged-in #google-signin-btn { display: none; }
-        .logged-out .main-content { display: none; }
-        .main-content { opacity: 0; transition: opacity 0.5s ease-in-out; }
-        .logged-in .main-content { opacity: 1; }
-        #app { position: relative; width: 100%; height: calc(100vh - 180px); padding: 20px; padding-top: 70px; box-sizing: border-box; }
-        #top-controls { position: fixed; top: 15px; left: 20px; right: 20px; z-index: 1001; display: flex; gap: 12px; align-items: center; }
-        #workspace-title { font-size: 24px; font-weight: 600; color: var(--text-dark); flex-grow: 1; }
-        #save-status { font-size: 14px; color: var(--text-light); transition: opacity 0.3s ease; margin-right: 10px; }
-        .control-btn { padding: 10px 22px; font-size: 14px; font-weight: 600; color: white; background-color: var(--primary-accent); border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 5px 15px rgba(90, 125, 203, 0.3); transition: all 0.3s ease; }
-        .control-btn:hover { background-color: var(--primary-accent-dark); transform: translateY(-2px); }
-        .control-btn.secondary { background-color: #95a5a6; }
-        .control-btn.secondary:hover { background-color: #7f8c8d; }
-        .profile-menu-container { position: relative; }
-        .profile-avatar { width: 45px; height: 45px; border-radius: 50%; cursor: pointer; border: 2px solid var(--panel-border); box-shadow: 0 2px 10px rgba(0,0,0,0.1); transition: transform 0.2s ease; }
-        .profile-avatar:hover { transform: scale(1.05); }
-        .profile-dropdown { position: absolute; top: 120%; right: 0; width: 220px; background-color: white; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); padding: 15px; box-sizing: border-box; opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); z-index: 1005; }
-        .profile-menu-container:hover .profile-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
-        .profile-dropdown .user-info { text-align: center; padding-bottom: 15px; border-bottom: 1px solid #f0f0f0; margin-bottom: 10px; }
-        .profile-dropdown .user-name { font-weight: 600; color: var(--text-dark); margin: 0; font-size: 16px; }
-        .profile-dropdown .signout-btn { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px; border: none; background-color: transparent; font-size: 14px; font-weight: 500; color: var(--danger-color); border-radius: 8px; cursor: pointer; transition: background-color 0.2s ease; }
-        .profile-dropdown .signout-btn:hover { background-color: #fef2f2; }
-        .draggable { position: absolute; z-index: 10; }
-        .dragging { z-index: 999 !important; }
-        .note { width: 240px; height: 240px; background-color: var(--note-color); box-shadow: 0 8px 25px var(--note-shadow); border-radius: 8px; padding: 15px; box-sizing: border-box; cursor: move; display: flex; flex-direction: column; }
-        .note textarea { flex-grow: 1; border: none; background: transparent; resize: none; font-family: 'Caveat', cursive; font-size: 22px; line-height: 1.5; color: var(--text-dark); outline: none; cursor: text; margin-top: 15px; }
-        .zone { background-color: var(--zone-bg); backdrop-filter: blur(5px); border: 1px solid var(--zone-border); border-radius: 12px; box-sizing: border-box; cursor: move; z-index: 1; padding: 45px 15px 15px 15px; min-width: 250px; min-height: 200px; }
-        .zone-title { position: absolute; top: 12px; left: 15px; font-weight: 600; font-size: 16px; color: var(--primary-accent-dark); border: none; background: transparent; width: calc(100% - 60px); outline: none; }
-        .delete-btn { position: absolute; top: 8px; right: 8px; width: 24px; height: 24px; text-align: center; line-height: 24px; font-size: 20px; border-radius: 50%; cursor: pointer; user-select: none; transition: background-color 0.2s, color 0.2s; color: var(--text-light); }
-        .delete-btn:hover { background-color: var(--highlight-color); color: white; }
-        .resize-handle { position: absolute; bottom: 0; right: 0; width: 20px; height: 20px; cursor: nwse-resize; z-index: 11; }
-        .resize-handle::after { content: ''; position: absolute; right: 5px; bottom: 5px; width: 8px; height: 8px; border-bottom: 2px solid var(--primary-accent); border-right: 2px solid var(--primary-accent); opacity: 0.5; }
-        #bottom-dashboard { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(239, 243, 245, 0.7); backdrop-filter: blur(10px); border-top: 1px solid rgba(255, 255, 255, 0.8); box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.05); display: flex; align-items: flex-start; justify-content: center; padding: 30px 20px; box-sizing: border-box; z-index: 1002; gap: 25px; }
-        .dashboard-widget { height: auto; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; color: var(--text-dark); text-align: center; background-color: rgba(255, 255, 255, 0.8); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.07); padding: 15px; border: 1px solid rgba(255, 255, 255, 0.9); transition: all 0.3s ease; transform: translateY(0); }
-        .dashboard-widget:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
-        .dashboard-widget h3 { margin: 0 0 12px 0; padding-bottom: 8px; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--text-light); letter-spacing: 0.8px; width: 100%; border-bottom: 1px solid rgba(0,0,0,0.08); }
-        #stats-widget span { font-size: 36px; font-weight: 600; }
-        #clock-widget #current-time { font-size: 36px; font-weight: 600; }
-        #clock-widget #current-date { font-size: 14px; color: var(--text-light); }
-        #youtube-widget input { border: 1px solid #ccc; border-radius: 4px; padding: 6px 8px; width: 180px; font-size: 12px; margin-bottom: 0; }
-        #calendar-widget { min-width: 270px; }
-        .calendar-header { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 8px; }
-        .calendar-header h3 { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
-        .calendar-header button { background: none; border: none; cursor: pointer; font-size: 18px; color: var(--primary-accent); }
-        #month-year { font-size: 14px; font-weight: 600; }
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; width: 100%; }
-        .calendar-grid span { text-align: center; padding: 2px; font-size: 12px; position: relative; }
-        .day-name { font-weight: 600; color: var(--text-light); }
-        .day { cursor: pointer; border-radius: 50%; transition: background-color 0.2s; }
-        .day:hover { background-color: #e0e0e0; }
-        .day.current-day { background-color: var(--highlight-color); color: white; font-weight: 600; }
-        .day.selected-day { box-shadow: 0 0 0 2px var(--primary-accent); }
-        .day.has-notes::after { content: ''; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; background-color: var(--primary-accent); border-radius: 50%; }
-        .timer-display-container { display: flex; align-items: center; justify-content: center; gap: 10px; }
-        #timer-display { font-size: 32px; font-weight: 600; font-family: 'Poppins', monospace; letter-spacing: 2px; color: var(--text-dark); transition: color 0.4s ease, text-shadow 0.4s ease; }
-        #timer-display.timer-running { color: var(--success-color); animation: pulse-green 2s infinite; }
-        #timer-display.timer-paused { color: var(--warning-color); }
-        #edit-timer-btn { background: none; border: none; cursor: pointer; font-size: 18px; color: var(--text-light); padding: 5px; border-radius: 50%; transition: background-color 0.2s; }
-        #edit-timer-btn:hover { background-color: #e0e0e0; }
-        #timer-widget .timer-buttons { margin-top: 8px; }
-        #timer-widget .timer-buttons button { margin: 0 4px; padding: 5px 10px; font-size: 14px; cursor: pointer; border: 1px solid #ccc; border-radius: 4px; background: #fff; }
-        #timer-widget .timer-buttons .hidden { display: none; }
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 9999; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
-        .modal-overlay.visible { opacity: 1; pointer-events: auto; }
-        .modal-content { background-color: white; padding: 40px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); text-align: center; max-width: 90%; width: 450px; transform: scale(0.9); transition: transform 0.3s ease; }
-        .modal-overlay.visible .modal-content { transform: scale(1); }
-        .modal-content h2 { margin-top: 0; color: var(--text-dark); font-size: 28px; }
-        .modal-content p { font-size: 16px; color: var(--text-light); margin-bottom: 25px; }
-        .modal-content .action-btn { padding: 12px 30px; font-size: 16px; font-weight: 600; color: white; background-color: var(--primary-accent); border: none; border-radius: 50px; cursor: pointer; transition: background-color 0.2s; }
-        .modal-content .action-btn:hover { background-color: var(--primary-accent-dark); }
-        .set-timer-inputs { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; }
-        .set-timer-inputs input { width: 70px; padding: 10px; font-size: 24px; text-align: center; border: 1px solid #ccc; border-radius: 8px; font-weight: 600; }
-        .set-timer-inputs input::-webkit-outer-spin-button, .set-timer-inputs input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-        .set-timer-inputs input[type=number] { -moz-appearance: textfield; }
-        .modal-actions { display: flex; justify-content: center; gap: 15px; }
-        .modal-actions .confirm-btn { background-color: var(--primary-accent); color: white; }
-        .modal-actions .confirm-btn:hover { background-color: var(--primary-accent-dark); }
-        .modal-actions .cancel-btn { background-color: #ecf0f1; color: var(--text-dark); }
-        .modal-actions .cancel-btn:hover { background-color: #bdc3c7; }
-        #sidebar-toggle-btn { display: none; padding: 8px 12px; font-size: 18px; line-height: 1; }
-        #mobile-sidebar-container { display: none; }
-        #youtube-player-container { position: relative; width: 200px; height: 112px; background: #000; border-radius: 8px; overflow: hidden; margin-top: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        #youtube-player-container iframe { width: 100%; height: 100%; border: none; }
-        #youtube-controls { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background-color: rgba(0, 0, 0, 0.3); opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
-        #youtube-player-container:hover #youtube-controls, #youtube-player-container.paused #youtube-controls { opacity: 1; pointer-events: all; }
-        .yt-control-btn { background-color: rgba(255, 255, 255, 0.9); border: none; border-radius: 50%; width: 50px; height: 50px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.3); transition: transform 0.2s ease, background-color 0.2s ease; }
-        .yt-control-btn:hover { transform: scale(1.1); background-color: #fff; }
-        .yt-control-btn svg { width: 24px; height: 24px; fill: var(--text-dark); }
-        #bottom-dashboard { transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
-        #app { transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
-        #dashboard-toggle { position: absolute; top: 0; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 30px; background-color: var(--primary-accent); border: none; border-radius: 15px 15px 0 0; box-shadow: 0 -4px 12px rgba(0,0,0,0.1); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background-color 0.3s ease; z-index: 1003; }
-        #dashboard-toggle:hover { background-color: var(--primary-accent-dark); }
-        #dashboard-toggle svg { width: 20px; height: 20px; stroke: white; transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
-        body.dashboard-hidden #bottom-dashboard { transform: translateY(calc(100% - 30px)); }
-        body.dashboard-hidden #app { height: calc(100vh - 30px); }
-        body.dashboard-hidden #dashboard-toggle svg { transform: rotate(0deg); }
-        body:not(.dashboard-hidden) #app { height: calc(100vh - 230px); }
-        body:not(.dashboard-hidden) #dashboard-toggle svg { transform: rotate(180deg); }
+        .note .resize-handle::after {
+            content: '';
+            position: absolute;
+            right: 5px; bottom: 5px;
+            width: 8px; height: 8px;
+            border-bottom: 2px solid var(--primary-accent-dark);
+            border-right: 2px solid var(--primary-accent-dark);
+            opacity: 0.6;
+        }
+        .note-tabs {
+            flex-shrink: 0;
+            width: 30px;
+            background-color: rgba(0, 0, 0, 0.03);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            border-right: 1px solid rgba(0, 0, 0, 0.06);
+        }
+        .note-tab-btn {
+            width: 14px;
+            height: 14px;
+            background-color: transparent;
+            border: 2px solid var(--text-light);
+            opacity: 0.5;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            padding: 0;
+        }
+        .note-tab-btn:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+        .note-tab-btn.active {
+            background-color: var(--primary-accent);
+            border-color: var(--primary-accent);
+            opacity: 1;
+        }
+        .note-main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 10px 15px 15px 15px;
+            position: relative;
+        }
+        .note-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        .tab-name-display {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+            flex-grow: 1;
+            padding: 5px;
+            border-radius: 4px;
+        }
+        .tab-name-display:focus {
+            outline: 1px dashed var(--primary-accent);
+            background-color: rgba(255, 255, 255, 0.7);
+        }
+        .note .delete-btn {
+            position: static;
+            flex-shrink: 0;
+        }
+        .note-content-panels {
+            flex-grow: 1;
+            position: relative;
+        }
+        .note-content-panel {
+            display: none;
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
+        .note-content-panel.active { display: block; }
+    }
+
+
+    /* --------------------------------------------------------------------------
+       7.2 VISTA MÓVIL (max-width: 768px)
+       -------------------------------------------------------------------------- */
+    @media (max-width: 768px) {
+        body { overflow-y: auto; overflow-x: hidden; height: auto; }
+        body.sidebar-active, body.zone-view-active { overflow: hidden; }
+
+        #app {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding: 75px 15px 100px 15px;
+            height: auto;
+        }
+
+        #bottom-dashboard { display: none !important; }
+        #dashboard-toggle { display: none; }
+        #addZoneBtn, #addNoteBtn { display: none; }
+        #notesContainer, #zonesContainer { display: none; }
+        .resize-handle { display: none !important; }
+
+        /* Controles superiores en móvil */
+        #top-controls {
+            height: 60px;
+            padding: 0 10px;
+            gap: 8px;
+            background: rgba(239, 243, 245, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.9);
+        }
+        #workspace-title { font-size: 16px; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        #sidebar-toggle-btn { display: block; padding: 8px 12px; font-size: 18px; line-height: 1; }
+        .profile-avatar { width: 40px; height: 40px; }
+        .control-btn.secondary { padding: 6px 10px; font-size: 13px; display: flex; }
         
-        #mobile-fab-container { display: none; position: fixed; bottom: 20px; right: 20px; z-index: 1050; flex-direction: column-reverse; align-items: center; gap: 15px; }
+        /* Sidebar móvil */
+        #mobile-sidebar-container { display: block; }
+        .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1099; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
+        #mobile-sidebar { position: fixed; top: 0; left: -300px; width: 300px; max-width: 85%; height: 100%; background: #ffffff; z-index: 1100; box-shadow: 5px 0 15px rgba(0,0,0,0.1); transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; }
+        body.sidebar-active .sidebar-overlay { opacity: 1; visibility: visible; }
+        body.sidebar-active #mobile-sidebar { left: 0; }
+        .sidebar-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid #e0e0e0; }
+        .sidebar-header h3 { margin: 0; font-size: 18px; color: var(--text-dark); }
+        #close-sidebar-btn { background: none; border: none; font-size: 28px; cursor: pointer; color: var(--text-light); padding: 0 5px; }
+        .sidebar-content { overflow-y: auto; flex-grow: 1; }
+        .sidebar-content .dashboard-widget { flex-direction: column; align-items: flex-start; text-align: left; padding: 20px; border-bottom: 1px solid #eee; box-shadow: none; border-radius: 0; }
+        .sidebar-content .dashboard-widget:last-child { border-bottom: none; }
+        .sidebar-content #stats-widget span, .sidebar-content #clock-widget #current-time, .sidebar-content #timer-display { font-size: 28px; }
+        .sidebar-content .timer-display-container { justify-content: flex-start;}
+        .sidebar-content #youtube-widget input { width: calc(100% - 16px); }
+        .sidebar-content #youtube-player-container { width: 100%; height: 140px; }
+        .sidebar-content .yt-control-btn { width: 45px; height: 45px; }
+        .sidebar-content .yt-control-btn svg { width: 20px; height: 20px; }
+        .sidebar-content .calendar-header { padding: 0 5px; }
+        .sidebar-content .calendar-grid { gap: 1px; }
+        .sidebar-content .day { padding: 4px 0; }
+
+        /* Estilos de Notas y Zonas en Móvil */
+        .note, .zone { position: static !important; width: 100% !important; height: auto !important; transform: none !important; cursor: default !important; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .zone { padding: 15px; padding-top: 55px; background: var(--zone-bg); }
+        
+        .note { display: flex; flex-direction: column-reverse; min-height: 180px; }
+        .note .delete-btn { position: absolute; top: 8px; right: 8px; z-index: 5; }
+        .note-main-content, .note-header { display: contents; } /* Hack para ignorar contenedores */
+        .note-tabs { display: flex; flex-direction: row; width: 100%; border-top: 1px solid rgba(0, 0, 0, 0.08); }
+        .note-tab-btn { background-color: transparent; border: none; border-right: 1px solid rgba(0, 0, 0, 0.08); flex-grow: 1; padding: 10px 5px; cursor: pointer; text-align: center; font-family: 'Poppins', sans-serif; font-size: 12px; color: var(--text-light); transition: all 0.2s ease; position: relative; }
+        .note-tab-btn::after { content: attr(title); }
+        .note-tab-btn:last-child { border-right: none; }
+        .note-tab-btn.active { background-color: #fff; color: var(--primary-accent); font-weight: 600; }
+        .note-tab-btn.active::before { content: ''; position: absolute; width: 100%; height: 3px; background-color: var(--primary-accent); bottom: 0; left: 0; }
+        .note-content-panels { padding: 35px 15px 15px 15px; flex-grow: 1; }
+        .note-content-panel { position: static; display: none; height: 100%; }
+        .note-content-panel.active { display: block; }
+        .note textarea {
+            min-height: 80px;
+            font-size: 18px;
+            overflow-y: hidden; /* ¡Clave para eliminar el scroll feo! */
+        }
+        
+        .zone .add-note-in-zone-btn { display: flex; align-items: center; justify-content: center; position: absolute; top: 14px; right: 48px; width: 28px; height: 28px; background-color: var(--success-color); color: white; border: none; border-radius: 50%; cursor: pointer; font-size: 22px; line-height: 1; font-weight: 600; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease; }
+        .zone .add-note-in-zone-btn:hover { background-color: #2ecc71; transform: scale(1.05); }
+        .zone .view-full-zone-btn { display: block; position: absolute; top: 14px; right: 85px; padding: 4px 10px; font-size: 11px; font-weight: 600; background-color: var(--primary-accent-dark); color: white; border: none; border-radius: 20px; cursor: pointer; transition: background-color 0.2s; }
+        .zone .view-full-zone-btn:hover { background-color: var(--primary-accent); }
+        .zone .zone-title { width: calc(100% - 165px) !important; }
+        .zone .zone-notes-container-mobile { margin-top: 15px; display: flex; flex-direction: column; gap: 12px; padding-left: 15px; border-left: 3px solid var(--primary-accent); }
+        
+        /* Zona en pantalla completa */
+        body.zone-view-active #app > .zone:not(.zone-fullscreen),
+        body.zone-view-active #app > .note,
+        body.zone-view-active #mobile-fab-container { display: none !important; }
+
+        .zone.zone-fullscreen { position: fixed !important; top: 60px !important; left: 0 !important; width: 100% !important; height: calc(100vh - 60px) !important; z-index: 1060; overflow-y: auto; background: var(--bg-color); border-radius: 0 !important; border: none !important; padding: 20px !important; padding-top: 60px !important; }
+        .zone.zone-fullscreen .zone-title { top: 20px !important; left: 20px !important; width: calc(100% - 180px) !important; }
+        .zone.zone-fullscreen .view-full-zone-btn { top: 14px !important; right: 15px !important; width: auto; background-color: var(--danger-color); font-size: 13px; }
+        .zone.zone-fullscreen .delete-btn { top: 14px !important; right: 80px !important; }
+        .zone.zone-fullscreen .add-note-in-zone-btn { top: 14px !important; right: 115px !important; }
+
+        /* Botón Flotante (FAB) */
+        #mobile-fab-container { display: flex; position: fixed; bottom: 20px; right: 20px; z-index: 1050; flex-direction: column-reverse; align-items: center; gap: 15px; }
         .fab-actions { display: flex; flex-direction: column-reverse; gap: 15px; }
         .fab-action { width: 48px; height: 48px; background-color: var(--primary-accent-dark); color: white; border-radius: 50%; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s; transform: scale(0.5); opacity: 0; }
         #fab-toggle-btn { width: 56px; height: 56px; background-color: var(--primary-accent); color: white; border-radius: 50%; border: none; box-shadow: 0 6px 20px rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.3s ease, background-color 0.3s ease; }
@@ -154,317 +440,14 @@
         #mobile-fab-container.fab-active .fab-action { transform: scale(1); opacity: 1; }
         #mobile-fab-container.fab-active .fab-action:nth-child(1) { transition-delay: 0.1s; }
         #mobile-fab-container.fab-active .fab-action:nth-child(2) { transition-delay: 0.05s; }
-        .add-note-in-zone-btn, .view-full-zone-btn { display: none; }
 
-        @media (max-width: 768px) {
-            body { overflow-y: auto; overflow-x: hidden; height: auto; }
-            body.sidebar-active, body.zone-view-active { overflow: hidden; }
-            #bottom-dashboard { display: none !important; }
-            #sidebar-toggle-btn { display: block; }
-            #mobile-sidebar-container { display: block; }
-            #dashboard-toggle { display: none; }
-            
-            #top-controls {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 60px;
-                padding: 0 10px;
-                box-sizing: border-box;
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                background: rgba(239, 243, 245, 0.8);
-                backdrop-filter: blur(10px);
-                border-bottom: 1px solid rgba(255, 255, 255, 0.9);
-                z-index: 1001;
-            }
-            #workspace-title {
-                position: static;
-                flex-grow: 1;
-                margin: 0;
-                padding: 0 5px;
-                text-align: left;
-                font-size: 16px;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                max-width: none;
-            }
-            #addZoneBtn, #addNoteBtn { display: none; }
-            .profile-avatar { width: 40px; height: 40px; }
-            .control-btn.secondary { padding: 6px 10px; font-size: 13px; display: flex; }
-            
-            .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1099; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
-            #mobile-sidebar { position: fixed; top: 0; left: -300px; width: 300px; max-width: 85%; height: 100%; background: #ffffff; z-index: 1100; box-shadow: 5px 0 15px rgba(0,0,0,0.1); transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; }
-            body.sidebar-active .sidebar-overlay { opacity: 1; visibility: visible; }
-            body.sidebar-active #mobile-sidebar { left: 0; }
-            .sidebar-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid #e0e0e0; }
-            .sidebar-header h3 { margin: 0; font-size: 18px; color: var(--text-dark); }
-            #close-sidebar-btn { background: none; border: none; font-size: 28px; cursor: pointer; color: var(--text-light); padding: 0 5px; }
-            .sidebar-content { overflow-y: auto; flex-grow: 1; }
-            .sidebar-content .dashboard-widget { flex-direction: column; align-items: flex-start; text-align: left; padding: 20px; border-bottom: 1px solid #eee; }
-            .sidebar-content .dashboard-widget:last-child { border-bottom: none; }
-            .sidebar-content #stats-widget span, .sidebar-content #clock-widget #current-time, .sidebar-content #timer-display { font-size: 28px; }
-            .sidebar-content .timer-display-container { justify-content: flex-start;}
-            .sidebar-content #youtube-widget input { width: calc(100% - 16px); }
-            .sidebar-content #youtube-player-container { width: 100%; height: 140px; }
-            .sidebar-content .yt-control-btn { width: 45px; height: 45px; }
-            .sidebar-content .yt-control-btn svg { width: 20px; height: 20px; }
-            .sidebar-content .calendar-header { padding: 0 5px; }
-            .sidebar-content .calendar-grid { gap: 1px; }
-            .sidebar-content .day { padding: 4px 0; }
-            
-            #app { display: flex; flex-direction: column; gap: 16px; padding: 75px 15px 100px 15px; height: auto; }
-            #notesContainer, #zonesContainer { display: none; }
-            
-            .draggable, .note { position: static !important; left: auto !important; top: auto !important; width: 100% !important; height: auto !important; min-height: 120px; transform: none !important; cursor: default !important; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-            .zone { position: relative !important; left: auto !important; top: auto !important; width: 100% !important; height: auto !important; min-height: 0; transform: none !important; cursor: default !important; box-shadow: 0 4px 12px rgba(0,0,0,0.08); padding: 15px; padding-top: 55px; background: var(--zone-bg); }
-            .resize-handle { display: none !important; }
-            .note textarea { min-height: 100px; font-size: 18px; }
-            .modal-content { padding: 25px 20px; width: 90%; }
-            .modal-content h2 { font-size: 22px; }
-            .modal-content p { font-size: 14px; }
-            .set-timer-inputs input { width: 50px; padding: 8px; font-size: 20px; }
-            .zone .zone-notes-container-mobile { margin-top: 15px; display: flex; flex-direction: column; gap: 12px; padding-left: 15px; border-left: 3px solid var(--primary-accent); }
-            #mobile-fab-container { display: flex; }
-
-            .zone .add-note-in-zone-btn { display: flex; align-items: center; justify-content: center; position: absolute; top: 14px; right: 48px; width: 28px; height: 28px; background-color: var(--success-color); color: white; border: none; border-radius: 50%; cursor: pointer; font-size: 22px; line-height: 1; font-weight: 600; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease; }
-            .zone .add-note-in-zone-btn:hover { background-color: #2ecc71; transform: scale(1.05); }
-            
-            /* NEW: Button to view zone in fullscreen */
-            .zone .view-full-zone-btn { display: block; position: absolute; top: 14px; right: 85px; padding: 4px 10px; font-size: 11px; font-weight: 600; background-color: var(--primary-accent-dark); color: white; border: none; border-radius: 20px; cursor: pointer; transition: background-color 0.2s; }
-            .zone .view-full-zone-btn:hover { background-color: var(--primary-accent); }
-            .zone .zone-title { width: calc(100% - 165px) !important; }
-
-            /* NEW: Styles for fullscreen zone view */
-            body.zone-view-active #app > .zone:not(.zone-fullscreen),
-            body.zone-view-active #app > .note,
-            body.zone-view-active #mobile-fab-container { display: none !important; }
-
-            .zone.zone-fullscreen { position: fixed !important; top: 60px !important; left: 0 !important; width: 100% !important; height: calc(100vh - 60px) !important; z-index: 1060; overflow-y: auto; background: var(--bg-color); border-radius: 0 !important; border: none !important; padding: 20px !important; padding-top: 60px !important; }
-            .zone.zone-fullscreen .zone-title { top: 20px !important; left: 20px !important; width: calc(100% - 180px) !important; }
-            .zone.zone-fullscreen .view-full-zone-btn { top: 14px !important; right: 15px !important; width: auto; background-color: var(--danger-color); font-size: 13px; }
-            .zone.zone-fullscreen .delete-btn { top: 14px !important; right: 80px !important; }
-            .zone.zone-fullscreen .add-note-in-zone-btn { top: 14px !important; right: 115px !important; }
-        }
-
-
-
-                        /* --- ESTILOS PARA NOTAS CON PESTAÑAS --- */
-
-        .note {
-            padding: 0;
-            overflow: hidden;
-            background-color: var(--note-color); /* Fondo base de la nota */
-        }
-
-        .note textarea {
-             font-family: 'Caveat', cursive; font-size: 22px; line-height: 1.5; color: var(--text-dark);
-        }
-
-        /* --- VISTA ESCRITORIO (min-width: 769px) --- */
-        @media (min-width: 769px) {
-            .note {
-                display: flex;
-                flex-direction: row;
-                min-height: 240px;
-            }
-            .note-tabs {
-                flex-shrink: 0;
-                width: 30px; /* ¡Mucho más delgada! */
-                background-color: rgba(0, 0, 0, 0.03);
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center; /* Centra los puntos verticalmente */
-                gap: 12px;
-                border-right: 1px solid rgba(0, 0, 0, 0.06);
-            }
-            .note-tab-btn {
-                width: 14px;
-                height: 14px;
-                background-color: transparent;
-                border: 2px solid var(--text-light);
-                opacity: 0.5;
-                border-radius: 50%;
-                cursor: pointer;
-                transition: all 0.2s ease;
-                padding: 0;
-            }
-            .note-tab-btn:hover {
-                opacity: 1;
-                transform: scale(1.1);
-            }
-            .note-tab-btn.active {
-                background-color: var(--primary-accent);
-                border-color: var(--primary-accent);
-                opacity: 1;
-            }
-
-            .note-main-content {
-                flex-grow: 1;
-                display: flex;
-                flex-direction: column;
-                padding: 10px 15px 15px 15px;
-                position: relative;
-            }
-
-            .note-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 5px;
-            }
-
-            .tab-name-display {
-                margin: 0;
-                font-family: 'Poppins', sans-serif;
-                font-size: 14px;
-                font-weight: 600;
-                color: var(--text-dark);
-                flex-grow: 1;
-                padding: 5px;
-                border-radius: 4px;
-            }
-            .tab-name-display:focus {
-                outline: 1px dashed var(--primary-accent);
-                background-color: rgba(255, 255, 255, 0.7);
-            }
-            .note .delete-btn {
-                position: static; /* Ya no es absoluto */
-                color: var(--text-light);
-                flex-shrink: 0;
-            }
-            .note .delete-btn:hover {
-                 background-color: var(--danger-color);
-                 color: white;
-            }
-
-            .note-content-panels {
-                flex-grow: 1;
-                position: relative;
-            }
-
-            .note-content-panel {
-                display: none;
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-            }
-            .note-content-panel.active {
-                display: block;
-            }
-            .note-content-panel textarea {
-                width: 100%;
-                height: 100%;
-                padding: 0;
-                margin: 0;
-                background: transparent;
-                border: none;
-                outline: none;
-                resize: none;
-            }
-        }
-        
-        /* --- VISTA MÓVIL (max-width: 768px) --- */
-        @media (max-width: 768px) {
-            /* Mantenemos el diseño original de pestañas en la parte inferior para móvil */
-            .note {
-                display: flex;
-                flex-direction: column-reverse; /* Pestañas abajo */
-                min-height: 180px;
-            }
-             .note .delete-btn { /* Posición original para móvil */
-                 position: absolute; top: 8px; right: 8px; z-index: 5;
-            }
-             .note-main-content, .note-header { display: contents; } /* Hack para ignorar contenedores extra en móvil */
-
-            .note-tabs {
-                display: flex;
-                flex-direction: row;
-                width: 100%;
-                border-top: 1px solid rgba(0, 0, 0, 0.08);
-            }
-            .note-tab-btn {
-                background-color: transparent;
-                border: none;
-                border-right: 1px solid rgba(0, 0, 0, 0.08);
-                flex-grow: 1;
-                padding: 10px 5px;
-                cursor: pointer;
-                text-align: center;
-                font-family: 'Poppins', sans-serif;
-                font-size: 12px;
-                color: var(--text-light);
-                transition: all 0.2s ease;
-                position: relative;
-            }
-             .note-tab-btn::after { /* Usamos un pseudoelemento para el texto editable */
-                content: attr(title); /* Muestra el title del botón */
-            }
-             .note-tab-btn:last-child { border-right: none; }
-
-            .note-tab-btn.active {
-                background-color: #fff;
-                color: var(--primary-accent);
-                font-weight: 600;
-            }
-             .note-tab-btn.active::before {
-                content: '';
-                position: absolute;
-                width: 100%;
-                height: 3px;
-                background-color: var(--primary-accent);
-                bottom: 0; left: 0;
-            }
-
-            .note-content-panels { height: 120px; padding: 15px; padding-top: 35px; } /* Ajuste de espacio */
-             .note-content-panel { position: static; display: none; }
-             .note-content-panel.active { display: block; height: 100%; }
-             .note-content-panel textarea { font-size: 18px; }
-        }
-
-        /* --- PEGA ESTO DENTRO DE @media (min-width: 769px) --- */
-        @media (min-width: 769px) {
-            /* ... (los otros estilos de .note para escritorio) ... */
-
-            .note .resize-handle {
-                position: absolute;
-                bottom: 0;
-                right: 0;
-                width: 20px;
-                height: 20px;
-                cursor: nwse-resize;
-                z-index: 12; /* Para que esté por encima de otros elementos */
-            }
-            .note .resize-handle::after {
-                content: '';
-                position: absolute;
-                right: 5px;
-                bottom: 5px;
-                width: 8px;
-                height: 8px;
-                border-bottom: 2px solid var(--primary-accent-dark);
-                border-right: 2px solid var(--primary-accent-dark);
-                opacity: 0.6;
-            }
-        }
-        
-        /* --- Y ASEGÚRATE QUE ESTÉ OCULTO EN MÓVIL --- */
-        /* --- PEGA ESTO DENTRO DE @media (max-width: 768px) --- */
-        @media (max-width: 768px) {
-            /* ... (los otros estilos de .note para móvil) ... */
-
-            .resize-handle {
-                display: none !important;
-            }
-        }
-
-    </style>
+        /* Modales en móvil */
+        .modal-content { padding: 25px 20px; width: 90%; }
+        .modal-content h2 { font-size: 22px; }
+        .modal-content p { font-size: 14px; }
+        .set-timer-inputs input { width: 50px; padding: 8px; font-size: 20px; }
+    }
+</style>
 </head>
 <body class="logged-out">
 
@@ -671,7 +654,6 @@
         },
 
         findParentZone(note) {
-            // Se usa el centro de la nota para determinar en qué zona está
             const noteCenterX = note.x + (note.width / 2);
             const noteCenterY = note.y + (note.height / 2);
             return this.state.zones.find(zone =>
@@ -776,7 +758,14 @@
                 const contentPanel = document.createElement('div');
                 contentPanel.className = 'note-content-panel';
                 contentPanel.dataset.index = index;
-                contentPanel.innerHTML = `<textarea placeholder="Escribe algo...">${tab.content || ''}</textarea>`;
+                
+                const textarea = document.createElement('textarea');
+                textarea.placeholder = "Escribe algo...";
+                textarea.value = tab.content || '';
+                contentPanel.appendChild(textarea);
+                
+                // AJUSTE: Ajustar tamaño inicial al crear el elemento
+                this.autoResizeTextarea(textarea);
 
                 if (index === note.activeTabIndex) {
                     tabBtn.classList.add('active');
@@ -810,10 +799,15 @@
                 this.saveData();
             });
 
+            // AJUSTE: Llamar a autoResizeTextarea en cada input
             contentPanels.addEventListener('input', e => {
-                if (e.target.tagName.toLowerCase() === 'textarea') {
-                    const panelIndex = parseInt(e.target.closest('.note-content-panel').dataset.index);
-                    note.tabs[panelIndex].content = e.target.value;
+                const target = e.target;
+                if (target.tagName.toLowerCase() === 'textarea') {
+                    const panelIndex = parseInt(target.closest('.note-content-panel').dataset.index);
+                    note.tabs[panelIndex].content = target.value;
+                    
+                    this.autoResizeTextarea(target); // <-- Aquí está la magia
+                    
                     this.saveData();
                 }
             });
@@ -823,11 +817,9 @@
                 this.saveData(); this.renderWorkspace(); this.renderCalendar();
             });
             
-            // ADICIÓN: Crear el manejador de redimensionamiento
             const resizeHandle = document.createElement('div');
             resizeHandle.className = 'resize-handle';
             
-            // Montar la estructura final
             mainHeader.appendChild(tabNameDisplay);
             mainHeader.appendChild(deleteBtn);
             mainContent.appendChild(mainHeader);
@@ -835,20 +827,16 @@
             
             element.appendChild(tabsContainer);
             element.appendChild(mainContent);
-            element.appendChild(resizeHandle); // ADICIÓN: Añadir el manejador al DOM
+            element.appendChild(resizeHandle);
 
-            // Lógica solo para escritorio
             if (window.innerWidth > 768) {
                 element.classList.add('draggable');
                 element.style.left = `${note.x || 20}px`;
                 element.style.top = `${note.y || 20}px`;
-                
-                // ADICIÓN: Aplicar dimensiones guardadas
                 element.style.width = `${note.width}px`;
                 element.style.height = `${note.height}px`;
 
                 this.makeDraggable(element, note);
-                // ADICIÓN: Habilitar redimensionamiento
                 this.makeResizable(element, note);
             }
             return element;
@@ -913,8 +901,7 @@
             const newNote = {
                 id: Date.now() + Math.random(),
                 x: 20, y: 20,
-                width: 320,
-                height: 240,
+                width: 320, height: 240,
                 date: this.state.selectedDate,
                 zoneId: zoneId,
                 activeTabIndex: 0,
@@ -937,6 +924,13 @@
         requestConfirm(title, message, action) { this.DOM.confirmModal.title.textContent = title; this.DOM.confirmModal.message.textContent = message; this.state.pendingTimerAction = action.bind(this); this.DOM.confirmModal.overlay.classList.add('visible'); },
         closeConfirmModal() { this.DOM.confirmModal.overlay.classList.remove('visible'); this.state.pendingTimerAction = null; },
         handleConfirmAction() { if (typeof this.state.pendingTimerAction === 'function') { this.state.pendingTimerAction(); } this.closeConfirmModal(); },
+        
+        // ADICIÓN: Función para auto-redimensionar el textarea
+        autoResizeTextarea(element) {
+            element.style.height = 'auto';
+            element.style.height = (element.scrollHeight) + 'px';
+        },
+
         updateUserProfile(user) { if (user) { this.DOM.userName.textContent = user.displayName; this.DOM.profileAvatar.src = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName)}&background=random&color=fff`; } },
         saveData: debounce(async function() { if (!this.state.currentUser || !this.state.isDataLoaded) return; this.DOM.saveStatus.textContent = 'Guardando...'; try { const userDocRef = doc(this.firebase.db, 'user_data', this.state.currentUser.uid); const dataToSave = { notes: this.state.notes, zones: this.state.zones, youtubeUrl: this.state.youtubeUrl }; await setDoc(userDocRef, dataToSave); this.DOM.saveStatus.textContent = 'Guardado ✓'; setTimeout(() => this.DOM.saveStatus.textContent = '', 2000); } catch (error) { console.error("Error al guardar datos:", error); this.DOM.saveStatus.textContent = 'Error al guardar'; } }, 1500),
         
@@ -950,7 +944,6 @@
                     let loadedNotes = data.notes || [];
 
                     loadedNotes.forEach(note => {
-                        // Migración para pestañas
                         if (note.content !== undefined && !note.tabs) {
                             note.tabs = [
                                 { name: 'Nota 1', content: note.content },
@@ -962,7 +955,6 @@
                             note.activeTabIndex = 0;
                             delete note.content;
                         }
-                        // CORRECCIÓN: Asegurar que las notas viejas tengan dimensiones
                         if (note.width === undefined) { note.width = 320; }
                         if (note.height === undefined) { note.height = 240; }
                     });
