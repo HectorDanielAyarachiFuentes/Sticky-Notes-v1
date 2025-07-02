@@ -22,7 +22,7 @@
     <meta name="twitter:image" content="https://hectordanielayarachifuentes.github.io/Sticky-Notes-v1/img/luna.jpg">
     <script src="https://www.youtube.com/iframe_api"></script>
 
-   <style>
+<style>
     /* ==========================================================================
        1. VARIABLES GLOBALES Y KEYFRAMES
        ========================================================================== */
@@ -111,11 +111,11 @@
         box-shadow: 0 8px 25px var(--note-shadow);
         border-radius: 8px;
         background-color: var(--note-color);
-        overflow: hidden; /* Importante para el diseño con pestañas */
+        overflow: hidden;
         padding: 0;
     }
 
-       .note textarea {
+    .note textarea {
         font-family: 'Caveat', cursive;
         font-size: 22px;
         line-height: 1.5;
@@ -125,7 +125,6 @@
         outline: none;
         resize: none;
         width: 100%;
-        /* La altura se controla en las media queries ahora */
         padding: 0;
         margin: 0;
     }
@@ -165,13 +164,11 @@
     #dashboard-toggle:hover { background-color: var(--primary-accent-dark); }
     #dashboard-toggle svg { width: 20px; height: 20px; stroke: white; transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
     
-    /* Lógica de ocultar/mostrar dashboard */
     body.dashboard-hidden #bottom-dashboard { transform: translateY(calc(100% - 30px)); }
     body:not(.dashboard-hidden) #app { height: calc(100vh - 230px); }
     body.dashboard-hidden #app { height: calc(100vh - 30px); }
     body:not(.dashboard-hidden) #dashboard-toggle svg { transform: rotate(180deg); }
 
-    /* Widgets específicos */
     #stats-widget span { font-size: 36px; font-weight: 600; }
     #clock-widget #current-time { font-size: 36px; font-weight: 600; }
     #clock-widget #current-date { font-size: 14px; color: var(--text-light); }
@@ -233,10 +230,10 @@
        7. MEDIA QUERIES (VISTAS DE MÓVIL Y ESCRITORIO)
        ========================================================================== */
 
-        /* ==========================================================================
-       7.1 VISTA DE ESCRITORIO (min-width: 769px) - CORREGIDA
-       ========================================================================== */
-       @media (min-width: 769px) {
+    /* --------------------------------------------------------------------------
+       7.1 VISTA DE ESCRITORIO (min-width: 769px)
+       -------------------------------------------------------------------------- */
+    @media (min-width: 769px) {
         .note {
             display: flex;
             flex-direction: row;
@@ -322,7 +319,7 @@
         .note-content-panels {
             flex-grow: 1;
             position: relative;
-            display: flex; /* Añadido para que el flex-grow funcione */
+            display: flex;
         }
         .note-content-panel {
             display: none;
@@ -331,7 +328,6 @@
         }
         .note-content-panel.active { display: block; }
         
-        /* Regla añadida para que el textarea ocupe todo el espacio */
         .note .note-content-panel textarea {
             height: 100%;
         }
@@ -359,7 +355,6 @@
         #notesContainer, #zonesContainer { display: none; }
         .resize-handle { display: none !important; }
 
-        /* Controles superiores en móvil */
         #top-controls {
             height: 60px;
             padding: 0 10px;
@@ -368,12 +363,23 @@
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.9);
         }
-        #workspace-title { font-size: 16px; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        #workspace-title { 
+            font-size: 16px; 
+            text-align: left; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis;
+            transition: color 0.2s ease;
+        }
+        #workspace-title:hover {
+            cursor: pointer;
+            color: var(--primary-accent);
+        }
+
         #sidebar-toggle-btn { display: block; padding: 8px 12px; font-size: 18px; line-height: 1; }
         .profile-avatar { width: 40px; height: 40px; }
         .control-btn.secondary { padding: 6px 10px; font-size: 13px; display: flex; }
         
-        /* Sidebar móvil */
         #mobile-sidebar-container { display: block; }
         .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1099; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
         #mobile-sidebar { position: fixed; top: 0; left: -300px; width: 300px; max-width: 85%; height: 100%; background: #ffffff; z-index: 1100; box-shadow: 5px 0 15px rgba(0,0,0,0.1); transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; }
@@ -395,13 +401,18 @@
         .sidebar-content .calendar-grid { gap: 1px; }
         .sidebar-content .day { padding: 4px 0; }
 
-        /* Estilos de Notas y Zonas en Móvil */
-/* ---- CÓDIGO CORREGIDO (DENTRO DEL @media móvil) ---- */
-.note, .zone { position: relative; width: 100% !important; height: auto !important; transform: none !important; cursor: default !important; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }        .zone { padding: 15px; padding-top: 55px; background: var(--zone-bg); }
+        .note, .zone { position: relative; width: 100% !important; height: auto !important; transform: none !important; cursor: default !important; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .zone { padding: 15px; padding-top: 55px; background: var(--zone-bg); }
+        .zone .delete-btn {
+            position: absolute;
+            top: 14px;
+            right: 15px;
+            z-index: 5;
+        }
         
         .note { display: flex; flex-direction: column-reverse; min-height: 180px; }
         .note .delete-btn { position: absolute; top: 8px; right: 8px; z-index: 5; }
-        .note-main-content, .note-header { display: contents; } /* Hack para ignorar contenedores */
+        .note-main-content, .note-header { display: contents; }
         .note-tabs { display: flex; flex-direction: row; width: 100%; border-top: 1px solid rgba(0, 0, 0, 0.08); }
         .note-tab-btn { background-color: transparent; border: none; border-right: 1px solid rgba(0, 0, 0, 0.08); flex-grow: 1; padding: 10px 5px; cursor: pointer; text-align: center; font-family: 'Poppins', sans-serif; font-size: 12px; color: var(--text-light); transition: all 0.2s ease; position: relative; }
         .note-tab-btn::after { content: attr(title); }
@@ -414,7 +425,7 @@
         .note textarea {
             min-height: 80px;
             font-size: 18px;
-            overflow-y: hidden; /* ¡Clave para eliminar el scroll feo! */
+            overflow-y: hidden;
         }
         
         .zone .add-note-in-zone-btn { display: flex; align-items: center; justify-content: center; position: absolute; top: 14px; right: 48px; width: 28px; height: 28px; background-color: var(--success-color); color: white; border: none; border-radius: 50%; cursor: pointer; font-size: 22px; line-height: 1; font-weight: 600; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease; }
@@ -424,7 +435,6 @@
         .zone .zone-title { width: calc(100% - 165px) !important; }
         .zone .zone-notes-container-mobile { margin-top: 15px; display: flex; flex-direction: column; gap: 12px; padding-left: 15px; border-left: 3px solid var(--primary-accent); }
         
-        /* Zona en pantalla completa */
         body.zone-view-active #app > .zone:not(.zone-fullscreen),
         body.zone-view-active #app > .note,
         body.zone-view-active #mobile-fab-container { display: none !important; }
@@ -435,7 +445,6 @@
         .zone.zone-fullscreen .delete-btn { top: 14px !important; right: 80px !important; }
         .zone.zone-fullscreen .add-note-in-zone-btn { top: 14px !important; right: 115px !important; }
 
-        /* Botón Flotante (FAB) */
         #mobile-fab-container { display: flex; position: fixed; bottom: 20px; right: 20px; z-index: 1050; flex-direction: column-reverse; align-items: center; gap: 15px; }
         .fab-actions { display: flex; flex-direction: column-reverse; gap: 15px; }
         .fab-action { width: 48px; height: 48px; background-color: var(--primary-accent-dark); color: white; border-radius: 50%; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s; transform: scale(0.5); opacity: 0; }
@@ -446,30 +455,11 @@
         #mobile-fab-container.fab-active .fab-action:nth-child(1) { transition-delay: 0.1s; }
         #mobile-fab-container.fab-active .fab-action:nth-child(2) { transition-delay: 0.05s; }
 
-        /* Modales en móvil */
         .modal-content { padding: 25px 20px; width: 90%; }
         .modal-content h2 { font-size: 22px; }
         .modal-content p { font-size: 14px; }
         .set-timer-inputs input { width: 50px; padding: 8px; font-size: 20px; }
     }
-
-    #workspace-title {
-    /* ... tus estilos existentes ... */
-    transition: color 0.2s ease; /* Opcional: para un efecto suave al pasar el ratón */
-}
-
-#workspace-title:hover {
-    cursor: pointer;
-    color: var(--primary-accent); /* Opcional: cambia de color para dar feedback visual */
-}
-
-#workspace-title {
-    font-size: 24px;
-    font-weight: 600;
-    color: var(--text-dark);
-    flex-grow: 1;
-    transition: color 0.2s ease; /* <-- Añadir o asegurar que esté esta línea */
-}
 </style>
 </head>
 <body class="logged-out">
@@ -633,10 +623,15 @@
             this.DOM.addNoteBtn.addEventListener('click', () => this.addNote());
             this.DOM.addZoneBtn.addEventListener('click', () => this.addZone());
             
-            // Lógica para volver al tablero general
-            const goHome = () => { this.showGeneralDashboard(); this.closeSidebar(); };
-            this.DOM.showGeneralBtn.addEventListener('click', goHome);
-            this.DOM.workspaceTitle.addEventListener('click', goHome); // <-- FUNCIONALIDAD AÑADIDA
+            this.DOM.showGeneralBtn.addEventListener('click', () => { this.showGeneralDashboard(); this.closeSidebar(); });
+            
+            // CORRECCIÓN: El clic en el título solo funciona en móvil
+            this.DOM.workspaceTitle.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    this.showGeneralDashboard();
+                    this.closeSidebar();
+                }
+            });
             
             const toggleSidebar = () => this.DOM.body.classList.toggle('sidebar-active');
             this.DOM.sidebarToggleBtn.addEventListener('click', toggleSidebar);
