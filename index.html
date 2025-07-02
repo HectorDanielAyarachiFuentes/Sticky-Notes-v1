@@ -154,11 +154,11 @@
         #mobile-fab-container.fab-active .fab-action { transform: scale(1); opacity: 1; }
         #mobile-fab-container.fab-active .fab-action:nth-child(1) { transition-delay: 0.1s; }
         #mobile-fab-container.fab-active .fab-action:nth-child(2) { transition-delay: 0.05s; }
-        .add-note-in-zone-btn { display: none; }
+        .add-note-in-zone-btn, .view-full-zone-btn { display: none; }
 
         @media (max-width: 768px) {
             body { overflow-y: auto; overflow-x: hidden; height: auto; }
-            body.sidebar-active { overflow: hidden; }
+            body.sidebar-active, body.zone-view-active { overflow: hidden; }
             #bottom-dashboard { display: none !important; }
             #sidebar-toggle-btn { display: block; }
             #mobile-sidebar-container { display: block; }
@@ -219,34 +219,8 @@
             #app { display: flex; flex-direction: column; gap: 16px; padding: 75px 15px 100px 15px; height: auto; }
             #notesContainer, #zonesContainer { display: none; }
             
-            /* CORE FIX: Separated rules for note and zone */
-            .draggable, .note {
-                position: static !important;
-                left: auto !important;
-                top: auto !important;
-                width: 100% !important;
-                height: auto !important;
-                min-height: 120px;
-                transform: none !important;
-                cursor: default !important;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            }
-
-            .zone {
-                position: relative !important; /* KEY FIX: Zone is a positioning context */
-                left: auto !important;
-                top: auto !important;
-                width: 100% !important;
-                height: auto !important;
-                min-height: 0;
-                transform: none !important;
-                cursor: default !important;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-                padding: 15px;
-                padding-top: 55px; /* Space for header controls */
-                background: var(--zone-bg);
-            }
-
+            .draggable, .note { position: static !important; left: auto !important; top: auto !important; width: 100% !important; height: auto !important; min-height: 120px; transform: none !important; cursor: default !important; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+            .zone { position: relative !important; left: auto !important; top: auto !important; width: 100% !important; height: auto !important; min-height: 0; transform: none !important; cursor: default !important; box-shadow: 0 4px 12px rgba(0,0,0,0.08); padding: 15px; padding-top: 55px; background: var(--zone-bg); }
             .resize-handle { display: none !important; }
             .note textarea { min-height: 100px; font-size: 18px; }
             .modal-content { padding: 25px 20px; width: 90%; }
@@ -256,36 +230,24 @@
             .zone .zone-notes-container-mobile { margin-top: 15px; display: flex; flex-direction: column; gap: 12px; padding-left: 15px; border-left: 3px solid var(--primary-accent); }
             #mobile-fab-container { display: flex; }
 
-            /* NEW: Styles for the in-zone add button */
-            .zone .add-note-in-zone-btn {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                position: absolute;
-                top: 14px;
-                right: 48px;
-                width: 28px;
-                height: 28px;
-                background-color: var(--success-color);
-                color: white;
-                border: none;
-                border-radius: 50%;
-                cursor: pointer;
-                font-size: 22px;
-                line-height: 1;
-                font-weight: 600;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                transition: all 0.2s ease;
-            }
-            .zone .add-note-in-zone-btn:hover {
-                background-color: #2ecc71;
-                transform: scale(1.05);
-            }
+            .zone .add-note-in-zone-btn { display: flex; align-items: center; justify-content: center; position: absolute; top: 14px; right: 48px; width: 28px; height: 28px; background-color: var(--success-color); color: white; border: none; border-radius: 50%; cursor: pointer; font-size: 22px; line-height: 1; font-weight: 600; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease; }
+            .zone .add-note-in-zone-btn:hover { background-color: #2ecc71; transform: scale(1.05); }
+            
+            /* NEW: Button to view zone in fullscreen */
+            .zone .view-full-zone-btn { display: block; position: absolute; top: 14px; right: 85px; padding: 4px 10px; font-size: 11px; font-weight: 600; background-color: var(--primary-accent-dark); color: white; border: none; border-radius: 20px; cursor: pointer; transition: background-color 0.2s; }
+            .zone .view-full-zone-btn:hover { background-color: var(--primary-accent); }
+            .zone .zone-title { width: calc(100% - 165px) !important; }
 
-            /* NEW: Adjust title width to account for two buttons */
-            .zone .zone-title {
-                width: calc(100% - 100px);
-            }
+            /* NEW: Styles for fullscreen zone view */
+            body.zone-view-active #app > .zone:not(.zone-fullscreen),
+            body.zone-view-active #app > .note,
+            body.zone-view-active #mobile-fab-container { display: none !important; }
+
+            .zone.zone-fullscreen { position: fixed !important; top: 60px !important; left: 0 !important; width: 100% !important; height: calc(100vh - 60px) !important; z-index: 1060; overflow-y: auto; background: var(--bg-color); border-radius: 0 !important; border: none !important; padding: 20px !important; padding-top: 60px !important; }
+            .zone.zone-fullscreen .zone-title { top: 20px !important; left: 20px !important; width: calc(100% - 180px) !important; }
+            .zone.zone-fullscreen .view-full-zone-btn { top: 14px !important; right: 15px !important; width: auto; background-color: var(--danger-color); font-size: 13px; }
+            .zone.zone-fullscreen .delete-btn { top: 14px !important; right: 80px !important; }
+            .zone.zone-fullscreen .add-note-in-zone-btn { top: 14px !important; right: 115px !important; }
         }
     </style>
 </head>
@@ -587,6 +549,7 @@
                 <input class="zone-title" value="${zone.title}" placeholder="Título de la Zona">
                 <span class="delete-btn">×</span>
                 <button class="add-note-in-zone-btn" title="Añadir Nota a Zona">+</button>
+                <button class="view-full-zone-btn">Ver Zona</button>
                 <div class="resize-handle"></div>
                 <div class="zone-notes-container-mobile"></div>
             `;
@@ -600,6 +563,18 @@
             });
             element.querySelector('.add-note-in-zone-btn').addEventListener('click', () => {
                 this.addNote(zone.id);
+            });
+
+            // NEW: Event listener for fullscreen view
+            const viewFullBtn = element.querySelector('.view-full-zone-btn');
+            viewFullBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isFullscreen = element.classList.toggle('zone-fullscreen');
+                document.body.classList.toggle('zone-view-active');
+                viewFullBtn.textContent = isFullscreen ? 'Cerrar' : 'Ver Zona';
+                if (isFullscreen) {
+                    element.scrollTop = 0;
+                }
             });
             
             if(window.innerWidth > 768) {
