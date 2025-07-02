@@ -52,8 +52,8 @@
         .main-content { opacity: 0; transition: opacity 0.5s ease-in-out; }
         .logged-in .main-content { opacity: 1; }
         #app { position: relative; width: 100%; height: calc(100vh - 180px); padding: 20px; padding-top: 70px; box-sizing: border-box; }
-        #workspace-title { position: fixed; top: 20px; left: 20px; font-size: 24px; font-weight: 600; color: var(--text-dark); z-index: 1001; }
-        #top-controls { position: fixed; top: 15px; right: 20px; z-index: 1001; display: flex; gap: 12px; align-items: center; }
+        #top-controls { position: fixed; top: 15px; left: 20px; right: 20px; z-index: 1001; display: flex; gap: 12px; align-items: center; }
+        #workspace-title { font-size: 24px; font-weight: 600; color: var(--text-dark); flex-grow: 1; }
         #save-status { font-size: 14px; color: var(--text-light); transition: opacity 0.3s ease; margin-right: 10px; }
         .control-btn { padding: 10px 22px; font-size: 14px; font-weight: 600; color: white; background-color: var(--primary-accent); border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 5px 15px rgba(90, 125, 203, 0.3); transition: all 0.3s ease; }
         .control-btn:hover { background-color: var(--primary-accent-dark); transform: translateY(-2px); }
@@ -163,7 +163,6 @@
             #mobile-sidebar-container { display: block; }
             #dashboard-toggle { display: none; }
             
-            /* INICIO: CORRECCIÓN DEL HEADER MÓVIL */
             #top-controls {
                 position: fixed;
                 top: 0;
@@ -174,38 +173,28 @@
                 box-sizing: border-box;
                 display: flex;
                 align-items: center;
-                gap: 8px; /* Espacio entre elementos */
+                gap: 8px;
                 background: rgba(239, 243, 245, 0.8);
                 backdrop-filter: blur(10px);
                 border-bottom: 1px solid rgba(255, 255, 255, 0.9);
                 z-index: 1001;
             }
             #workspace-title {
-                position: static; /* Quitar posicionamiento absoluto */
-                flex-grow: 1; /* Permitir que ocupe el espacio sobrante */
+                position: static;
+                flex-grow: 1;
                 margin: 0;
                 padding: 0 5px;
-                text-align: left; /* Alinear a la izquierda, junto al menú */
+                text-align: left;
                 font-size: 16px;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
-                max-width: none; /* Eliminar el max-width que limitaba */
+                max-width: none;
             }
-            #app {
-                 padding: 75px 15px 100px 15px; /* Ajustar padding superior para el nuevo header fijo */
-            }
-            .profile-avatar {
-                width: 40px;
-                height: 40px;
-            }
-            .control-btn.secondary {
-                 padding: 6px 10px; /* Hacer el botón un poco más compacto */
-                 font-size: 13px;
-            }
-             /* FIN: CORRECCIÓN DEL HEADER MÓVIL */
-
             #addZoneBtn, #addNoteBtn { display: none; }
+            .profile-avatar { width: 40px; height: 40px; }
+            .control-btn.secondary { padding: 6px 10px; font-size: 13px; display: flex; }
+            
             .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1099; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
             #mobile-sidebar { position: fixed; top: 0; left: -300px; width: 300px; max-width: 85%; height: 100%; background: #ffffff; z-index: 1100; box-shadow: 5px 0 15px rgba(0,0,0,0.1); transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; }
             body.sidebar-active .sidebar-overlay { opacity: 1; visibility: visible; }
@@ -225,7 +214,8 @@
             .sidebar-content .calendar-header { padding: 0 5px; }
             .sidebar-content .calendar-grid { gap: 1px; }
             .sidebar-content .day { padding: 4px 0; }
-            #app { display: flex; flex-direction: column; gap: 16px; height: auto; }
+            
+            #app { display: flex; flex-direction: column; gap: 16px; padding: 75px 15px 100px 15px; height: auto; }
             #notesContainer, #zonesContainer { display: none; }
             .draggable, .note, .zone { position: static !important; left: auto !important; top: auto !important; width: 100% !important; height: auto !important; min-height: 0; transform: none !important; cursor: default !important; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
             .zone { padding: 15px; padding-top: 55px; background: var(--zone-bg); }
@@ -246,7 +236,6 @@
     <button id="google-signin-btn">🚀 Iniciar Sesión con Google</button>
 
     <div class="main-content">
-        <!-- MODIFICADO: El h2 se movió dentro de #top-controls -->
         <div id="top-controls">
             <button id="sidebar-toggle-btn" class="control-btn">☰</button>
             <h2 id="workspace-title"></h2>
@@ -446,8 +435,8 @@
             });
         },
         findParentZone(note) {
-            const noteCenterX = note.x + 120;
-            const noteCenterY = note.y + 120;
+            const noteCenterX = note.x + 120; // Ancho de la nota / 2
+            const noteCenterY = note.y + 120; // Alto de la nota / 2
             return this.state.zones.find(zone =>
                 note.date === zone.date &&
                 noteCenterX >= zone.x && noteCenterX <= (zone.x + zone.width) &&
@@ -455,6 +444,9 @@
             );
         },
         
+        // =====================================================================
+        // INICIO: LÓGICA DE RENDERIZADO MODIFICADA
+        // =====================================================================
         renderWorkspace() {
             const isMobile = window.innerWidth <= 768;
             this.DOM.app.innerHTML = ''; 
@@ -494,29 +486,35 @@
         },
         
         renderMobileLayout() {
+            // Esta función ahora organiza los elementos por jerarquía para una vista móvil coherente.
             const notesToShow = this.state.notes.filter(note => note.date === this.state.selectedDate);
             const zonesToShow = this.state.zones.filter(zone => zone.date === this.state.selectedDate);
-            const standaloneNotes = notesToShow.filter(note => !note.zoneId || !zonesToShow.some(z => z.id === note.zoneId));
-
+            
+            // 1. Renderizar Zonas y sus notas hijas
             zonesToShow.forEach(zone => {
                 const zoneEl = this.createZoneElement(zone);
-                this.DOM.app.appendChild(zoneEl);
+                const mobileNotesContainer = zoneEl.querySelector('.zone-notes-container-mobile');
                 
+                // Buscar y renderizar las notas que pertenecen a esta zona
                 const notesInThisZone = notesToShow.filter(note => note.zoneId === zone.id);
-                if (notesInThisZone.length > 0) {
-                    const mobileNotesContainer = zoneEl.querySelector('.zone-notes-container-mobile');
-                    notesInThisZone.forEach(note => {
-                        const noteEl = this.createNoteElement(note);
-                        mobileNotesContainer.appendChild(noteEl);
-                    });
-                }
+                notesInThisZone.forEach(note => {
+                    const noteEl = this.createNoteElement(note);
+                    mobileNotesContainer.appendChild(noteEl);
+                });
+
+                this.DOM.app.appendChild(zoneEl);
             });
 
+            // 2. Renderizar notas "huérfanas" (sin zona asignada) al final
+            const standaloneNotes = notesToShow.filter(note => !note.zoneId || !zonesToShow.some(z => z.id === note.zoneId));
             standaloneNotes.forEach(note => {
                 const noteEl = this.createNoteElement(note);
                 this.DOM.app.appendChild(noteEl);
             });
         },
+        // =====================================================================
+        // FIN: LÓGICA DE RENDERIZADO MODIFICADA
+        // =====================================================================
         
         createNoteElement(note) {
             const element = document.createElement('div');
@@ -537,10 +535,21 @@
         createZoneElement(zone) {
             const element = document.createElement('div');
             element.className = 'zone'; 
-            element.innerHTML = `<input class="zone-title" value="${zone.title}" placeholder="Título de la Zona"><span class="delete-btn">×</span><div class="resize-handle"></div><div class="zone-notes-container-mobile"></div>`;
+            element.innerHTML = `
+                <input class="zone-title" value="${zone.title}" placeholder="Título de la Zona">
+                <span class="delete-btn">×</span>
+                <div class="resize-handle"></div>
+                <!-- Este contenedor es crucial para la jerarquía en móvil -->
+                <div class="zone-notes-container-mobile"></div>
+            `;
             
             element.querySelector('.zone-title').addEventListener('input', e => { zone.title = e.target.value; this.saveData(); });
-            element.querySelector('.delete-btn').addEventListener('click', () => { this.state.zones = this.state.zones.filter(z => z.id !== zone.id); this.state.notes.forEach(n => { if (n.zoneId === zone.id) n.zoneId = null; }); this.saveData(); this.renderWorkspace(); });
+            element.querySelector('.delete-btn').addEventListener('click', () => { 
+                this.state.zones = this.state.zones.filter(z => z.id !== zone.id); 
+                this.state.notes.forEach(n => { if (n.zoneId === zone.id) n.zoneId = null; }); 
+                this.saveData(); 
+                this.renderWorkspace(); 
+            });
             
             if(window.innerWidth > 768) {
                element.classList.add('draggable');
@@ -557,10 +566,14 @@
         updateTopControlsVisibility() {
             const isMobile = window.innerWidth <= 768;
             const generalBtn = document.getElementById('show-general-btn');
+            const userProfileMenu = document.getElementById('user-profile-menu');
+
             if (isMobile) {
-                generalBtn.style.display = this.state.selectedDate ? 'flex' : 'none'; // Use flex to align with other buttons
+                generalBtn.style.display = this.state.selectedDate ? 'flex' : 'none'; 
+                userProfileMenu.style.marginLeft = 'auto'; // Empuja el avatar a la derecha
             } else {
                  generalBtn.style.display = 'block';
+                 userProfileMenu.style.marginLeft = '0';
             }
         },
 
