@@ -233,22 +233,24 @@
        7. MEDIA QUERIES (VISTAS DE MÓVIL Y ESCRITORIO)
        ========================================================================== */
 
-    /* --------------------------------------------------------------------------
-       7.1 VISTA DE ESCRITORIO (min-width: 769px)
-       -------------------------------------------------------------------------- */
+        /* ==========================================================================
+       7.1 VISTA DE ESCRITORIO (min-width: 769px) - CORREGIDA
+       ========================================================================== */
     @media (min-width: 769px) {
         .note {
             display: flex;
             flex-direction: row;
         }
-        .note .resize-handle {
+        
+        /* REGLAS CORREGIDAS PARA QUE FUNCIONE EN NOTAS Y ZONAS */
+        .note .resize-handle, .zone .resize-handle {
             position: absolute;
             bottom: 0; right: 0;
             width: 20px; height: 20px;
             cursor: nwse-resize;
             z-index: 12;
         }
-        .note .resize-handle::after {
+        .note .resize-handle::after, .zone .resize-handle::after {
             content: '';
             position: absolute;
             right: 5px; bottom: 5px;
@@ -257,6 +259,8 @@
             border-right: 2px solid var(--primary-accent-dark);
             opacity: 0.6;
         }
+        /* FIN DE LA CORRECCIÓN */
+
         .note-tabs {
             flex-shrink: 0;
             width: 30px;
@@ -877,7 +881,6 @@
                 if (isFullscreen) { element.scrollTop = 0; }
             });
             
-            // CÓDIGO CLAVE PARA LA VISTA DE ESCRITORIO
             if(window.innerWidth > 768) {
                element.classList.add('draggable');
                element.style.left = `${zone.x || 50}px`;
@@ -885,7 +888,6 @@
                element.style.width = `${zone.width || 400}px`;
                element.style.height = `${zone.height || 300}px`;
                this.makeDraggable(element, zone);
-               // ¡Y aquí se activa la función para cambiar el tamaño!
                this.makeResizable(element, zone);
             }
             return element;
