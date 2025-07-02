@@ -115,20 +115,20 @@
         padding: 0;
     }
 
-    .note textarea {
-    font-family: 'Caveat', cursive;
-    font-size: 22px;
-    line-height: 1.5;
-    color: var(--text-dark);
-    border: none;
-    background: transparent;
-    outline: none;
-    resize: none;
-    width: 100%;
-    /* height: 100%; */ /* <-- LO HEMOS QUITADO DE AQUÍ */
-    padding: 0;
-    margin: 0;
-}
+       .note textarea {
+        font-family: 'Caveat', cursive;
+        font-size: 22px;
+        line-height: 1.5;
+        color: var(--text-dark);
+        border: none;
+        background: transparent;
+        outline: none;
+        resize: none;
+        width: 100%;
+        /* La altura se controla en las media queries ahora */
+        padding: 0;
+        margin: 0;
+    }
 
     .zone { 
         background-color: var(--zone-bg); 
@@ -236,15 +236,11 @@
         /* ==========================================================================
        7.1 VISTA DE ESCRITORIO (min-width: 769px) - CORREGIDA
        ========================================================================== */
-    @media (min-width: 769px) {
+       @media (min-width: 769px) {
         .note {
             display: flex;
             flex-direction: row;
         }
-        .note .note-content-panel textarea {
-    height: 100%;
-}
-        /* REGLAS CORREGIDAS PARA QUE FUNCIONE EN NOTAS Y ZONAS */
         .note .resize-handle, .zone .resize-handle {
             position: absolute;
             bottom: 0; right: 0;
@@ -261,8 +257,6 @@
             border-right: 2px solid var(--primary-accent-dark);
             opacity: 0.6;
         }
-        /* FIN DE LA CORRECCIÓN */
-
         .note-tabs {
             flex-shrink: 0;
             width: 30px;
@@ -328,13 +322,20 @@
         .note-content-panels {
             flex-grow: 1;
             position: relative;
+            display: flex; /* Añadido para que el flex-grow funcione */
         }
         .note-content-panel {
-    display: none;
-    width: 100%; 
-    height: 100%;
-    flex-grow: 1; /* <-- Añadimos esto para asegurar que ocupe el espacio */
-}
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
+        .note-content-panel.active { display: block; }
+        
+        /* Regla añadida para que el textarea ocupe todo el espacio */
+        .note .note-content-panel textarea {
+            height: 100%;
+        }
+    }
 
 
     /* --------------------------------------------------------------------------
