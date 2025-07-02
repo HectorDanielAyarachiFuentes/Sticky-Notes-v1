@@ -33,7 +33,7 @@
             --panel-border: rgba(255, 255, 255, 0.8);
             --text-dark: #2c3e50;
             --text-light: #7f8c8d;
-            --zone-bg: rgba(90, 125, 203, 0.1);
+            --zone-bg: rgba(235, 239, 249, 0.8);
             --zone-border: rgba(90, 125, 203, 0.4);
             --highlight-color: #ffc107;
             --danger-color: #e74c3c;
@@ -73,8 +73,8 @@
         .note { width: 240px; height: 240px; background-color: var(--note-color); box-shadow: 0 8px 25px var(--note-shadow); border-radius: 8px; padding: 15px; box-sizing: border-box; cursor: move; display: flex; flex-direction: column; }
         .note textarea { flex-grow: 1; border: none; background: transparent; resize: none; font-family: 'Caveat', cursive; font-size: 22px; line-height: 1.5; color: var(--text-dark); outline: none; cursor: text; margin-top: 15px; }
         .zone { background-color: var(--zone-bg); backdrop-filter: blur(5px); border: 1px solid var(--zone-border); border-radius: 12px; box-sizing: border-box; cursor: move; z-index: 1; padding: 45px 15px 15px 15px; min-width: 250px; min-height: 200px; }
-        .zone-title { position: absolute; top: 12px; left: 15px; font-weight: 600; font-size: 16px; color: var(--primary-accent-dark); border: none; background: transparent; width: calc(100% - 60px); outline: none; }
-        .delete-btn { position: absolute; top: 8px; right: 8px; width: 24px; height: 24px; text-align: center; line-height: 24px; font-size: 20px; border-radius: 50%; cursor: pointer; user-select: none; transition: background-color 0.2s, color 0.2s; color: var(--text-light); }
+        .zone-title { position: absolute; top: 12px; left: 15px; font-weight: 600; font-size: 16px; color: var(--primary-accent-dark); border: none; background: transparent; width: calc(100% - 90px); /* Espacio para botones */ outline: none; }
+        .delete-btn { position: absolute; top: 8px; right: 8px; width: 24px; height: 24px; text-align: center; line-height: 24px; font-size: 20px; border-radius: 50%; cursor: pointer; user-select: none; transition: background-color 0.2s, color 0.2s; color: var(--text-light); z-index: 12; }
         .delete-btn:hover { background-color: var(--highlight-color); color: white; }
         .resize-handle { position: absolute; bottom: 0; right: 0; width: 20px; height: 20px; cursor: nwse-resize; z-index: 11; }
         .resize-handle::after { content: ''; position: absolute; right: 5px; bottom: 5px; width: 8px; height: 8px; border-bottom: 2px solid var(--primary-accent); border-right: 2px solid var(--primary-accent); opacity: 0.5; }
@@ -144,9 +144,7 @@
         body.dashboard-hidden #dashboard-toggle svg { transform: rotate(0deg); }
         body:not(.dashboard-hidden) #app { height: calc(100vh - 230px); }
         body:not(.dashboard-hidden) #dashboard-toggle svg { transform: rotate(180deg); }
-        
-        /* <!-- MODIFICADO --> BOTÓN DE ACCIÓN FLOTANTE (FAB) PARA MÓVIL */
-        #mobile-fab-container { display: none; /* Oculto por defecto, visible solo en móvil */ position: fixed; bottom: 20px; right: 20px; z-index: 1050; flex-direction: column-reverse; align-items: center; gap: 15px; }
+        #mobile-fab-container { display: none; position: fixed; bottom: 20px; right: 20px; z-index: 1050; flex-direction: column-reverse; align-items: center; gap: 15px; }
         .fab-actions { display: flex; flex-direction: column-reverse; gap: 15px; }
         .fab-action { width: 48px; height: 48px; background-color: var(--primary-accent-dark); color: white; border-radius: 50%; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s; transform: scale(0.5); opacity: 0; }
         #fab-toggle-btn { width: 56px; height: 56px; background-color: var(--primary-accent); color: white; border-radius: 50%; border: none; box-shadow: 0 6px 20px rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.3s ease, background-color 0.3s ease; }
@@ -155,7 +153,7 @@
         #mobile-fab-container.fab-active .fab-action { transform: scale(1); opacity: 1; }
         #mobile-fab-container.fab-active .fab-action:nth-child(1) { transition-delay: 0.1s; }
         #mobile-fab-container.fab-active .fab-action:nth-child(2) { transition-delay: 0.05s; }
-
+        
         @media (max-width: 768px) {
             body { overflow-y: auto; overflow-x: hidden; height: auto; }
             body.sidebar-active { overflow: hidden; }
@@ -187,11 +185,10 @@
             .sidebar-content .calendar-header { padding: 0 5px; }
             .sidebar-content .calendar-grid { gap: 1px; }
             .sidebar-content .day { padding: 4px 0; }
-            #app { display: flex; flex-direction: column; gap: 16px; padding: 80px 15px 100px 15px; /* Más padding inferior para el FAB */ height: auto; }
+            #app { display: flex; flex-direction: column; gap: 16px; padding: 80px 15px 100px 15px; height: auto; }
             #notesContainer, #zonesContainer { display: none; }
-            .draggable, .note, .zone { position: static !important; left: auto !important; top: auto !important; width: 100% !important; height: auto !important; min-height: 0; transform: none !important; cursor: default !important; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-            .zone { padding: 15px; padding-top: 55px; background: var(--zone-bg); }
-            .note { min-height: 120px; }
+            .note { position: static !important; width: 100% !important; height: auto !important; min-height: 120px; }
+            .zone { position: relative !important; width: 100% !important; height: auto !important; min-height: 0; padding: 15px; padding-top: 55px; background: var(--zone-bg); }
             .resize-handle { display: none !important; }
             .note textarea { min-height: 100px; font-size: 18px; }
             .modal-content { padding: 25px 20px; width: 90%; }
@@ -199,7 +196,10 @@
             .modal-content p { font-size: 14px; }
             .set-timer-inputs input { width: 50px; padding: 8px; font-size: 20px; }
             .zone .zone-notes-container-mobile { margin-top: 15px; display: flex; flex-direction: column; gap: 12px; padding-left: 15px; border-left: 3px solid var(--primary-accent); }
-            #mobile-fab-container { display: flex; } /* Hacemos visible el FAB en móvil */
+            #mobile-fab-container { display: flex; }
+            .add-note-to-zone-btn { display: flex; position: absolute; top: 8px; right: 40px; width: 24px; height: 24px; background-color: var(--primary-accent); color: white; border-radius: 50%; border: none; align-items: center; justify-content: center; cursor: pointer; z-index: 12; transition: background-color 0.2s; }
+            .add-note-to-zone-btn:hover { background-color: var(--primary-accent-dark); }
+            .add-note-to-zone-btn svg { width: 16px; height: 16px; }
         }
     </style>
 </head>
@@ -264,22 +264,19 @@
         </div>
     </div>
     
-    <!-- MODALES -->
     <div id="alert-modal-overlay" class="modal-overlay"><div class="modal-content"><h2 id="alert-modal-title"></h2><p id="alert-modal-message"></p><button id="alert-modal-close-btn" class="action-btn">Entendido</button></div></div>
     <div id="set-timer-modal-overlay" class="modal-overlay"><div class="modal-content"><h2>Configurar Temporizador</h2><p>Define la duración de tu temporizador.</p><div class="set-timer-inputs"><input type="number" id="set-hours" min="0" max="99" placeholder="HH" oninput="this.value = this.value ? Math.min(99, Math.max(0, parseInt(this.value))) : ''"><input type="number" id="set-minutes" min="0" max="59" placeholder="MM" oninput="this.value = this.value ? Math.min(59, Math.max(0, parseInt(this.value))) : ''"><input type="number" id="set-seconds" min="0" max="59" placeholder="SS" oninput="this.value = this.value ? Math.min(59, Math.max(0, parseInt(this.value))) : ''"></div><button id="save-timer-btn" class="action-btn">Guardar</button></div></div>
     <div id="confirm-modal-overlay" class="modal-overlay"><div class="modal-content"><h2 id="confirm-modal-title"></h2><p id="confirm-modal-message"></p><div class="modal-actions"><button id="confirm-modal-cancel-btn" class="action-btn cancel-btn">Cancelar</button><button id="confirm-modal-confirm-btn" class="action-btn confirm-btn">Confirmar</button></div></div></div>
 
-    <!-- MENÚ LATERAL MÓVIL -->
     <div id="mobile-sidebar-container"><div class="sidebar-overlay"></div><aside id="mobile-sidebar"><div class="sidebar-header"><h3>Panel de Control</h3><button id="close-sidebar-btn">×</button></div><div class="sidebar-content"></div></aside></div>
     
-    <!-- MODIFICADO: BOTÓN DE ACCIÓN FLOTANTE (FAB) -->
     <div id="mobile-fab-container">
         <div class="fab-actions">
-            <button id="fab-add-note" class="fab-action" title="Añadir Nota">
+            <button id="fab-add-note" class="fab-action" title="Añadir Nota Independiente">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
             </button>
              <button id="fab-add-zone" class="fab-action" title="Añadir Zona">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line><line x1="15" y1="3" x2="15" y2="21"></line><line x1="3" y1="9" x2="21" y2="9"></line><line x1="3" y1="15" x2="21" y2="15"></line></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>
             </button>
         </div>
         <button id="fab-toggle-btn" title="Añadir">
@@ -343,7 +340,6 @@
             this.DOM.sidebarContent = document.querySelector('#mobile-sidebar .sidebar-content');
             this.DOM.closeSidebarBtn = document.getElementById('close-sidebar-btn');
             this.DOM.dashboardToggle = document.getElementById('dashboard-toggle');
-            // MODIFICADO: Cache de los nuevos botones FAB
             this.DOM.fabContainer = document.getElementById('mobile-fab-container');
             this.DOM.fabToggleBtn = document.getElementById('fab-toggle-btn');
             this.DOM.fabAddNoteBtn = document.getElementById('fab-add-note');
@@ -372,16 +368,15 @@
             document.querySelectorAll('#stop-timer').forEach(btn => btn.addEventListener('click', () => this.requestConfirm('Pausar Temporizador', '¿Quieres pausar el tiempo?', this.stopTimer)));
             document.querySelectorAll('#reset-timer').forEach(btn => btn.addEventListener('click', () => this.requestConfirm('Reiniciar Temporizador', 'Esto restablecerá el tiempo a su valor inicial. ¿Continuar?', this.resetTimer)));
             this.DOM.dashboardToggle.addEventListener('click', () => { const isHidden = this.DOM.body.classList.toggle('dashboard-hidden'); localStorage.setItem('dashboardIsHidden', isHidden); });
-            // MODIFICADO: Eventos para el FAB
             this.DOM.fabToggleBtn.addEventListener('click', () => this.DOM.fabContainer.classList.toggle('fab-active'));
-            this.DOM.fabAddNoteBtn.addEventListener('click', () => { this.addNote(); this.DOM.fabContainer.classList.remove('fab-active'); });
+            this.DOM.fabAddNoteBtn.addEventListener('click', () => { this.addNote(null); this.DOM.fabContainer.classList.remove('fab-active'); }); // Standalone note
             this.DOM.fabAddZoneBtn.addEventListener('click', () => { this.addZone(); this.DOM.fabContainer.classList.remove('fab-active'); });
         },
         
         makeDraggable(element, item) {
             element.addEventListener('mousedown', e => {
                 const target = e.target;
-                if (target.tagName.toLowerCase() === 'textarea' || target.tagName.toLowerCase() === 'input' || target.classList.contains('delete-btn') || target.classList.contains('resize-handle')) return;
+                if (target.tagName.toLowerCase() === 'textarea' || target.tagName.toLowerCase() === 'input' || target.classList.contains('delete-btn') || target.classList.contains('resize-handle') || target.closest('.add-note-to-zone-btn')) return;
                 element.classList.add('dragging');
                 const offsetX = e.clientX - element.offsetLeft;
                 const offsetY = e.clientY - element.offsetTop;
@@ -421,13 +416,8 @@
         renderWorkspace() {
             const isMobile = window.innerWidth <= 768;
             this.DOM.app.innerHTML = ''; 
-
-            if (isMobile) {
-                this.renderMobileLayout();
-            } else {
-                this.renderDesktopLayout();
-            }
-
+            if (isMobile) { this.renderMobileLayout(); } 
+            else { this.renderDesktopLayout(); }
             if (this.state.selectedDate) {
                 const [y, m, d] = this.state.selectedDate.split('-');
                 this.DOM.workspaceTitle.textContent = new Date(y, m - 1, d).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -441,19 +431,10 @@
         renderDesktopLayout() {
             this.DOM.app.innerHTML = `<div id="zonesContainer"></div><div id="notesContainer"></div>`;
             this.cacheDOM(); 
-
             const notesToShow = this.state.notes.filter(note => note.date === this.state.selectedDate);
             const zonesToShow = this.state.zones.filter(zone => zone.date === this.state.selectedDate);
-            
-            zonesToShow.forEach(zone => {
-                const zoneEl = this.createZoneElement(zone);
-                this.DOM.zonesContainer.appendChild(zoneEl);
-            });
-
-            notesToShow.forEach(note => {
-                const noteEl = this.createNoteElement(note);
-                this.DOM.notesContainer.appendChild(noteEl);
-            });
+            zonesToShow.forEach(zone => { const zoneEl = this.createZoneElement(zone); this.DOM.zonesContainer.appendChild(zoneEl); });
+            notesToShow.forEach(note => { const noteEl = this.createNoteElement(note); this.DOM.notesContainer.appendChild(noteEl); });
         },
         
         renderMobileLayout() {
@@ -464,7 +445,6 @@
             zonesToShow.forEach(zone => {
                 const zoneEl = this.createZoneElement(zone);
                 this.DOM.app.appendChild(zoneEl);
-                
                 const notesInThisZone = notesToShow.filter(note => note.zoneId === zone.id);
                 if (notesInThisZone.length > 0) {
                     const mobileNotesContainer = zoneEl.querySelector('.zone-notes-container-mobile');
@@ -483,34 +463,40 @@
         
         createNoteElement(note) {
             const element = document.createElement('div');
-            element.className = 'note'; // Ya no necesita ser draggable en móvil
+            element.className = 'note';
             element.innerHTML = `<button class="delete-btn">×</button><textarea placeholder="Escribe algo...">${note.content || ''}</textarea>`;
-            
             element.querySelector('textarea').addEventListener('input', e => { note.content = e.target.value; this.saveData(); });
             element.querySelector('.delete-btn').addEventListener('click', () => { this.state.notes = this.state.notes.filter(n => n.id !== note.id); this.saveData(); this.renderWorkspace(); this.renderCalendar(); });
-            
             if (window.innerWidth > 768) {
                 element.classList.add('draggable');
-                element.style.left = `${note.x || 20}px`;
-                element.style.top = `${note.y || 20}px`;
+                element.style.left = `${note.x}px`;
+                element.style.top = `${note.y}px`;
                 this.makeDraggable(element, note);
             }
             return element;
         },
         createZoneElement(zone) {
             const element = document.createElement('div');
-            element.className = 'zone'; // Ya no necesita ser draggable en móvil
-            element.innerHTML = `<input class="zone-title" value="${zone.title}" placeholder="Título de la Zona"><span class="delete-btn">×</span><div class="resize-handle"></div><div class="zone-notes-container-mobile"></div>`;
+            element.className = 'zone';
+            element.innerHTML = `
+                <input class="zone-title" value="${zone.title}" placeholder="Título de la Zona">
+                <button class="add-note-to-zone-btn" title="Añadir Nota a esta Zona">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                </button>
+                <span class="delete-btn">×</span>
+                <div class="resize-handle"></div>
+                <div class="zone-notes-container-mobile"></div>`;
             
             element.querySelector('.zone-title').addEventListener('input', e => { zone.title = e.target.value; this.saveData(); });
             element.querySelector('.delete-btn').addEventListener('click', () => { this.state.zones = this.state.zones.filter(z => z.id !== zone.id); this.state.notes.forEach(n => { if (n.zoneId === zone.id) n.zoneId = null; }); this.saveData(); this.renderWorkspace(); });
-            
+            element.querySelector('.add-note-to-zone-btn').addEventListener('click', (e) => { e.stopPropagation(); this.addNote(zone.id); });
+
             if(window.innerWidth > 768) {
                element.classList.add('draggable');
-               element.style.left = `${zone.x || 50}px`;
-               element.style.top = `${zone.y || 50}px`;
-               element.style.width = `${zone.width || 400}px`;
-               element.style.height = `${zone.height || 300}px`;
+               element.style.left = `${zone.x}px`;
+               element.style.top = `${zone.y}px`;
+               element.style.width = `${zone.width}px`;
+               element.style.height = `${zone.height}px`;
                this.makeDraggable(element, zone);
                this.makeResizable(element, zone);
             }
@@ -519,17 +505,47 @@
 
         updateTopControlsVisibility() {
             const isMobile = window.innerWidth <= 768;
-            if (isMobile) {
-                this.DOM.showGeneralBtn.style.display = this.state.selectedDate ? 'block' : 'none';
-            } else {
-                 this.DOM.showGeneralBtn.style.display = 'block';
+            this.DOM.showGeneralBtn.style.display = (isMobile && this.state.selectedDate) ? 'block' : 'none';
+            if(!isMobile) this.DOM.showGeneralBtn.style.display = 'block';
+        },
+        
+        // MODIFICADO: Lógica de posicionamiento inteligente
+        getNewItemPosition(baseX, baseY) {
+            let x = baseX;
+            let y = baseY;
+            const offset = 30;
+            let isOccupied = true;
+            
+            while(isOccupied) {
+                const spotTaken = this.state.notes.some(item => item.x === x && item.y === y) || 
+                                  this.state.zones.some(item => item.x === x && item.y === y);
+                if (!spotTaken) {
+                    isOccupied = false;
+                } else {
+                    x += offset;
+                    y += offset;
+                }
             }
+            return { x, y };
         },
 
-        addNote() { const newNote = { id: Date.now() + Math.random(), content: '', x: 20, y: 20, date: this.state.selectedDate, zoneId: null }; this.state.notes.push(newNote); this.renderWorkspace(); this.saveData(); this.updateStats(); this.renderCalendar(); },
-        addZone() { const newZone = { id: Date.now() + Math.random(), title: 'Nueva Zona', x: 50, y: 50, width: 400, height: 300, date: this.state.selectedDate }; this.state.zones.push(newZone); this.renderWorkspace(); this.saveData(); },
+        addNote(zoneId = null) { 
+            const pos = this.getNewItemPosition(20, 20);
+            const newNote = { id: Date.now() + Math.random(), content: '', x: pos.x, y: pos.y, date: this.state.selectedDate, zoneId: zoneId }; 
+            this.state.notes.push(newNote); 
+            this.renderWorkspace(); 
+            this.saveData(); 
+            this.updateStats(); 
+            this.renderCalendar(); 
+        },
+        addZone() { 
+            const pos = this.getNewItemPosition(50, 50);
+            const newZone = { id: Date.now() + Math.random(), title: 'Nueva Zona', x: pos.x, y: pos.y, width: 400, height: 300, date: this.state.selectedDate }; 
+            this.state.zones.push(newZone); 
+            this.renderWorkspace(); 
+            this.saveData(); 
+        },
         
-        // --- El resto del código JS (helpers, modals, etc.) no necesita cambios ---
         requestConfirm(title, message, action) { this.DOM.confirmModal.title.textContent = title; this.DOM.confirmModal.message.textContent = message; this.state.pendingTimerAction = action.bind(this); this.DOM.confirmModal.overlay.classList.add('visible'); },
         closeConfirmModal() { this.DOM.confirmModal.overlay.classList.remove('visible'); this.state.pendingTimerAction = null; },
         handleConfirmAction() { if (typeof this.state.pendingTimerAction === 'function') { this.state.pendingTimerAction(); } this.closeConfirmModal(); },
