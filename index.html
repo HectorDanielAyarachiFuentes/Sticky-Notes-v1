@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%235a7dcb' d='M83.2,16.8C75.1,8.7,66.2,2,50,2S24.9,8.7,16.8,16.8C8.7,24.9,2,33.8,2,50s6.7,25.1,14.8,33.2 c8.1,8.1,17,14.8,33.2,14.8s25.1-6.7,33.2-14.8C91.3,75.1,98,66.2,98,50S91.3,24.9,83.2,16.8z M72.2,38.1L57.5,52.8 c-2.5,2.5-5.8,3.7-9.2,3.7s-6.7-1.2-9.2-3.7L24.5,38.1c-1-1-1.5-2.2-1.5-3.5s0.5-2.5,1.5-3.5c2-2,5.1-2,7.1,0l12.4,12.4V22.2 c0-2.8,2.3-5.1,5.1-5.1s5.1,2.3,5.1,5.1v21.3l12.4-12.4c2-2,5.1-2,7.1,0C74.2,33,74.2,36.1,72.2,38.1z M68.5,75.7 c0,1.4-0.5,2.7-1.5,3.7c-2,2-5.1,2-7.1,0L50,69.5l-9.9,9.9c-2,2-5.1,2-7.1,0c-1-1-1.5-2.3-1.5-3.7c0-1.4,0.5-2.7,1.5-3.7L43,62.1 c2.5-2.5,5.8-3.7,9.2-3.7s6.7,1.2,9.2,3.7l9.9,9.9C68,73,68.5,74.3,68.5,75.7z'%3E%3C/path%3E%3C/svg%3E" type="image/svg+xml">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%235a7dcb' d='M83.2,16.8C75.1,8.7,66.2,2,50,2S24.9,8.7,16.8,16.8C8.7,24.9,2,33.8,2,50s6.7,25.1,14.8,33.2 c8.1,8.1,17,14.8,33.2,14.8s25.1-6.7,33.2-14.8C91.3,75.1,98,66.2,98,50S91.3,24.9,83.2,16.8z M72.2,38.1L57.5,52.8 c-2.5,2.5-5.8,3.7-9.2,3.7s-6.7-1.2-9.2-3.7L24.5,38.1c-1-1-1.5-2.2-1.5-3.5s0.5-2.5,1.5-3.5c2-2,5.1-2,7.1,0l12.4,12.4V22.2 c0-2.8,2.3-5.1,5.1-5.1s5.1,2.3,5.1,5.1v21.3l12.4-12.4c2-2,5.1-2,7.1,0C74.2,33,74.2,36.1,72.2,38.1z M68.5,75.7 c0,1.4-0.5,2.7-1.5,3.7c-2,2-5.1,2-7.1,0L50,69.5l-9.9,9.9c-2,2-5.1,2-7.1,0c-1-1-1.5-2.3-1.5-3.7c0-1.4,0.5-2.7,1.5-3.7L43,62.1 c2.5-2.5,5.8-3.7,9.2,3.7s6.7,1.2,9.2,3.7l9.9,9.9C68,73,68.5,74.3,68.5,75.7z'%3E%3C/path%3E%3C/svg%3E" type="image/svg+xml">
     <meta name="description" content="Organiza tus tareas, gestiona tu tiempo y aumenta tu enfoque con este dashboard de productividad personal. Incluye notas, zonas de trabajo, temporizador y más.">
     <meta name="author" content="Hector Daniel Ayarachi Fuentes">
     <meta name="theme-color" content="#5a7dcb"> 
@@ -63,7 +63,6 @@
         height: 100vh;
     }
 
-    /* Manejo del estado de login */
     #google-signin-btn { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 15px 30px; font-size: 18px; font-weight: 600; color: white; background-color: #DB4437; border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.2); z-index: 10000; }
     .logged-in #google-signin-btn { display: none; }
     .logged-out .main-content { display: none; }
@@ -111,39 +110,26 @@
         box-shadow: 0 8px 25px var(--note-shadow);
         border-radius: 8px;
         background-color: var(--note-color);
-        overflow: hidden; /* Importante para el diseño con pestañas */
+        overflow: hidden;
         padding: 0;
     }
 
     .note textarea {
-        font-family: 'Caveat', cursive;
-        font-size: 22px;
-        line-height: 1.5;
-        color: var(--text-dark);
-        border: none;
-        background: transparent;
-        outline: none;
-        resize: none;
-        width: 100%;
-        height: 100%;
-        padding: 0;
-        margin: 0;
+        font-family: 'Caveat', cursive; font-size: 22px; line-height: 1.5; color: var(--text-dark);
+        border: none; background: transparent; outline: none; resize: none;
+        width: 100%; height: 100%; padding: 0; margin: 0;
     }
 
     .zone { 
-        background-color: var(--zone-bg); 
-        backdrop-filter: blur(5px); 
-        border: 1px solid var(--zone-border); 
-        border-radius: 12px; 
-        box-sizing: border-box; 
-        padding: 45px 15px 15px 15px; 
-        min-width: 250px; 
-        min-height: 200px;
+        background-color: var(--zone-bg); backdrop-filter: blur(5px); 
+        border: 1px solid var(--zone-border); border-radius: 12px; 
+        box-sizing: border-box; padding: 45px 15px 15px 15px; 
+        min-width: 250px; min-height: 200px; position: relative;
     }
     .zone-title { position: absolute; top: 12px; left: 15px; font-weight: 600; font-size: 16px; color: var(--primary-accent-dark); border: none; background: transparent; width: calc(100% - 60px); outline: none; }
     .add-note-in-zone-btn, .view-full-zone-btn { display: none; }
     
-    .delete-btn { width: 24px; height: 24px; text-align: center; line-height: 24px; font-size: 20px; border-radius: 50%; cursor: pointer; user-select: none; transition: background-color 0.2s, color 0.2s; color: var(--text-light); }
+    .delete-btn { width: 24px; height: 24px; text-align: center; line-height: 24px; font-size: 20px; border-radius: 50%; cursor: pointer; user-select: none; transition: background-color 0.2s, color 0.2s; color: var(--text-light); border: none; background: transparent;}
     .delete-btn:hover { background-color: var(--danger-color); color: white; }
 
     /* ==========================================================================
@@ -165,7 +151,6 @@
     #dashboard-toggle:hover { background-color: var(--primary-accent-dark); }
     #dashboard-toggle svg { width: 20px; height: 20px; stroke: white; transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
     
-    /* Lógica de ocultar/mostrar dashboard */
     body.dashboard-hidden #bottom-dashboard { transform: translateY(calc(100% - 30px)); }
     body:not(.dashboard-hidden) #app { height: calc(100vh - 230px); }
     body.dashboard-hidden #app { height: calc(100vh - 30px); }
@@ -237,98 +222,41 @@
        7.1 VISTA DE ESCRITORIO (min-width: 769px)
        -------------------------------------------------------------------------- */
     @media (min-width: 769px) {
-        .note {
-            display: flex;
-            flex-direction: row;
+        .note { display: flex; flex-direction: row; }
+        
+        .resize-handle {
+            position: absolute; bottom: 0; right: 0;
+            width: 20px; height: 20px; cursor: nwse-resize; z-index: 12;
         }
-        .note .resize-handle {
-            position: absolute;
-            bottom: 0; right: 0;
-            width: 20px; height: 20px;
-            cursor: nwse-resize;
-            z-index: 12;
-        }
-        .note .resize-handle::after {
-            content: '';
-            position: absolute;
-            right: 5px; bottom: 5px;
+        .resize-handle::after {
+            content: ''; position: absolute; right: 5px; bottom: 5px;
             width: 8px; height: 8px;
             border-bottom: 2px solid var(--primary-accent-dark);
             border-right: 2px solid var(--primary-accent-dark);
             opacity: 0.6;
         }
+
         .note-tabs {
-            flex-shrink: 0;
-            width: 30px;
-            background-color: rgba(0, 0, 0, 0.03);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            border-right: 1px solid rgba(0, 0, 0, 0.06);
+            flex-shrink: 0; width: 30px; background-color: rgba(0, 0, 0, 0.03);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 12px; border-right: 1px solid rgba(0, 0, 0, 0.06);
         }
         .note-tab-btn {
-            width: 14px;
-            height: 14px;
-            background-color: transparent;
-            border: 2px solid var(--text-light);
-            opacity: 0.5;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            padding: 0;
+            width: 14px; height: 14px; background-color: transparent; border: 2px solid var(--text-light);
+            opacity: 0.5; border-radius: 50%; cursor: pointer; transition: all 0.2s ease; padding: 0;
         }
-        .note-tab-btn:hover {
-            opacity: 1;
-            transform: scale(1.1);
-        }
-        .note-tab-btn.active {
-            background-color: var(--primary-accent);
-            border-color: var(--primary-accent);
-            opacity: 1;
-        }
-        .note-main-content {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 10px 15px 15px 15px;
-            position: relative;
-        }
-        .note-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 5px;
-        }
+        .note-tab-btn:hover { opacity: 1; transform: scale(1.1); }
+        .note-tab-btn.active { background-color: var(--primary-accent); border-color: var(--primary-accent); opacity: 1; }
+        .note-main-content { flex-grow: 1; display: flex; flex-direction: column; padding: 10px 15px 15px 15px; position: relative; }
+        .note-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
         .tab-name-display {
-            margin: 0;
-            font-family: 'Poppins', sans-serif;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-dark);
-            flex-grow: 1;
-            padding: 5px;
-            border-radius: 4px;
+            margin: 0; font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 600;
+            color: var(--text-dark); flex-grow: 1; padding: 5px; border-radius: 4px;
         }
-        .tab-name-display:focus {
-            outline: 1px dashed var(--primary-accent);
-            background-color: rgba(255, 255, 255, 0.7);
-        }
-        .note .delete-btn {
-            position: static;
-            flex-shrink: 0;
-        }
-        .note-content-panels {
-            flex-grow: 1;
-            position: relative;
-        }
-        .note-content-panel {
-            display: none;
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-        }
+        .tab-name-display:focus { outline: 1px dashed var(--primary-accent); background-color: rgba(255, 255, 255, 0.7); }
+        .note .delete-btn { position: static; flex-shrink: 0; }
+        .note-content-panels { flex-grow: 1; position: relative; }
+        .note-content-panel { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
         .note-content-panel.active { display: block; }
     }
 
@@ -340,35 +268,18 @@
         body { overflow-y: auto; overflow-x: hidden; height: auto; }
         body.sidebar-active, body.zone-view-active { overflow: hidden; }
 
-        #app {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            padding: 75px 15px 100px 15px;
-            height: auto;
-        }
+        #app { display: flex; flex-direction: column; gap: 16px; padding: 75px 15px 100px 15px; height: auto; }
+        #bottom-dashboard, #dashboard-toggle, #addZoneBtn, #addNoteBtn, #notesContainer, #zonesContainer, .resize-handle { display: none !important; }
 
-        #bottom-dashboard { display: none !important; }
-        #dashboard-toggle { display: none; }
-        #addZoneBtn, #addNoteBtn { display: none; }
-        #notesContainer, #zonesContainer { display: none; }
-        .resize-handle { display: none !important; }
-
-        /* Controles superiores en móvil */
         #top-controls {
-            height: 60px;
-            padding: 0 10px;
-            gap: 8px;
-            background: rgba(239, 243, 245, 0.8);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.9);
+            height: 60px; padding: 0 10px; gap: 8px; background: rgba(239, 243, 245, 0.8);
+            backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255, 255, 255, 0.9);
         }
         #workspace-title { font-size: 16px; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         #sidebar-toggle-btn { display: block; padding: 8px 12px; font-size: 18px; line-height: 1; }
         .profile-avatar { width: 40px; height: 40px; }
         .control-btn.secondary { padding: 6px 10px; font-size: 13px; display: flex; }
         
-        /* Sidebar móvil */
         #mobile-sidebar-container { display: block; }
         .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1099; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
         #mobile-sidebar { position: fixed; top: 0; left: -300px; width: 300px; max-width: 85%; height: 100%; background: #ffffff; z-index: 1100; box-shadow: 5px 0 15px rgba(0,0,0,0.1); transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; }
@@ -390,13 +301,12 @@
         .sidebar-content .calendar-grid { gap: 1px; }
         .sidebar-content .day { padding: 4px 0; }
 
-        /* Estilos de Notas y Zonas en Móvil */
         .note, .zone { position: static !important; width: 100% !important; height: auto !important; transform: none !important; cursor: default !important; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
         .zone { padding: 15px; padding-top: 55px; background: var(--zone-bg); }
         
         .note { display: flex; flex-direction: column-reverse; min-height: 180px; }
         .note .delete-btn { position: absolute; top: 8px; right: 8px; z-index: 5; }
-        .note-main-content, .note-header { display: contents; } /* Hack para ignorar contenedores */
+        .note-main-content, .note-header { display: contents; }
         .note-tabs { display: flex; flex-direction: row; width: 100%; border-top: 1px solid rgba(0, 0, 0, 0.08); }
         .note-tab-btn { background-color: transparent; border: none; border-right: 1px solid rgba(0, 0, 0, 0.08); flex-grow: 1; padding: 10px 5px; cursor: pointer; text-align: center; font-family: 'Poppins', sans-serif; font-size: 12px; color: var(--text-light); transition: all 0.2s ease; position: relative; }
         .note-tab-btn::after { content: attr(title); }
@@ -406,11 +316,7 @@
         .note-content-panels { padding: 35px 15px 15px 15px; flex-grow: 1; }
         .note-content-panel { position: static; display: none; height: 100%; }
         .note-content-panel.active { display: block; }
-        .note textarea {
-            min-height: 80px;
-            font-size: 18px;
-            overflow-y: hidden; /* ¡Clave para eliminar el scroll feo! */
-        }
+        .note textarea { min-height: 80px; font-size: 18px; overflow-y: hidden; }
         
         .zone .add-note-in-zone-btn { display: flex; align-items: center; justify-content: center; position: absolute; top: 14px; right: 48px; width: 28px; height: 28px; background-color: var(--success-color); color: white; border: none; border-radius: 50%; cursor: pointer; font-size: 22px; line-height: 1; font-weight: 600; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease; }
         .zone .add-note-in-zone-btn:hover { background-color: #2ecc71; transform: scale(1.05); }
@@ -419,7 +325,6 @@
         .zone .zone-title { width: calc(100% - 165px) !important; }
         .zone .zone-notes-container-mobile { margin-top: 15px; display: flex; flex-direction: column; gap: 12px; padding-left: 15px; border-left: 3px solid var(--primary-accent); }
         
-        /* Zona en pantalla completa */
         body.zone-view-active #app > .zone:not(.zone-fullscreen),
         body.zone-view-active #app > .note,
         body.zone-view-active #mobile-fab-container { display: none !important; }
@@ -430,7 +335,6 @@
         .zone.zone-fullscreen .delete-btn { top: 14px !important; right: 80px !important; }
         .zone.zone-fullscreen .add-note-in-zone-btn { top: 14px !important; right: 115px !important; }
 
-        /* Botón Flotante (FAB) */
         #mobile-fab-container { display: flex; position: fixed; bottom: 20px; right: 20px; z-index: 1050; flex-direction: column-reverse; align-items: center; gap: 15px; }
         .fab-actions { display: flex; flex-direction: column-reverse; gap: 15px; }
         .fab-action { width: 48px; height: 48px; background-color: var(--primary-accent-dark); color: white; border-radius: 50%; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s; transform: scale(0.5); opacity: 0; }
@@ -441,7 +345,6 @@
         #mobile-fab-container.fab-active .fab-action:nth-child(1) { transition-delay: 0.1s; }
         #mobile-fab-container.fab-active .fab-action:nth-child(2) { transition-delay: 0.05s; }
 
-        /* Modales en móvil */
         .modal-content { padding: 25px 20px; width: 90%; }
         .modal-content h2 { font-size: 22px; }
         .modal-content p { font-size: 14px; }
@@ -453,12 +356,6 @@
 
     <button id="google-signin-btn">🚀 Iniciar Sesión con Google</button>
 
-    <!--
-      /// CORRECCIÓN IMPORTANTE ///
-      Todos los elementos de la interfaz de la aplicación, incluyendo el menú lateral móvil
-      y el botón flotante, AHORA ESTÁN DENTRO DE ESTE DIV 'main-content'.
-      Esto asegura que cuando el body tenga la clase 'logged-out', TODO se oculte correctamente.
-    -->
     <div class="main-content">
         <div id="top-controls">
             <button id="sidebar-toggle-btn" class="control-btn">☰</button>
@@ -514,16 +411,13 @@
             </div>
             <div id="clock-widget" class="dashboard-widget"><h3>Hora</h3><span id="current-time"></span><span id="current-date"></span></div>
         </div>
-
-        <!-- MODALES (pueden quedar aquí dentro, ya que usan position:fixed y no afecta) -->
+    
         <div id="alert-modal-overlay" class="modal-overlay"><div class="modal-content"><h2 id="alert-modal-title"></h2><p id="alert-modal-message"></p><button id="alert-modal-close-btn" class="action-btn">Entendido</button></div></div>
         <div id="set-timer-modal-overlay" class="modal-overlay"><div class="modal-content"><h2>Configurar Temporizador</h2><p>Define la duración de tu temporizador.</p><div class="set-timer-inputs"><input type="number" id="set-hours" min="0" max="99" placeholder="HH" oninput="this.value = this.value ? Math.min(99, Math.max(0, parseInt(this.value))) : ''"><input type="number" id="set-minutes" min="0" max="59" placeholder="MM" oninput="this.value = this.value ? Math.min(59, Math.max(0, parseInt(this.value))) : ''"><input type="number" id="set-seconds" min="0" max="59" placeholder="SS" oninput="this.value = this.value ? Math.min(59, Math.max(0, parseInt(this.value))) : ''"></div><button id="save-timer-btn" class="action-btn">Guardar</button></div></div>
         <div id="confirm-modal-overlay" class="modal-overlay"><div class="modal-content"><h2 id="confirm-modal-title"></h2><p id="confirm-modal-message"></p><div class="modal-actions"><button id="confirm-modal-cancel-btn" class="action-btn cancel-btn">Cancelar</button><button id="confirm-modal-confirm-btn" class="action-btn confirm-btn">Confirmar</button></div></div></div>
         
-        <!-- MENÚ LATERAL MÓVIL (CORREGIDO - AHORA DENTRO DE MAIN-CONTENT) -->
         <div id="mobile-sidebar-container"><div class="sidebar-overlay"></div><aside id="mobile-sidebar"><div class="sidebar-header"><h3>Panel de Control</h3><button id="close-sidebar-btn">×</button></div><div class="sidebar-content"></div></aside></div>
     
-        <!-- BOTÓN DE ACCIÓN FLOTANTE (FAB) (CORREGIDO - AHORA DENTRO DE MAIN-CONTENT) -->
         <div id="mobile-fab-container">
             <div class="fab-actions">
                 <button id="fab-add-note" class="fab-action" title="Añadir Nota">
@@ -537,8 +431,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             </button>
         </div>
-
-    </div><!-- FIN DE DIV .main-content -->
+    </div>
     
     <audio id="alarm-sound" src="audio/cat-meow-8-fx-306184.mp3"></audio>    
 <script type="module">
@@ -785,7 +678,6 @@
             tabsContainer.addEventListener('click', (e) => {
                 const clickedTab = e.target.closest('.note-tab-btn');
                 if (!clickedTab) return;
-
                 const newIndex = parseInt(clickedTab.dataset.index);
                 note.activeTabIndex = newIndex;
                 const activeTab = note.tabs[newIndex];
@@ -810,9 +702,7 @@
                 if (target.tagName.toLowerCase() === 'textarea') {
                     const panelIndex = parseInt(target.closest('.note-content-panel').dataset.index);
                     note.tabs[panelIndex].content = target.value;
-                    
                     this.autoResizeTextarea(target);
-                    
                     this.saveData();
                 }
             });
@@ -849,9 +739,9 @@
 
         createZoneElement(zone) {
             const element = document.createElement('div');
-            element.className = 'zone'; 
+            element.className = 'zone draggable'; // Make sure it's draggable
             element.innerHTML = `
-                <input class="zone-title" value="${zone.title}" placeholder="Título de la Zona">
+                <input class="zone-title" value="${zone.title || 'Nueva Zona'}" placeholder="Título de la Zona">
                 <span class="delete-btn">×</span>
                 <button class="add-note-in-zone-btn" title="Añadir Nota a Zona">+</button>
                 <button class="view-full-zone-btn">Ver Zona</button>
@@ -877,13 +767,14 @@
                 if (isFullscreen) { element.scrollTop = 0; }
             });
             
-            if(window.innerWidth > 768) {
-               element.classList.add('draggable');
+            // Apply logic only for desktop
+            if (window.innerWidth > 768) {
                element.style.left = `${zone.x || 50}px`;
                element.style.top = `${zone.y || 50}px`;
                element.style.width = `${zone.width || 400}px`;
                element.style.height = `${zone.height || 300}px`;
                this.makeDraggable(element, zone);
+               // CORRECCIÓN: Llamar a la función para redimensionar la zona
                this.makeResizable(element, zone);
             }
             return element;
@@ -892,29 +783,22 @@
         updateTopControlsVisibility() {
             const isMobile = window.innerWidth <= 768;
             const generalBtn = document.getElementById('show-general-btn');
-            const userProfileMenu = document.getElementById('user-profile-menu');
             if (isMobile) {
                 generalBtn.style.display = this.state.selectedDate ? 'flex' : 'none'; 
-                userProfileMenu.style.marginLeft = 'auto';
             } else {
                  generalBtn.style.display = 'block';
-                 userProfileMenu.style.marginLeft = '0';
             }
         },
 
         addNote(zoneId = null) {
             const newNote = {
                 id: Date.now() + Math.random(),
-                x: 20, y: 20,
-                width: 320, height: 240,
+                x: 20, y: 20, width: 320, height: 240,
                 date: this.state.selectedDate,
-                zoneId: zoneId,
-                activeTabIndex: 0,
+                zoneId: zoneId, activeTabIndex: 0,
                 tabs: [
-                    { name: 'Nota 1', content: '' },
-                    { name: 'Nota 2', content: '' },
-                    { name: 'Nota 3', content: '' },
-                    { name: 'Nota 4', content: '' },
+                    { name: 'Nota 1', content: '' }, { name: 'Nota 2', content: '' },
+                    { name: 'Nota 3', content: '' }, { name: 'Nota 4', content: '' },
                     { name: 'Nota 5', content: '' },
                 ]
             };
@@ -924,7 +808,15 @@
             this.updateStats();
             this.renderCalendar();
         },
-        addZone() { const newZone = { id: Date.now() + Math.random(), title: 'Nueva Zona', x: 50, y: 50, width: 400, height: 300, date: this.state.selectedDate }; this.state.zones.push(newZone); this.renderWorkspace(); this.saveData(); },
+
+        addZone() { 
+            const newZone = { 
+                id: Date.now() + Math.random(), title: 'Nueva Zona', 
+                x: 50, y: 50, width: 400, height: 300, 
+                date: this.state.selectedDate 
+            }; 
+            this.state.zones.push(newZone); this.renderWorkspace(); this.saveData(); 
+        },
         
         requestConfirm(title, message, action) { this.DOM.confirmModal.title.textContent = title; this.DOM.confirmModal.message.textContent = message; this.state.pendingTimerAction = action.bind(this); this.DOM.confirmModal.overlay.classList.add('visible'); },
         closeConfirmModal() { this.DOM.confirmModal.overlay.classList.remove('visible'); this.state.pendingTimerAction = null; },
@@ -946,25 +838,28 @@
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     let loadedNotes = data.notes || [];
+                    let loadedZones = data.zones || [];
 
                     loadedNotes.forEach(note => {
                         if (note.content !== undefined && !note.tabs) {
                             note.tabs = [
-                                { name: 'Nota 1', content: note.content },
-                                { name: 'Nota 2', content: '' },
-                                { name: 'Nota 3', content: '' },
-                                { name: 'Nota 4', content: '' },
-                                { name: 'Nota 5', content: '' },
+                                { name: 'Nota 1', content: note.content }, { name: 'Nota 2', content: '' },
+                                { name: 'Nota 3', content: '' }, { name: 'Nota 4', content: '' }, { name: 'Nota 5', content: '' }
                             ];
                             note.activeTabIndex = 0;
                             delete note.content;
                         }
-                        if (note.width === undefined) { note.width = 320; }
-                        if (note.height === undefined) { note.height = 240; }
+                        if (note.width === undefined) note.width = 320;
+                        if (note.height === undefined) note.height = 240;
+                    });
+                    
+                    loadedZones.forEach(zone => {
+                        if (zone.width === undefined) zone.width = 400;
+                        if (zone.height === undefined) zone.height = 300;
                     });
 
                     this.state.notes = loadedNotes;
-                    this.state.zones = data.zones || [];
+                    this.state.zones = loadedZones;
                     this.state.youtubeUrl = data.youtubeUrl || '';
                 } else {
                     this.state.notes = [];
@@ -1025,40 +920,46 @@
         },
         setupAllYoutubePlayers() { this.setupYoutubePlayer(); },
         setupYoutubePlayer() {
-            const container = document.querySelector('#youtube-widget');
-            const input = container.querySelector('#youtube-url-input');
-            const playerContainer = container.querySelector('#youtube-player-container');
-            if (!input || !playerContainer) return;
-            const loadVideo = (url) => {
-                const videoId = (u => { const m = u.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/); return (m && m[2].length === 11) ? m[2] : null; })(url);
-                if (videoId) {
-                    if (this.state.youtubePlayer && typeof this.state.youtubePlayer.loadVideoById === 'function') {
-                        this.state.youtubePlayer.loadVideoById(videoId);
-                    } else {
-                        if (typeof YT !== 'undefined' && YT.Player) {
-                            this.state.youtubePlayer = new YT.Player('youtube-player', { height: '100%', width: '100%', videoId: videoId, playerVars: { 'playsinline': 1, 'controls': 0, 'modestbranding': 1, 'rel': 0 }, events: { 'onReady': this.onPlayerReady.bind(this), 'onStateChange': this.onPlayerStateChange.bind(this) } });
+            document.querySelectorAll('#youtube-widget').forEach(container => {
+                const input = container.querySelector('#youtube-url-input');
+                const playerContainer = container.querySelector('#youtube-player-container');
+                if (!input || !playerContainer) return;
+
+                const playerId = playerContainer.id || `ytplayer-${Math.random().toString(36).substr(2, 9)}`;
+                playerContainer.id = playerId;
+                
+                const loadVideo = (url) => {
+                    const videoId = (u => { const m = u.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/); return (m && m[2].length === 11) ? m[2] : null; })(url);
+                    if (videoId) {
+                        if (this.state.youtubePlayer && typeof this.state.youtubePlayer.loadVideoById === 'function') {
+                            this.state.youtubePlayer.loadVideoById(videoId);
+                        } else {
+                            if (typeof YT !== 'undefined' && YT.Player) {
+                                this.state.youtubePlayer = new YT.Player(playerId, { height: '100%', width: '100%', videoId: videoId, playerVars: { 'playsinline': 1, 'controls': 0, 'modestbranding': 1, 'rel': 0 }, events: { 'onReady': this.onPlayerReady.bind(this), 'onStateChange': this.onPlayerStateChange.bind(this) } });
+                            }
                         }
+                        if (this.state.youtubeUrl !== url) { this.state.youtubeUrl = url; this.saveData(); }
                     }
-                    if (this.state.youtubeUrl !== url) { this.state.youtubeUrl = url; this.saveData(); }
+                };
+                input.addEventListener('change', e => loadVideo(e.target.value));
+                if (this.state.isDataLoaded && this.state.youtubeUrl) {
+                    input.value = this.state.youtubeUrl;
+                    if(typeof window.onYouTubeIframeAPIReady === 'function') { window.onYouTubeIframeAPIReady(); } // Run if exists
+                    window.onYouTubeIframeAPIReady = () => { loadVideo(this.state.youtubeUrl); };
+                    if (typeof YT !== 'undefined' && YT.loaded) { window.onYouTubeIframeAPIReady(); }
+                } else if (!this.state.youtubeUrl) {
+                    window.onYouTubeIframeAPIReady = () => {};
                 }
-            };
-            input.addEventListener('change', e => loadVideo(e.target.value));
-            if (this.state.isDataLoaded && this.state.youtubeUrl) {
-                input.value = this.state.youtubeUrl;
-                window.onYouTubeIframeAPIReady = () => { loadVideo(this.state.youtubeUrl); };
-                if (typeof YT !== 'undefined' && YT.loaded) { window.onYouTubeIframeAPIReady(); }
-            } else if (!this.state.youtubeUrl) {
-                 window.onYouTubeIframeAPIReady = () => {};
-            }
+            });
         },
         onPlayerReady(event) {
-            document.querySelectorAll('#yt-play-pause-btn').forEach(btn => {
+            document.querySelectorAll('.yt-control-btn').forEach(btn => {
                 btn.innerHTML = this.ICONS.PLAY;
                 btn.onclick = () => { const playerState = this.state.youtubePlayer.getPlayerState(); if (playerState === YT.PlayerState.PLAYING) { this.state.youtubePlayer.pauseVideo(); } else { this.state.youtubePlayer.playVideo(); } };
             });
         },
         onPlayerStateChange(event) {
-            document.querySelectorAll('#yt-play-pause-btn').forEach(btn => { if (event.data === YT.PlayerState.PLAYING) { btn.innerHTML = this.ICONS.PAUSE; } else { btn.innerHTML = this.ICONS.PLAY; } });
+            document.querySelectorAll('.yt-control-btn').forEach(btn => { if (event.data === YT.PlayerState.PLAYING) { btn.innerHTML = this.ICONS.PAUSE; } else { btn.innerHTML = this.ICONS.PLAY; } });
             document.querySelectorAll('#youtube-player-container').forEach(container => { if (event.data === YT.PlayerState.PLAYING) { container.classList.remove('paused'); } else { container.classList.add('paused'); } });
         },
         setupAllTimers() { document.querySelectorAll('#timer-widget').forEach(container => this.setupTimer(container)); },
