@@ -1,25 +1,22 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <!-- ... (No hay cambios en el head, puedes mantener el tuyo) ... -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard de Productividad | Impulsa tu Enfoque</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%235a7dcb' d='M83.2,16.8C75.1,8.7,66.2,2,50,2S24.9,8.7,16.8,16.8C8.7,24.9,2,33.8,2,50s6.7,25.1,14.8,33.2 c8.1,8.1,17,14.8,33.2,14.8s25.1-6.7,33.2-14.8C91.3,75.1,98,66.2,98,50S91.3,24.9,83.2,16.8z M72.2,38.1L57.5,52.8 c-2.5,2.5-5.8,3.7-9.2,3.7s-6.7-1.2-9.2-3.7L24.5,38.1c-1-1-1.5-2.2-1.5-3.5s0.5-2.5,1.5-3.5c2-2,5.1-2,7.1,0l12.4,12.4V22.2 c0-2.8,2.3-5.1,5.1-5.1s5.1,2.3,5.1,5.1v21.3l12.4-12.4c2-2,5.1-2,7.1,0C74.2,33,74.2,36.1,72.2,38.1z M68.5,75.7 c0,1.4-0.5,2.7-1.5,3.7c-2,2-5.1,2-7.1,0L50,69.5l-9.9,9.9c-2,2-5.1,2-7.1,0c-1-1-1.5-2.3-1.5-3.7c0-1.4,0.5-2.7,1.5-3.7L43,62.1 c2.5-2.5,5.8-3.7,9.2-3.7s6.7,1.2,9.2,3.7l9.9,9.9C68,73,68.5,74.3,68.5,75.7z'%3E%3C/path%3E%3C/svg%3E" type="image/svg+xml">
-    
     <meta name="description" content="Organiza tus tareas, gestiona tu tiempo y aumenta tu enfoque con este dashboard de productividad personal. Incluye notas, zonas de trabajo, temporizador y más.">
     <meta name="author" content="Hector Daniel Ayarachi Fuentes">
     <meta name="theme-color" content="#5a7dcb"> 
-
     <meta property="og:title" content="Dashboard de Productividad | Impulsa tu Enfoque">
     <meta property="og:description" content="Organiza tus tareas, gestiona tu tiempo y aumenta tu enfoque con este dashboard de productividad personal.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://hectordanielayarachifuentes.github.io/Sticky-Notes-v1/">
     <meta property="og:image" content="https://hectordanielayarachifuentes.github.io/Sticky-Notes-v1/img/luna.jpg"> 
-
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Dashboard de Productividad | Impulsa tu Enfoque">
     <meta name="twitter:description" content="Organiza tus tareas, gestiona tu tiempo y aumenta tu enfoque con este dashboard de productividad personal.">
@@ -44,19 +41,12 @@
             --success-color: #27ae60;
             --warning-color: #f39c12;
         }
-
         @keyframes pulse-green {
             0% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.4); }
             70% { box-shadow: 0 0 0 10px rgba(39, 174, 96, 0); }
             100% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0); }
         }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--bg-color);
-            background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23dce3eb" fill-opacity="0.4"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
-            margin: 0; padding: 0; overflow: hidden; height: 100vh;
-        }
+        body { font-family: 'Poppins', sans-serif; background-color: var(--bg-color); background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23dce3eb" fill-opacity="0.4"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E'); margin: 0; padding: 0; overflow: hidden; height: 100vh; }
         #google-signin-btn { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 15px 30px; font-size: 18px; font-weight: 600; color: white; background-color: #DB4437; border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.2); z-index: 10000; }
         .logged-in #google-signin-btn { display: none; }
         .logged-out .main-content { display: none; }
@@ -89,10 +79,8 @@
         .delete-btn:hover { background-color: var(--highlight-color); color: white; }
         .resize-handle { position: absolute; bottom: 0; right: 0; width: 20px; height: 20px; cursor: nwse-resize; z-index: 11; }
         .resize-handle::after { content: ''; position: absolute; right: 5px; bottom: 5px; width: 8px; height: 8px; border-bottom: 2px solid var(--primary-accent); border-right: 2px solid var(--primary-accent); opacity: 0.5; }
-        
-        /* <!-- MODIFICADO --> ESTILOS DEL DASHBOARD INFERIOR CORREGIDOS CON DISEÑO DE TARJETAS */
-        #bottom-dashboard { position: fixed; bottom: 0; left: 0; width: 100%; /* height se elimina para ser auto */ background: rgba(239, 243, 245, 0.7); backdrop-filter: blur(10px); border-top: 1px solid rgba(255, 255, 255, 0.8); box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.05); display: flex; align-items: flex-start; justify-content: center; padding: 30px 20px; /* Aumentamos el padding para el margen lindo */ box-sizing: border-box; z-index: 1002; gap: 25px; }
-        .dashboard-widget { height: auto; /* Permite que el contenido defina la altura */ display: flex; flex-direction: column; align-items: center; justify-content: flex-start; color: var(--text-dark); text-align: center; background-color: rgba(255, 255, 255, 0.8); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.07); padding: 15px; border: 1px solid rgba(255, 255, 255, 0.9); transition: all 0.3s ease; transform: translateY(0); }
+        #bottom-dashboard { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(239, 243, 245, 0.7); backdrop-filter: blur(10px); border-top: 1px solid rgba(255, 255, 255, 0.8); box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.05); display: flex; align-items: flex-start; justify-content: center; padding: 30px 20px; box-sizing: border-box; z-index: 1002; gap: 25px; }
+        .dashboard-widget { height: auto; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; color: var(--text-dark); text-align: center; background-color: rgba(255, 255, 255, 0.8); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.07); padding: 15px; border: 1px solid rgba(255, 255, 255, 0.9); transition: all 0.3s ease; transform: translateY(0); }
         .dashboard-widget:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
         .dashboard-widget h3 { margin: 0 0 12px 0; padding-bottom: 8px; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--text-light); letter-spacing: 0.8px; width: 100%; border-bottom: 1px solid rgba(0,0,0,0.08); }
         #stats-widget span { font-size: 36px; font-weight: 600; }
@@ -140,7 +128,6 @@
         .modal-actions .cancel-btn:hover { background-color: #bdc3c7; }
         #sidebar-toggle-btn { display: none; padding: 8px 12px; font-size: 18px; line-height: 1; }
         #mobile-sidebar-container { display: none; }
-        
         #youtube-player-container { position: relative; width: 200px; height: 112px; background: #000; border-radius: 8px; overflow: hidden; margin-top: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
         #youtube-player-container iframe { width: 100%; height: 100%; border: none; }
         #youtube-controls { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background-color: rgba(0, 0, 0, 0.3); opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
@@ -148,20 +135,16 @@
         .yt-control-btn { background-color: rgba(255, 255, 255, 0.9); border: none; border-radius: 50%; width: 50px; height: 50px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.3); transition: transform 0.2s ease, background-color 0.2s ease; }
         .yt-control-btn:hover { transform: scale(1.1); background-color: #fff; }
         .yt-control-btn svg { width: 24px; height: 24px; fill: var(--text-dark); }
-
         #bottom-dashboard { transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
         #app { transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
         #dashboard-toggle { position: absolute; top: 0; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 30px; background-color: var(--primary-accent); border: none; border-radius: 15px 15px 0 0; box-shadow: 0 -4px 12px rgba(0,0,0,0.1); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background-color 0.3s ease; z-index: 1003; }
         #dashboard-toggle:hover { background-color: var(--primary-accent-dark); }
         #dashboard-toggle svg { width: 20px; height: 20px; stroke: white; transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
-        
-        /* <!-- MODIFICADO --> Lógica de ocultar/mostrar corregida */
         body.dashboard-hidden #bottom-dashboard { transform: translateY(calc(100% - 30px)); }
         body.dashboard-hidden #app { height: calc(100vh - 30px); }
         body.dashboard-hidden #dashboard-toggle svg { transform: rotate(0deg); }
-        body:not(.dashboard-hidden) #app { height: calc(100vh - 230px); /* Ajusta a la nueva altura del panel */ }
+        body:not(.dashboard-hidden) #app { height: calc(100vh - 230px); }
         body:not(.dashboard-hidden) #dashboard-toggle svg { transform: rotate(180deg); }
-
         @media (max-width: 768px) {
             body { overflow-y: auto; overflow-x: hidden; height: auto; }
             body.sidebar-active { overflow: hidden; }
@@ -169,16 +152,13 @@
             #sidebar-toggle-btn { display: block; }
             #mobile-sidebar-container { display: block; }
             #dashboard-toggle { display: none; }
-            
             #top-controls { padding: 0 10px; width: auto; right: 10px; }
             .control-btn.secondary, #addZoneBtn, #addNoteBtn { display: none; }
-            
             #workspace-title { left: 60px; top: 21px; font-size: 16px; max-width: calc(100% - 120px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
             .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1099; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
             #mobile-sidebar { position: fixed; top: 0; left: -300px; width: 300px; max-width: 85%; height: 100%; background: #ffffff; z-index: 1100; box-shadow: 5px 0 15px rgba(0,0,0,0.1); transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; }
             body.sidebar-active .sidebar-overlay { opacity: 1; visibility: visible; }
             body.sidebar-active #mobile-sidebar { left: 0; }
-            
             .sidebar-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid #e0e0e0; }
             .sidebar-header h3 { margin: 0; font-size: 18px; color: var(--text-dark); }
             #close-sidebar-btn { background: none; border: none; font-size: 28px; cursor: pointer; color: var(--text-light); padding: 0 5px; }
@@ -205,6 +185,8 @@
             .modal-content h2 { font-size: 22px; }
             .modal-content p { font-size: 14px; }
             .set-timer-inputs input { width: 50px; padding: 8px; font-size: 20px; }
+            /* <!-- MODIFICADO --> ESTILOS PARA LA JERARQUÍA MÓVIL */
+            .zone .zone-notes-container-mobile { margin-top: 15px; display: flex; flex-direction: column; gap: 12px; }
         }
     </style>
 </head>
@@ -233,6 +215,7 @@
             </div>
         </div>
         <div id="app">
+            <!-- MODIFICADO: Estos contenedores solo se usarán en Desktop -->
             <div id="zonesContainer"></div>
             <div id="notesContainer"></div>
         </div>
@@ -328,34 +311,13 @@
     
     const App = {
         firebase: {},
-        state: {
-            currentUser: null,
-            notes: [],
-            zones: [],
-            youtubeUrl: '',
-            youtubePlayer: null, 
-            selectedDate: null,
-            isDataLoaded: false,
-            calendarDate: new Date(),
-            timerInterval: null,
-            timerSeconds: 25 * 60,
-            timerInitialDuration: 25 * 60,
-            timerPreAlertShown: false,
-            pendingTimerAction: null,
-        },
+        state: { currentUser: null, notes: [], zones: [], youtubeUrl: '', youtubePlayer: null, selectedDate: null, isDataLoaded: false, calendarDate: new Date(), timerInterval: null, timerSeconds: 25 * 60, timerInitialDuration: 25 * 60, timerPreAlertShown: false, pendingTimerAction: null, },
         DOM: {},
-        ICONS: {
-            PLAY: `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>`,
-            PAUSE: `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>`
-        },
+        ICONS: { PLAY: `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>`, PAUSE: `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>` },
         
         init() {
             this.cacheDOM();
-
-            if (localStorage.getItem('dashboardIsHidden') === 'true') {
-                this.DOM.body.classList.add('dashboard-hidden');
-            }
-            
+            if (localStorage.getItem('dashboardIsHidden') === 'true') { this.DOM.body.classList.add('dashboard-hidden'); }
             this.initFirebase();
             this.setupMobileUI();
             this.bindEvents();
@@ -364,6 +326,7 @@
 
         cacheDOM() {
             this.DOM.body = document.body;
+            this.DOM.app = document.getElementById('app');
             this.DOM.signInBtn = document.getElementById('google-signin-btn');
             this.DOM.notesContainer = document.getElementById('notesContainer');
             this.DOM.zonesContainer = document.getElementById('zonesContainer');
@@ -388,44 +351,14 @@
             this.DOM.dashboardToggle = document.getElementById('dashboard-toggle');
         },
 
-        setupMobileUI() {
-            const widgets = this.DOM.bottomDashboard.querySelectorAll('.dashboard-widget');
-            widgets.forEach(widget => {
-                const clone = widget.cloneNode(true);
-                this.DOM.sidebarContent.appendChild(clone);
-            });
-        },
-
-        initFirebase() {
-            const firebaseApp = initializeApp(firebaseConfig);
-            this.firebase.auth = getAuth(firebaseApp);
-            this.firebase.db = getFirestore(firebaseApp);
-            this.firebase.provider = new GoogleAuthProvider();
-            onAuthStateChanged(this.firebase.auth, (user) => {
-                if (user) {
-                    this.state.currentUser = user;
-                    this.updateUserProfile(user);
-                    this.DOM.body.classList.remove('logged-out');
-                    this.DOM.body.classList.add('logged-in');
-                    this.loadData();
-                } else {
-                    this.state.currentUser = null;
-                    this.DOM.body.classList.add('logged-out');
-                    this.DOM.body.classList.remove('logged-in');
-                    this.clearWorkspace();
-                }
-            });
-        },
-
+        setupMobileUI() { const widgets = this.DOM.bottomDashboard.querySelectorAll('.dashboard-widget'); widgets.forEach(widget => { const clone = widget.cloneNode(true); this.DOM.sidebarContent.appendChild(clone); }); },
+        initFirebase() { const firebaseApp = initializeApp(firebaseConfig); this.firebase.auth = getAuth(firebaseApp); this.firebase.db = getFirestore(firebaseApp); this.firebase.provider = new GoogleAuthProvider(); onAuthStateChanged(this.firebase.auth, (user) => { if (user) { this.state.currentUser = user; this.updateUserProfile(user); this.DOM.body.classList.remove('logged-out'); this.DOM.body.classList.add('logged-in'); this.loadData(); } else { this.state.currentUser = null; this.DOM.body.classList.add('logged-out'); this.DOM.body.classList.remove('logged-in'); this.clearWorkspace(); } }); },
         bindEvents() {
             this.DOM.signInBtn.addEventListener('click', () => signInWithPopup(this.firebase.auth, this.firebase.provider).catch(console.error));
             this.DOM.signOutBtn.addEventListener('click', () => signOut(this.firebase.auth));
             this.DOM.addNoteBtn.addEventListener('click', () => this.addNote());
             this.DOM.addZoneBtn.addEventListener('click', () => this.addZone());
-            this.DOM.showGeneralBtn.addEventListener('click', () => {
-                this.showGeneralDashboard();
-                this.closeSidebar();
-            });
+            this.DOM.showGeneralBtn.addEventListener('click', () => { this.showGeneralDashboard(); this.closeSidebar(); });
             const toggleSidebar = () => this.DOM.body.classList.toggle('sidebar-active');
             this.DOM.sidebarToggleBtn.addEventListener('click', toggleSidebar);
             this.DOM.sidebarOverlay.addEventListener('click', toggleSidebar);
@@ -436,32 +369,156 @@
             this.DOM.confirmModal.confirmBtn.addEventListener('click', () => this.handleConfirmAction());
             this.DOM.confirmModal.cancelBtn.addEventListener('click', () => this.closeConfirmModal());
             this.DOM.confirmModal.overlay.addEventListener('click', e => { if (e.target === this.DOM.confirmModal.overlay) this.closeConfirmModal(); });
-            
             document.querySelectorAll('#start-timer').forEach(btn => btn.addEventListener('click', () => this.requestConfirm('Iniciar Temporizador', '¿Estás seguro de que quieres iniciar el tiempo?', this.startTimer)));
             document.querySelectorAll('#stop-timer').forEach(btn => btn.addEventListener('click', () => this.requestConfirm('Pausar Temporizador', '¿Quieres pausar el tiempo?', this.stopTimer)));
             document.querySelectorAll('#reset-timer').forEach(btn => btn.addEventListener('click', () => this.requestConfirm('Reiniciar Temporizador', 'Esto restablecerá el tiempo a su valor inicial. ¿Continuar?', this.resetTimer)));
-        
-            this.DOM.dashboardToggle.addEventListener('click', () => {
-                const isHidden = this.DOM.body.classList.toggle('dashboard-hidden');
-                localStorage.setItem('dashboardIsHidden', isHidden);
-            });
+            this.DOM.dashboardToggle.addEventListener('click', () => { const isHidden = this.DOM.body.classList.toggle('dashboard-hidden'); localStorage.setItem('dashboardIsHidden', isHidden); });
         },
         
+        // MODIFICADO: Lógica de arrastrar y soltar para establecer la relación nota-zona
+        makeDraggable(element, item) {
+            element.addEventListener('mousedown', e => {
+                const target = e.target;
+                if (target.tagName.toLowerCase() === 'textarea' || target.tagName.toLowerCase() === 'input' || target.classList.contains('delete-btn') || target.classList.contains('resize-handle')) return;
+                element.classList.add('dragging');
+                const offsetX = e.clientX - element.offsetLeft;
+                const offsetY = e.clientY - element.offsetTop;
+                const onMouseMove = (moveEvent) => {
+                    let newX = moveEvent.clientX - offsetX;
+                    let newY = moveEvent.clientY - offsetY;
+                    const appRect = this.DOM.app.getBoundingClientRect();
+                    element.style.left = `${Math.max(0, Math.min(newX, appRect.width - element.offsetWidth))}px`;
+                    element.style.top = `${Math.max(0, Math.min(newY, appRect.height - element.offsetHeight))}px`;
+                };
+                const onMouseUp = () => {
+                    document.removeEventListener('mousemove', onMouseMove);
+                    document.removeEventListener('mouseup', onMouseUp);
+                    element.classList.remove('dragging');
+                    item.x = parseInt(element.style.left);
+                    item.y = parseInt(element.style.top);
+
+                    // Lógica para anidar notas en zonas
+                    if (element.classList.contains('note')) {
+                        const parentZone = this.findParentZone(item);
+                        item.zoneId = parentZone ? parentZone.id : null;
+                    }
+
+                    this.saveData();
+                };
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mouseup', onMouseUp);
+            });
+        },
+        // MODIFICADO: Nueva función auxiliar para encontrar la zona padre de una nota
+        findParentZone(note) {
+            const noteCenterX = note.x + (240 / 2); // Ancho de la nota
+            const noteCenterY = note.y + (240 / 2); // Alto de la nota
+            
+            return this.state.zones.find(zone =>
+                noteCenterX >= zone.x && noteCenterX <= (zone.x + zone.width) &&
+                noteCenterY >= zone.y && noteCenterY <= (zone.y + zone.height) &&
+                zone.date === this.state.selectedDate
+            );
+        },
+        
+        // MODIFICADO: La función de renderizado ahora se divide para escritorio y móvil
+        renderWorkspace() {
+            const isMobile = window.innerWidth <= 768;
+            if (isMobile) {
+                this.renderMobileLayout();
+            } else {
+                this.renderDesktopLayout();
+            }
+             if (this.state.selectedDate) {
+                const [y, m, d] = this.state.selectedDate.split('-');
+                this.DOM.workspaceTitle.textContent = `${new Date(y, m - 1, d).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}`;
+            } else {
+                this.DOM.workspaceTitle.textContent = 'Tablero General';
+            }
+            this.updateStats();
+        },
+
+        renderDesktopLayout() {
+            this.DOM.app.innerHTML = `<div id="zonesContainer"></div><div id="notesContainer"></div>`;
+            this.cacheDOM(); // Recachea notesContainer y zonesContainer
+            const notesToShow = this.state.notes.filter(note => note.date === this.state.selectedDate);
+            const zonesToShow = this.state.zones.filter(zone => zone.date === this.state.selectedDate);
+            notesToShow.forEach(note => this.createNoteElement(note));
+            zonesToShow.forEach(zone => this.createZoneElement(zone));
+        },
+        
+        renderMobileLayout() {
+            this.DOM.app.innerHTML = ''; // Limpia el contenedor principal
+            const notesToShow = this.state.notes.filter(note => note.date === this.state.selectedDate);
+            const zonesToShow = this.state.zones.filter(zone => zone.date === this.state.selectedDate);
+            
+            const standaloneNotes = notesToShow.filter(note => !note.zoneId);
+
+            zonesToShow.forEach(zone => {
+                const zoneEl = this.createZoneElement(zone);
+                const notesInThisZone = notesToShow.filter(note => note.zoneId === zone.id);
+                if (notesInThisZone.length > 0) {
+                    const mobileNotesContainer = document.createElement('div');
+                    mobileNotesContainer.className = 'zone-notes-container-mobile';
+                    notesInThisZone.forEach(note => {
+                        this.createNoteElement(note, mobileNotesContainer);
+                    });
+                    zoneEl.appendChild(mobileNotesContainer);
+                }
+            });
+
+            standaloneNotes.forEach(note => {
+                this.createNoteElement(note);
+            });
+        },
+
+        // MODIFICADO: createNoteElement y createZoneElement ahora aceptan un contenedor opcional
+        createNoteElement(note, container = null) {
+            const element = document.createElement('div');
+            element.className = 'draggable note';
+            element.style.left = `${note.x || 20}px`;
+            element.style.top = `${note.y || 20}px`;
+            element.innerHTML = `<button class="delete-btn">×</button><textarea placeholder="Escribe algo...">${note.content || ''}</textarea>`;
+            
+            const targetContainer = container || this.DOM.notesContainer || this.DOM.app;
+            targetContainer.appendChild(element);
+
+            element.querySelector('textarea').addEventListener('input', e => { note.content = e.target.value; this.saveData(); });
+            element.querySelector('.delete-btn').addEventListener('click', () => { this.state.notes = this.state.notes.filter(n => n.id !== note.id); this.saveData(); this.renderWorkspace(); this.renderCalendar(); });
+            this.makeDraggable(element, note);
+            return element;
+        },
+        createZoneElement(zone, container = null) {
+            const element = document.createElement('div');
+            element.className = 'draggable zone';
+            element.style.left = `${zone.x || 50}px`;
+            element.style.top = `${zone.y || 50}px`;
+            element.style.width = `${zone.width || 400}px`;
+            element.style.height = `${zone.height || 300}px`;
+            element.innerHTML = `<input class="zone-title" value="${zone.title}" placeholder="Título de la Zona"><span class="delete-btn">×</span><div class="resize-handle"></div>`;
+            
+            const targetContainer = container || this.DOM.zonesContainer || this.DOM.app;
+            targetContainer.appendChild(element);
+
+            element.querySelector('.zone-title').addEventListener('input', e => { zone.title = e.target.value; this.saveData(); });
+            element.querySelector('.delete-btn').addEventListener('click', () => { this.state.zones = this.state.zones.filter(z => z.id !== zone.id); this.state.notes.forEach(n => { if (n.zoneId === zone.id) n.zoneId = null; }); this.saveData(); this.renderWorkspace(); });
+            this.makeDraggable(element, zone);
+            this.makeResizable(element, zone);
+            return element;
+        },
+
+        // --- El resto del código JS no necesita cambios ---
         requestConfirm(title, message, action) { this.DOM.confirmModal.title.textContent = title; this.DOM.confirmModal.message.textContent = message; this.state.pendingTimerAction = action.bind(this); this.DOM.confirmModal.overlay.classList.add('visible'); },
         closeConfirmModal() { this.DOM.confirmModal.overlay.classList.remove('visible'); this.state.pendingTimerAction = null; },
         handleConfirmAction() { if (typeof this.state.pendingTimerAction === 'function') { this.state.pendingTimerAction(); } this.closeConfirmModal(); },
         updateUserProfile(user) { if (user) { this.DOM.userName.textContent = user.displayName; this.DOM.profileAvatar.src = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName)}&background=random&color=fff`; } },
         saveData: debounce(async function() { if (!this.state.currentUser || !this.state.isDataLoaded) return; this.DOM.saveStatus.textContent = 'Guardando...'; try { const userDocRef = doc(this.firebase.db, 'user_data', this.state.currentUser.uid); const dataToSave = { notes: this.state.notes, zones: this.state.zones, youtubeUrl: this.state.youtubeUrl }; await setDoc(userDocRef, dataToSave); this.DOM.saveStatus.textContent = 'Guardado ✓'; setTimeout(() => this.DOM.saveStatus.textContent = '', 2000); } catch (error) { console.error("Error al guardar datos:", error); this.DOM.saveStatus.textContent = 'Error al guardar'; } }, 1500),
         async loadData() { if (!this.state.currentUser) return; const userDocRef = doc(this.firebase.db, 'user_data', this.state.currentUser.uid); try { const docSnap = await getDoc(userDocRef); if (docSnap.exists()) { const data = docSnap.data(); this.state.notes = data.notes || []; this.state.zones = data.zones || []; this.state.youtubeUrl = data.youtubeUrl || ''; } else { this.state.notes = []; this.state.zones = []; this.state.youtubeUrl = ''; } this.state.isDataLoaded = true; this.renderWorkspace(); this.renderCalendar(); this.setupAllYoutubePlayers(); } catch (error) { console.error("Error al cargar datos:", error); } },
-        renderWorkspace() { this.DOM.notesContainer.innerHTML = ''; this.DOM.zonesContainer.innerHTML = ''; const notesToShow = this.state.notes.filter(note => note.date === this.state.selectedDate); const zonesToShow = this.state.zones.filter(zone => zone.date === this.state.selectedDate); notesToShow.forEach(note => this.createNoteElement(note)); zonesToShow.forEach(zone => this.createZoneElement(zone)); if (this.state.selectedDate) { const [y, m, d] = this.state.selectedDate.split('-'); this.DOM.workspaceTitle.textContent = `${new Date(y, m - 1, d).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}`; } else { this.DOM.workspaceTitle.textContent = 'Tablero General'; } this.updateStats(); },
         clearWorkspace() { this.DOM.notesContainer.innerHTML = ''; this.DOM.zonesContainer.innerHTML = ''; this.DOM.workspaceTitle.textContent = ''; this.state.isDataLoaded = false; },
         updateStats() { const notesInView = this.state.notes.filter(n => n.date === this.state.selectedDate).length; document.querySelectorAll('#note-count').forEach(el => el.textContent = notesInView); },
-        makeDraggable(element, item) { element.addEventListener('mousedown', e => { const target = e.target; if (target.tagName.toLowerCase() === 'textarea' || target.tagName.toLowerCase() === 'input' || target.classList.contains('delete-btn') || target.classList.contains('resize-handle')) return; element.classList.add('dragging'); const offsetX = e.clientX - element.offsetLeft; const offsetY = e.clientY - element.offsetTop; const onMouseMove = (moveEvent) => { let newX = moveEvent.clientX - offsetX; let newY = moveEvent.clientY - offsetY; const appRect = document.getElementById('app').getBoundingClientRect(); element.style.left = `${Math.max(0, Math.min(newX, appRect.width - element.offsetWidth))}px`; element.style.top = `${Math.max(0, Math.min(newY, appRect.height - element.offsetHeight))}px`; }; const onMouseUp = () => { document.removeEventListener('mousemove', onMouseMove); document.removeEventListener('mouseup', onMouseUp); element.classList.remove('dragging'); item.x = parseInt(element.style.left); item.y = parseInt(element.style.top); this.saveData(); }; document.addEventListener('mousemove', onMouseMove); document.addEventListener('mouseup', onMouseUp); }); },
         makeResizable(element, item) { const handle = element.querySelector('.resize-handle'); handle.addEventListener('mousedown', e => { e.stopPropagation(); const startX = e.clientX; const startY = e.clientY; const startWidth = parseInt(document.defaultView.getComputedStyle(element).width, 10); const startHeight = parseInt(document.defaultView.getComputedStyle(element).height, 10); const onMouseMove = (moveEvent) => { element.style.width = `${Math.max(250, startWidth + moveEvent.clientX - startX)}px`; element.style.height = `${Math.max(200, startHeight + moveEvent.clientY - startY)}px`; }; const onMouseUp = () => { document.removeEventListener('mousemove', onMouseMove); document.removeEventListener('mouseup', onMouseUp); item.width = parseInt(element.style.width); item.height = parseInt(element.style.height); this.saveData(); }; document.addEventListener('mousemove', onMouseMove); document.addEventListener('mouseup', onMouseUp); }); },
-        createNoteElement(note) { const element = document.createElement('div'); element.className = 'draggable note'; element.style.left = `${note.x || 20}px`; element.style.top = `${note.y || 20}px`; element.innerHTML = `<button class="delete-btn">×</button><textarea placeholder="Escribe algo...">${note.content}</textarea>`; this.DOM.notesContainer.appendChild(element); element.querySelector('textarea').addEventListener('input', e => { note.content = e.target.value; this.saveData(); }); element.querySelector('.delete-btn').addEventListener('click', () => { this.state.notes = this.state.notes.filter(n => n.id !== note.id); this.saveData(); this.renderWorkspace(); this.renderCalendar(); }); this.makeDraggable(element, note); },
-        createZoneElement(zone) { const element = document.createElement('div'); element.className = 'draggable zone'; element.style.left = `${zone.x || 50}px`; element.style.top = `${zone.y || 50}px`; element.style.width = `${zone.width || 400}px`; element.style.height = `${zone.height || 300}px`; element.innerHTML = `<input class="zone-title" value="${zone.title}" placeholder="Título de la Zona"><span class="delete-btn">×</span><div class="resize-handle"></div>`; this.DOM.zonesContainer.appendChild(element); element.querySelector('.zone-title').addEventListener('input', e => { zone.title = e.target.value; this.saveData(); }); element.querySelector('.delete-btn').addEventListener('click', () => { this.state.zones = this.state.zones.filter(z => z.id !== zone.id); this.saveData(); this.renderWorkspace(); }); this.makeDraggable(element, zone); this.makeResizable(element, zone); },
-        addNote() { const newNote = { id: Date.now() + Math.random(), content: '', x: 20, y: 20, date: this.state.selectedDate }; this.state.notes.push(newNote); this.createNoteElement(newNote); this.saveData(); this.updateStats(); this.renderCalendar(); },
-        addZone() { const newZone = { id: Date.now() + Math.random(), title: 'Nueva Zona', x: 50, y: 50, width: 400, height: 300, date: this.state.selectedDate }; this.state.zones.push(newZone); this.createZoneElement(newZone); this.saveData(); },
+        addNote() { const newNote = { id: Date.now() + Math.random(), content: '', x: 20, y: 20, date: this.state.selectedDate, zoneId: null }; this.state.notes.push(newNote); this.renderWorkspace(); this.saveData(); this.updateStats(); this.renderCalendar(); },
+        addZone() { const newZone = { id: Date.now() + Math.random(), title: 'Nueva Zona', x: 50, y: 50, width: 400, height: 300, date: this.state.selectedDate }; this.state.zones.push(newZone); this.renderWorkspace(); this.saveData(); },
         showGeneralDashboard() { this.state.selectedDate = null; this.saveData(); this.renderWorkspace(); this.renderCalendar(); },
         closeSidebar() { this.DOM.body.classList.remove('sidebar-active'); },
         setupAllWidgets() { this.setupAllClocks(); this.setupAllCalendars(); this.setupAllTimers(); this.setupAllYoutubePlayers(); },
