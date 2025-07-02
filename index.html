@@ -145,8 +145,7 @@
         body:not(.dashboard-hidden) #app { height: calc(100vh - 230px); }
         body:not(.dashboard-hidden) #dashboard-toggle svg { transform: rotate(180deg); }
         
-        /* <!-- MODIFICADO --> BOTÓN DE ACCIÓN FLOTANTE (FAB) PARA MÓVIL */
-        #mobile-fab-container { display: none; /* Oculto por defecto, visible solo en móvil */ position: fixed; bottom: 20px; right: 20px; z-index: 1050; flex-direction: column-reverse; align-items: center; gap: 15px; }
+        #mobile-fab-container { display: none; position: fixed; bottom: 20px; right: 20px; z-index: 1050; flex-direction: column-reverse; align-items: center; gap: 15px; }
         .fab-actions { display: flex; flex-direction: column-reverse; gap: 15px; }
         .fab-action { width: 48px; height: 48px; background-color: var(--primary-accent-dark); color: white; border-radius: 50%; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s; transform: scale(0.5); opacity: 0; }
         #fab-toggle-btn { width: 56px; height: 56px; background-color: var(--primary-accent); color: white; border-radius: 50%; border: none; box-shadow: 0 6px 20px rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.3s ease, background-color 0.3s ease; }
@@ -163,10 +162,50 @@
             #sidebar-toggle-btn { display: block; }
             #mobile-sidebar-container { display: block; }
             #dashboard-toggle { display: none; }
-            #top-controls { padding: 0 10px; width: auto; right: 10px; }
+            
+            /* INICIO: CORRECCIÓN DEL HEADER MÓVIL */
+            #top-controls {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 60px;
+                padding: 0 10px;
+                box-sizing: border-box;
+                display: flex;
+                align-items: center;
+                gap: 8px; /* Espacio entre elementos */
+                background: rgba(239, 243, 245, 0.8);
+                backdrop-filter: blur(10px);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.9);
+                z-index: 1001;
+            }
+            #workspace-title {
+                position: static; /* Quitar posicionamiento absoluto */
+                flex-grow: 1; /* Permitir que ocupe el espacio sobrante */
+                margin: 0;
+                padding: 0 5px;
+                text-align: left; /* Alinear a la izquierda, junto al menú */
+                font-size: 16px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: none; /* Eliminar el max-width que limitaba */
+            }
+            #app {
+                 padding: 75px 15px 100px 15px; /* Ajustar padding superior para el nuevo header fijo */
+            }
+            .profile-avatar {
+                width: 40px;
+                height: 40px;
+            }
+            .control-btn.secondary {
+                 padding: 6px 10px; /* Hacer el botón un poco más compacto */
+                 font-size: 13px;
+            }
+             /* FIN: CORRECCIÓN DEL HEADER MÓVIL */
+
             #addZoneBtn, #addNoteBtn { display: none; }
-            .control-btn.secondary { display: none; }
-            #workspace-title { left: 60px; top: 21px; font-size: 16px; max-width: calc(100% - 180px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
             .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1099; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
             #mobile-sidebar { position: fixed; top: 0; left: -300px; width: 300px; max-width: 85%; height: 100%; background: #ffffff; z-index: 1100; box-shadow: 5px 0 15px rgba(0,0,0,0.1); transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; }
             body.sidebar-active .sidebar-overlay { opacity: 1; visibility: visible; }
@@ -177,7 +216,6 @@
             .sidebar-content { overflow-y: auto; flex-grow: 1; }
             .sidebar-content .dashboard-widget { flex-direction: column; align-items: flex-start; text-align: left; padding: 20px; border-bottom: 1px solid #eee; }
             .sidebar-content .dashboard-widget:last-child { border-bottom: none; }
-            .sidebar-content .dashboard-widget h3 { margin-bottom: 15px; }
             .sidebar-content #stats-widget span, .sidebar-content #clock-widget #current-time, .sidebar-content #timer-display { font-size: 28px; }
             .sidebar-content .timer-display-container { justify-content: flex-start;}
             .sidebar-content #youtube-widget input { width: calc(100% - 16px); }
@@ -187,7 +225,7 @@
             .sidebar-content .calendar-header { padding: 0 5px; }
             .sidebar-content .calendar-grid { gap: 1px; }
             .sidebar-content .day { padding: 4px 0; }
-            #app { display: flex; flex-direction: column; gap: 16px; padding: 80px 15px 100px 15px; /* Más padding inferior para el FAB */ height: auto; }
+            #app { display: flex; flex-direction: column; gap: 16px; height: auto; }
             #notesContainer, #zonesContainer { display: none; }
             .draggable, .note, .zone { position: static !important; left: auto !important; top: auto !important; width: 100% !important; height: auto !important; min-height: 0; transform: none !important; cursor: default !important; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
             .zone { padding: 15px; padding-top: 55px; background: var(--zone-bg); }
@@ -199,7 +237,7 @@
             .modal-content p { font-size: 14px; }
             .set-timer-inputs input { width: 50px; padding: 8px; font-size: 20px; }
             .zone .zone-notes-container-mobile { margin-top: 15px; display: flex; flex-direction: column; gap: 12px; padding-left: 15px; border-left: 3px solid var(--primary-accent); }
-            #mobile-fab-container { display: flex; } /* Hacemos visible el FAB en móvil */
+            #mobile-fab-container { display: flex; }
         }
     </style>
 </head>
@@ -208,9 +246,10 @@
     <button id="google-signin-btn">🚀 Iniciar Sesión con Google</button>
 
     <div class="main-content">
-        <h2 id="workspace-title"></h2>
+        <!-- MODIFICADO: El h2 se movió dentro de #top-controls -->
         <div id="top-controls">
             <button id="sidebar-toggle-btn" class="control-btn">☰</button>
+            <h2 id="workspace-title"></h2>
             <span id="save-status"></span>
             <button id="show-general-btn" class="control-btn secondary">Ver Tablero General</button>
             <button id="addZoneBtn" class="control-btn">Añadir Zona</button>
@@ -272,7 +311,7 @@
     <!-- MENÚ LATERAL MÓVIL -->
     <div id="mobile-sidebar-container"><div class="sidebar-overlay"></div><aside id="mobile-sidebar"><div class="sidebar-header"><h3>Panel de Control</h3><button id="close-sidebar-btn">×</button></div><div class="sidebar-content"></div></aside></div>
     
-    <!-- MODIFICADO: BOTÓN DE ACCIÓN FLOTANTE (FAB) -->
+    <!-- BOTÓN DE ACCIÓN FLOTANTE (FAB) -->
     <div id="mobile-fab-container">
         <div class="fab-actions">
             <button id="fab-add-note" class="fab-action" title="Añadir Nota">
@@ -343,7 +382,6 @@
             this.DOM.sidebarContent = document.querySelector('#mobile-sidebar .sidebar-content');
             this.DOM.closeSidebarBtn = document.getElementById('close-sidebar-btn');
             this.DOM.dashboardToggle = document.getElementById('dashboard-toggle');
-            // MODIFICADO: Cache de los nuevos botones FAB
             this.DOM.fabContainer = document.getElementById('mobile-fab-container');
             this.DOM.fabToggleBtn = document.getElementById('fab-toggle-btn');
             this.DOM.fabAddNoteBtn = document.getElementById('fab-add-note');
@@ -372,7 +410,6 @@
             document.querySelectorAll('#stop-timer').forEach(btn => btn.addEventListener('click', () => this.requestConfirm('Pausar Temporizador', '¿Quieres pausar el tiempo?', this.stopTimer)));
             document.querySelectorAll('#reset-timer').forEach(btn => btn.addEventListener('click', () => this.requestConfirm('Reiniciar Temporizador', 'Esto restablecerá el tiempo a su valor inicial. ¿Continuar?', this.resetTimer)));
             this.DOM.dashboardToggle.addEventListener('click', () => { const isHidden = this.DOM.body.classList.toggle('dashboard-hidden'); localStorage.setItem('dashboardIsHidden', isHidden); });
-            // MODIFICADO: Eventos para el FAB
             this.DOM.fabToggleBtn.addEventListener('click', () => this.DOM.fabContainer.classList.toggle('fab-active'));
             this.DOM.fabAddNoteBtn.addEventListener('click', () => { this.addNote(); this.DOM.fabContainer.classList.remove('fab-active'); });
             this.DOM.fabAddZoneBtn.addEventListener('click', () => { this.addZone(); this.DOM.fabContainer.classList.remove('fab-active'); });
@@ -483,7 +520,7 @@
         
         createNoteElement(note) {
             const element = document.createElement('div');
-            element.className = 'note'; // Ya no necesita ser draggable en móvil
+            element.className = 'note'; 
             element.innerHTML = `<button class="delete-btn">×</button><textarea placeholder="Escribe algo...">${note.content || ''}</textarea>`;
             
             element.querySelector('textarea').addEventListener('input', e => { note.content = e.target.value; this.saveData(); });
@@ -499,7 +536,7 @@
         },
         createZoneElement(zone) {
             const element = document.createElement('div');
-            element.className = 'zone'; // Ya no necesita ser draggable en móvil
+            element.className = 'zone'; 
             element.innerHTML = `<input class="zone-title" value="${zone.title}" placeholder="Título de la Zona"><span class="delete-btn">×</span><div class="resize-handle"></div><div class="zone-notes-container-mobile"></div>`;
             
             element.querySelector('.zone-title').addEventListener('input', e => { zone.title = e.target.value; this.saveData(); });
@@ -519,17 +556,17 @@
 
         updateTopControlsVisibility() {
             const isMobile = window.innerWidth <= 768;
+            const generalBtn = document.getElementById('show-general-btn');
             if (isMobile) {
-                this.DOM.showGeneralBtn.style.display = this.state.selectedDate ? 'block' : 'none';
+                generalBtn.style.display = this.state.selectedDate ? 'flex' : 'none'; // Use flex to align with other buttons
             } else {
-                 this.DOM.showGeneralBtn.style.display = 'block';
+                 generalBtn.style.display = 'block';
             }
         },
 
         addNote() { const newNote = { id: Date.now() + Math.random(), content: '', x: 20, y: 20, date: this.state.selectedDate, zoneId: null }; this.state.notes.push(newNote); this.renderWorkspace(); this.saveData(); this.updateStats(); this.renderCalendar(); },
         addZone() { const newZone = { id: Date.now() + Math.random(), title: 'Nueva Zona', x: 50, y: 50, width: 400, height: 300, date: this.state.selectedDate }; this.state.zones.push(newZone); this.renderWorkspace(); this.saveData(); },
         
-        // --- El resto del código JS (helpers, modals, etc.) no necesita cambios ---
         requestConfirm(title, message, action) { this.DOM.confirmModal.title.textContent = title; this.DOM.confirmModal.message.textContent = message; this.state.pendingTimerAction = action.bind(this); this.DOM.confirmModal.overlay.classList.add('visible'); },
         closeConfirmModal() { this.DOM.confirmModal.overlay.classList.remove('visible'); this.state.pendingTimerAction = null; },
         handleConfirmAction() { if (typeof this.state.pendingTimerAction === 'function') { this.state.pendingTimerAction(); } this.closeConfirmModal(); },
