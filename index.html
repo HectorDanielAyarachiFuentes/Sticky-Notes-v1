@@ -154,6 +154,7 @@
         #mobile-fab-container.fab-active .fab-action { transform: scale(1); opacity: 1; }
         #mobile-fab-container.fab-active .fab-action:nth-child(1) { transition-delay: 0.1s; }
         #mobile-fab-container.fab-active .fab-action:nth-child(2) { transition-delay: 0.05s; }
+        .add-note-in-zone-btn { display: none; }
 
         @media (max-width: 768px) {
             body { overflow-y: auto; overflow-x: hidden; height: auto; }
@@ -217,9 +218,35 @@
             
             #app { display: flex; flex-direction: column; gap: 16px; padding: 75px 15px 100px 15px; height: auto; }
             #notesContainer, #zonesContainer { display: none; }
-            .draggable, .note, .zone { position: static !important; left: auto !important; top: auto !important; width: 100% !important; height: auto !important; min-height: 0; transform: none !important; cursor: default !important; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-            .zone { padding: 15px; padding-top: 55px; background: var(--zone-bg); }
-            .note { min-height: 120px; }
+            
+            /* CORE FIX: Separated rules for note and zone */
+            .draggable, .note {
+                position: static !important;
+                left: auto !important;
+                top: auto !important;
+                width: 100% !important;
+                height: auto !important;
+                min-height: 120px;
+                transform: none !important;
+                cursor: default !important;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            }
+
+            .zone {
+                position: relative !important; /* KEY FIX: Zone is a positioning context */
+                left: auto !important;
+                top: auto !important;
+                width: 100% !important;
+                height: auto !important;
+                min-height: 0;
+                transform: none !important;
+                cursor: default !important;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+                padding: 15px;
+                padding-top: 55px; /* Space for header controls */
+                background: var(--zone-bg);
+            }
+
             .resize-handle { display: none !important; }
             .note textarea { min-height: 100px; font-size: 18px; }
             .modal-content { padding: 25px 20px; width: 90%; }
@@ -228,6 +255,37 @@
             .set-timer-inputs input { width: 50px; padding: 8px; font-size: 20px; }
             .zone .zone-notes-container-mobile { margin-top: 15px; display: flex; flex-direction: column; gap: 12px; padding-left: 15px; border-left: 3px solid var(--primary-accent); }
             #mobile-fab-container { display: flex; }
+
+            /* NEW: Styles for the in-zone add button */
+            .zone .add-note-in-zone-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: absolute;
+                top: 14px;
+                right: 48px;
+                width: 28px;
+                height: 28px;
+                background-color: var(--success-color);
+                color: white;
+                border: none;
+                border-radius: 50%;
+                cursor: pointer;
+                font-size: 22px;
+                line-height: 1;
+                font-weight: 600;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                transition: all 0.2s ease;
+            }
+            .zone .add-note-in-zone-btn:hover {
+                background-color: #2ecc71;
+                transform: scale(1.05);
+            }
+
+            /* NEW: Adjust title width to account for two buttons */
+            .zone .zone-title {
+                width: calc(100% - 100px);
+            }
         }
     </style>
 </head>
@@ -444,9 +502,6 @@
             );
         },
         
-        // =====================================================================
-        // INICIO: LÓGICA DE RENDERIZADO MODIFICADA
-        // =====================================================================
         renderWorkspace() {
             const isMobile = window.innerWidth <= 768;
             this.DOM.app.innerHTML = ''; 
@@ -486,16 +541,13 @@
         },
         
         renderMobileLayout() {
-            // Esta función ahora organiza los elementos por jerarquía para una vista móvil coherente.
             const notesToShow = this.state.notes.filter(note => note.date === this.state.selectedDate);
             const zonesToShow = this.state.zones.filter(zone => zone.date === this.state.selectedDate);
             
-            // 1. Renderizar Zonas y sus notas hijas
             zonesToShow.forEach(zone => {
                 const zoneEl = this.createZoneElement(zone);
                 const mobileNotesContainer = zoneEl.querySelector('.zone-notes-container-mobile');
                 
-                // Buscar y renderizar las notas que pertenecen a esta zona
                 const notesInThisZone = notesToShow.filter(note => note.zoneId === zone.id);
                 notesInThisZone.forEach(note => {
                     const noteEl = this.createNoteElement(note);
@@ -505,16 +557,12 @@
                 this.DOM.app.appendChild(zoneEl);
             });
 
-            // 2. Renderizar notas "huérfanas" (sin zona asignada) al final
             const standaloneNotes = notesToShow.filter(note => !note.zoneId || !zonesToShow.some(z => z.id === note.zoneId));
             standaloneNotes.forEach(note => {
                 const noteEl = this.createNoteElement(note);
                 this.DOM.app.appendChild(noteEl);
             });
         },
-        // =====================================================================
-        // FIN: LÓGICA DE RENDERIZADO MODIFICADA
-        // =====================================================================
         
         createNoteElement(note) {
             const element = document.createElement('div');
@@ -538,8 +586,8 @@
             element.innerHTML = `
                 <input class="zone-title" value="${zone.title}" placeholder="Título de la Zona">
                 <span class="delete-btn">×</span>
+                <button class="add-note-in-zone-btn" title="Añadir Nota a Zona">+</button>
                 <div class="resize-handle"></div>
-                <!-- Este contenedor es crucial para la jerarquía en móvil -->
                 <div class="zone-notes-container-mobile"></div>
             `;
             
@@ -549,6 +597,9 @@
                 this.state.notes.forEach(n => { if (n.zoneId === zone.id) n.zoneId = null; }); 
                 this.saveData(); 
                 this.renderWorkspace(); 
+            });
+            element.querySelector('.add-note-in-zone-btn').addEventListener('click', () => {
+                this.addNote(zone.id);
             });
             
             if(window.innerWidth > 768) {
@@ -570,14 +621,21 @@
 
             if (isMobile) {
                 generalBtn.style.display = this.state.selectedDate ? 'flex' : 'none'; 
-                userProfileMenu.style.marginLeft = 'auto'; // Empuja el avatar a la derecha
+                userProfileMenu.style.marginLeft = 'auto';
             } else {
                  generalBtn.style.display = 'block';
                  userProfileMenu.style.marginLeft = '0';
             }
         },
 
-        addNote() { const newNote = { id: Date.now() + Math.random(), content: '', x: 20, y: 20, date: this.state.selectedDate, zoneId: null }; this.state.notes.push(newNote); this.renderWorkspace(); this.saveData(); this.updateStats(); this.renderCalendar(); },
+        addNote(zoneId = null) {
+            const newNote = { id: Date.now() + Math.random(), content: '', x: 20, y: 20, date: this.state.selectedDate, zoneId: zoneId };
+            this.state.notes.push(newNote);
+            this.renderWorkspace();
+            this.saveData();
+            this.updateStats();
+            this.renderCalendar();
+        },
         addZone() { const newZone = { id: Date.now() + Math.random(), title: 'Nueva Zona', x: 50, y: 50, width: 400, height: 300, date: this.state.selectedDate }; this.state.zones.push(newZone); this.renderWorkspace(); this.saveData(); },
         
         requestConfirm(title, message, action) { this.DOM.confirmModal.title.textContent = title; this.DOM.confirmModal.message.textContent = message; this.state.pendingTimerAction = action.bind(this); this.DOM.confirmModal.overlay.classList.add('visible'); },
