@@ -21,15 +21,14 @@
             --zone-bg: rgba(90, 125, 203, 0.1);
             --zone-border: rgba(90, 125, 203, 0.4);
             --highlight-color: #ffc107;
+            --danger-color: #e74c3c;
         }
-
         body {
             font-family: 'Poppins', sans-serif;
             background-color: var(--bg-color);
             background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23dce3eb" fill-opacity="0.4"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
             margin: 0; padding: 0; overflow: hidden; height: 100vh;
         }
-
         #google-signin-btn {
             position: fixed; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
@@ -45,19 +44,49 @@
         .logged-in .main-content { opacity: 1; }
         #app { position: relative; width: 100%; height: calc(100vh - 140px); padding: 20px; padding-top: 60px; box-sizing: border-box; }
         #workspace-title { position: fixed; top: 15px; left: 20px; font-size: 24px; font-weight: 600; color: var(--text-dark); z-index: 1001; }
-        #top-controls { position: fixed; top: 20px; right: 20px; z-index: 1001; display: flex; gap: 12px; }
+        #top-controls { position: fixed; top: 15px; right: 20px; z-index: 1001; display: flex; gap: 12px; align-items: center; }
+        #save-status { font-size: 14px; color: var(--text-light); transition: opacity 0.3s ease; margin-right: 10px; }
         .control-btn { padding: 10px 22px; font-size: 14px; font-weight: 600; color: white; background-color: var(--primary-accent); border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 5px 15px rgba(90, 125, 203, 0.3); transition: all 0.3s ease; }
         .control-btn:hover { background-color: var(--primary-accent-dark); transform: translateY(-2px); }
         .control-btn.secondary { background-color: #95a5a6; }
         .control-btn.secondary:hover { background-color: #7f8c8d; }
-        .draggable { position: absolute; }
-        .note { width: 240px; height: 240px; background-color: var(--note-color); box-shadow: 0 8px 25px var(--note-shadow); border-radius: 8px; padding: 15px; box-sizing: border-box; cursor: move; display: flex; flex-direction: column; z-index: 10; }
+        
+        /* --- Nuevo Menú de Perfil --- */
+        .profile-menu-container { position: relative; }
+        .profile-avatar { width: 45px; height: 45px; border-radius: 50%; cursor: pointer; border: 2px solid var(--panel-border); box-shadow: 0 2px 10px rgba(0,0,0,0.1); transition: transform 0.2s ease; }
+        .profile-avatar:hover { transform: scale(1.05); }
+        .profile-dropdown {
+            position: absolute; top: 120%; right: 0;
+            width: 220px; background-color: white;
+            border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            padding: 15px; box-sizing: border-box;
+            opacity: 0; visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 1005;
+        }
+        .profile-menu-container:hover .profile-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+        .profile-dropdown .user-info { text-align: center; padding-bottom: 15px; border-bottom: 1px solid #f0f0f0; margin-bottom: 10px; }
+        .profile-dropdown .user-name { font-weight: 600; color: var(--text-dark); margin: 0; font-size: 16px; }
+        .profile-dropdown .signout-btn {
+            width: 100%; display: flex; align-items: center; justify-content: center;
+            gap: 8px; padding: 10px; border: none;
+            background-color: transparent; font-size: 14px; font-weight: 500;
+            color: var(--danger-color); border-radius: 8px; cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .profile-dropdown .signout-btn:hover { background-color: #fef2f2; }
+        /* --- Fin Menú Perfil --- */
+        
+        .draggable { position: absolute; z-index: 10; }
+        .dragging { z-index: 999 !important; }
+        .note { width: 240px; height: 240px; background-color: var(--note-color); box-shadow: 0 8px 25px var(--note-shadow); border-radius: 8px; padding: 15px; box-sizing: border-box; cursor: move; display: flex; flex-direction: column; }
         .note textarea { flex-grow: 1; border: none; background: transparent; resize: none; font-family: 'Caveat', cursive; font-size: 22px; line-height: 1.5; color: var(--text-dark); outline: none; cursor: text; margin-top: 15px; }
         .zone { background-color: var(--zone-bg); backdrop-filter: blur(5px); border: 1px solid var(--zone-border); border-radius: 12px; box-sizing: border-box; cursor: move; z-index: 1; padding: 45px 15px 15px 15px; min-width: 250px; min-height: 200px; }
         .zone-title { position: absolute; top: 12px; left: 15px; font-weight: 600; font-size: 16px; color: var(--primary-accent-dark); border: none; background: transparent; width: calc(100% - 60px); outline: none; }
         .delete-btn { position: absolute; top: 8px; right: 8px; width: 24px; height: 24px; text-align: center; line-height: 24px; font-size: 20px; border-radius: 50%; cursor: pointer; user-select: none; transition: background-color 0.2s, color 0.2s; color: var(--text-light); }
         .delete-btn:hover { background-color: var(--highlight-color); color: white; }
-        .resize-handle { position: absolute; bottom: 0; right: 0; width: 20px; height: 20px; cursor: nwse-resize; z-index: 2; }
+        .resize-handle { position: absolute; bottom: 0; right: 0; width: 20px; height: 20px; cursor: nwse-resize; z-index: 11; }
         .resize-handle::after { content: ''; position: absolute; right: 5px; bottom: 5px; width: 8px; height: 8px; border-bottom: 2px solid var(--primary-accent); border-right: 2px solid var(--primary-accent); opacity: 0.5; }
         #bottom-dashboard { position: fixed; bottom: 0; left: 0; width: 100%; height: 140px; background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(10px); border-top: 1px solid rgba(255, 255, 255, 0.8); box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.05); display: flex; align-items: stretch; justify-content: space-between; padding: 0 15px; box-sizing: border-box; z-index: 1002; }
         .dashboard-widget { display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-dark); padding: 10px; text-align: center; border-right: 1px solid rgba(0,0,0,0.05); flex-grow: 1; flex-basis: 0; }
@@ -107,10 +136,21 @@
     <div class="main-content">
         <h2 id="workspace-title"></h2>
         <div id="top-controls">
-            <button id="signout-btn" class="control-btn secondary">Cerrar Sesión</button>
+            <span id="save-status"></span>
             <button id="show-general-btn" class="control-btn secondary">Ver Tablero General</button>
             <button id="addZoneBtn" class="control-btn">Añadir Zona</button>
             <button id="addNoteBtn" class="control-btn">Añadir Nota</button>
+            <div id="user-profile-menu" class="profile-menu-container">
+                <img id="profile-avatar" src="" alt="Avatar de Usuario" class="profile-avatar">
+                <div class="profile-dropdown">
+                    <div class="user-info">
+                        <p id="user-name" class="user-name"></p>
+                    </div>
+                    <button id="signout-btn" class="signout-btn">
+                        <span>🚪</span> Cerrar Sesión
+                    </button>
+                </div>
+            </div>
         </div>
         <div id="app">
             <div id="zonesContainer"></div>
@@ -146,301 +186,501 @@
     <div id="set-timer-modal-overlay" class="modal-overlay">
         <div class="modal-content">
             <h2>Configurar Recordatorio</h2>
-            <p>¡Atento! Estás a punto de cambiar la duración de tu recordatorio.</p>
+            <p>Define la duración de tu temporizador.</p>
             <div class="set-timer-inputs">
-                <input type="number" id="set-hours" min="0" max="99" placeholder="HH">
-                <input type="number" id="set-minutes" min="0" max="59" placeholder="MM">
-                <input type="number" id="set-seconds" min="0" max="59" placeholder="SS">
+                <input type="number" id="set-hours" min="0" max="99" placeholder="HH" oninput="this.value = Math.max(0, parseInt(this.value) || 0)">
+                <input type="number" id="set-minutes" min="0" max="59" placeholder="MM" oninput="this.value = Math.min(59, Math.max(0, parseInt(this.value) || 0))">
+                <input type="number" id="set-seconds" min="0" max="59" placeholder="SS" oninput="this.value = Math.min(59, Math.max(0, parseInt(this.value) || 0))">
             </div>
             <button id="save-timer-btn" class="action-btn">Guardar</button>
         </div>
     </div>
 
-    <audio id="alarm-sound" src="data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU2LjQwLjEwMQAAAAAAAAAAAAAA/+M4wAAAAAAAAAAAAEluZm8AAAAPAAAAAwAAAbAAqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq-"></audio>
+    <audio id="alarm-sound" src="data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU2LjQwLjEwMQAAAAAAAAAAAAAA/+M4wAAAAAAAAAAAAEluZm8AAAAPAAAAAwAAAbAAqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq-"></audio>
     
-    <!-- SDKs de Firebase (versión compat, más simple para un solo archivo) -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script type="module">
+        // SDKs de Firebase (v9+, modular)
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
         // --- CONFIGURACIÓN DE FIREBASE ---
-        // ▼▼▼ REEMPLAZA ESTE BLOQUE CON EL TUYO ▼▼▼
-       const firebaseConfig = {
-  apiKey: "AIzaSyCptS0stYpYu5GGLNXgtjNJD8NFzKZdEj0",
-  authDomain: "mi-dashboard-de-notas.firebaseapp.com",
-  projectId: "mi-dashboard-de-notas",
-  storageBucket: "mi-dashboard-de-notas.appspot.com", // OJO: Firebase a veces usa '.firebasestorage.app'. Usa el que te dieron, pero '.appspot.com' es más común para Firestore.
-  messagingSenderId: "829232928135",
-  appId: "1:829232cptS0stYpYu5GGLNXgtjNJD8NFzKZdEj0:web:04e2043af0d7f79d916f22",
-  measurementId: "G-T89JSJ7DEN"
-};
-        // ▲▲▲ FIN DEL BLOQUE A REEMPLAZAR ▲▲▲
-
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-        const provider = new firebase.auth.GoogleAuthProvider();
-
-        let appState = { notes: [], zones: [], youtubeUrl: '', selectedDate: null };
-        let currentUser = null;
+        const firebaseConfig = {
+             apiKey: "AIzaSyCptS0stYpYu5GGLNXgtjNJD8NFzKZdEj0",
+            authDomain: "mi-dashboard-de-notas.firebaseapp.com",
+            projectId: "mi-dashboard-de-notas",
+            storageBucket: "mi-dashboard-de-notas.appspot.com",
+            messagingSenderId: "829232928135",
+            appId: "1:829232cptS0stYpYu5GGLNXgtjNJD8NFzKZdEj0:web:04e2043af0d7f79d916f22",
+            measurementId: "G-T89JSJ7DEN"
+        };
         
-        const signInBtn = document.getElementById('google-signin-btn');
-        const signOutBtn = document.getElementById('signout-btn');
-        const body = document.body;
+        const App = {
+            // --- PROPIEDADES ---
+            firebase: {},
+            state: {
+                currentUser: null,
+                notes: [],
+                zones: [],
+                youtubeUrl: '',
+                selectedDate: null,
+                isDataLoaded: false,
+                calendarDate: new Date(),
+                timerInterval: null,
+                timerSeconds: 25 * 60,
+                timerInitialDuration: 25 * 60,
+                timerPreAlertShown: false,
+            },
+            DOM: {},
+            
+            // --- INICIALIZACIÓN ---
+            init() {
+                this.cacheDOM();
+                this.initFirebase();
+                this.bindEvents();
+                this.setupAllWidgets();
+            },
 
-        const notesContainer = document.getElementById('notesContainer');
-        const zonesContainer = document.getElementById('zonesContainer');
-        const workspaceTitle = document.getElementById('workspace-title');
-        const addNoteBtn = document.getElementById('addNoteBtn');
-        const addZoneBtn = document.getElementById('addZoneBtn');
-        const showGeneralBtn = document.getElementById('show-general-btn');
-        
-        const alertModalOverlay = document.getElementById('alert-modal-overlay');
-        const alertModalTitle = document.getElementById('alert-modal-title');
-        const alertModalMessage = document.getElementById('alert-modal-message');
-        const alertModalCloseBtn = document.getElementById('alert-modal-close-btn');
+            cacheDOM() {
+                this.DOM.body = document.body;
+                this.DOM.signInBtn = document.getElementById('google-signin-btn');
+                this.DOM.notesContainer = document.getElementById('notesContainer');
+                this.DOM.zonesContainer = document.getElementById('zonesContainer');
+                this.DOM.workspaceTitle = document.getElementById('workspace-title');
+                this.DOM.addNoteBtn = document.getElementById('addNoteBtn');
+                this.DOM.addZoneBtn = document.getElementById('addZoneBtn');
+                this.DOM.showGeneralBtn = document.getElementById('show-general-btn');
+                this.DOM.noteCount = document.getElementById('note-count');
+                this.DOM.saveStatus = document.getElementById('save-status');
+                // Profile Menu
+                this.DOM.profileMenu = document.getElementById('user-profile-menu');
+                this.DOM.profileAvatar = document.getElementById('profile-avatar');
+                this.DOM.userName = document.getElementById('user-name');
+                this.DOM.signOutBtn = document.getElementById('signout-btn');
+                // Calendar
+                this.DOM.calendarDays = document.getElementById('calendar-days');
+                this.DOM.monthYear = document.getElementById('month-year');
+                this.DOM.prevMonthBtn = document.getElementById('prev-month');
+                this.DOM.nextMonthBtn = document.getElementById('next-month');
+                // YouTube
+                this.DOM.youtubeInput = document.getElementById('youtube-url-input');
+                this.DOM.youtubePlayer = document.getElementById('youtube-player');
+                // Timer
+                this.DOM.timerDisplay = document.getElementById('timer-display');
+                this.DOM.startTimerBtn = document.getElementById('start-timer');
+                this.DOM.stopTimerBtn = document.getElementById('stop-timer');
+                this.DOM.resetTimerBtn = document.getElementById('reset-timer');
+                this.DOM.editTimerBtn = document.getElementById('edit-timer-btn');
+                this.DOM.alarmSound = document.getElementById('alarm-sound');
+                // Modals
+                this.DOM.alertModal = {
+                    overlay: document.getElementById('alert-modal-overlay'),
+                    title: document.getElementById('alert-modal-title'),
+                    message: document.getElementById('alert-modal-message'),
+                    closeBtn: document.getElementById('alert-modal-close-btn')
+                };
+                this.DOM.timerModal = {
+                    overlay: document.getElementById('set-timer-modal-overlay'),
+                    hoursInput: document.getElementById('set-hours'),
+                    minutesInput: document.getElementById('set-minutes'),
+                    secondsInput: document.getElementById('set-seconds'),
+                    saveBtn: document.getElementById('save-timer-btn')
+                };
+            },
 
-        signInBtn.addEventListener('click', () => auth.signInWithPopup(provider).catch(console.error));
-        signOutBtn.addEventListener('click', () => auth.signOut());
+            initFirebase() {
+                const firebaseApp = initializeApp(firebaseConfig);
+                this.firebase.auth = getAuth(firebaseApp);
+                this.firebase.db = getFirestore(firebaseApp);
+                this.firebase.provider = new GoogleAuthProvider();
 
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                currentUser = user;
-                body.classList.remove('logged-out');
-                body.classList.add('logged-in');
-                loadDataFromFirestore();
-            } else {
-                currentUser = null;
-                body.classList.add('logged-out');
-                body.classList.remove('logged-in');
-                notesContainer.innerHTML = '';
-                zonesContainer.innerHTML = '';
-            }
-        });
-
-        const saveDataToFirestore = debounce(async () => {
-            if (!currentUser) return;
-            try {
-                const userDocRef = db.collection('user_data').doc(currentUser.uid);
-                await userDocRef.set(appState);
-            } catch (error) { console.error("Error al guardar datos:", error); }
-        }, 1500);
-
-        async function loadDataFromFirestore() {
-            if (!currentUser) return;
-            const userDocRef = db.collection('user_data').doc(currentUser.uid);
-            try {
-                const doc = await userDocRef.get();
-                if (doc.exists) {
-                    const data = doc.data();
-                    appState = { ...appState, ...data }; 
-                    if (!appState.notes) appState.notes = [];
-                    if (!appState.zones) appState.zones = [];
-                } else {
-                    appState = { notes: [], zones: [], youtubeUrl: '', selectedDate: null };
-                }
-                initializeAll();
-            } catch (error) { console.error("Error al cargar datos:", error); }
-        }
-
-        function debounce(func, wait) { let timeout; return function executedFunction(...args) { const later = () => { clearTimeout(timeout); func(...args); }; clearTimeout(timeout); timeout = setTimeout(later, wait); }; }
-        function showAlertModal(title, message) { alertModalTitle.textContent = title; alertModalMessage.textContent = message; alertModalOverlay.classList.add('visible'); }
-        function closeAlertModal() { alertModalOverlay.classList.remove('visible'); }
-
-        function renderWorkspace() {
-            notesContainer.innerHTML = '';
-            zonesContainer.innerHTML = '';
-            const notesToShow = appState.notes.filter(note => note.date === appState.selectedDate);
-            const zonesToShow = appState.zones.filter(zone => zone.date === appState.selectedDate);
-            notesToShow.forEach(createNoteElement);
-            zonesToShow.forEach(createZoneElement);
-            if (appState.selectedDate) {
-                const [y, m, d] = appState.selectedDate.split('-');
-                workspaceTitle.textContent = `Notas para: ${new Date(y, m - 1, d).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}`;
-            } else {
-                workspaceTitle.textContent = 'Tablero General';
-            }
-            updateStats();
-        }
-
-        function makeDraggable(element, item) {
-            let isDragging = false, offsetX, offsetY;
-            element.addEventListener('mousedown', e => {
-                const target = e.target;
-                if (target.tagName.toLowerCase() === 'textarea' || target.tagName.toLowerCase() === 'input' || target.classList.contains('delete-btn') || target.classList.contains('resize-handle')) return;
-                isDragging = true; element.classList.add('dragging');
-                offsetX = e.clientX - element.offsetLeft; offsetY = e.clientY - element.offsetTop;
-            });
-            document.addEventListener('mousemove', e => {
-                if (!isDragging) return;
-                let newX = e.clientX - offsetX, newY = e.clientY - offsetY;
-                const appRect = document.getElementById('app').getBoundingClientRect();
-                element.style.left = `${Math.max(0, Math.min(newX, appRect.width - element.offsetWidth))}px`;
-                element.style.top = `${Math.max(0, Math.min(newY, appRect.height - element.offsetHeight))}px`;
-            });
-            document.addEventListener('mouseup', () => {
-                if (isDragging) {
-                    isDragging = false; element.classList.remove('dragging');
-                    item.x = parseInt(element.style.left); item.y = parseInt(element.style.top);
-                    saveDataToFirestore();
-                }
-            });
-        }
-        
-        function makeResizable(element, item) {
-            const handle = element.querySelector('.resize-handle'); let isResizing = false;
-            handle.addEventListener('mousedown', e => { isResizing = true; e.stopPropagation(); });
-            document.addEventListener('mousemove', e => {
-                if (!isResizing) return;
-                const rect = element.getBoundingClientRect();
-                element.style.width = `${Math.max(250, e.clientX - rect.left)}px`;
-                element.style.height = `${Math.max(200, e.clientY - rect.top)}px`;
-            });
-            document.addEventListener('mouseup', () => {
-                if (isResizing) {
-                    isResizing = false;
-                    item.width = parseInt(element.style.width); item.height = parseInt(element.style.height);
-                    saveDataToFirestore();
-                }
-            });
-        }
-        
-        function createNoteElement(note) {
-            const element = document.createElement('div'); element.className = 'draggable note';
-            element.style.left = `${note.x}px`; element.style.top = `${note.y}px`;
-            element.innerHTML = `<button class="delete-btn">×</button><textarea placeholder="Escribe algo...">${note.content}</textarea>`;
-            notesContainer.appendChild(element);
-            element.querySelector('textarea').addEventListener('input', e => { note.content = e.target.value; saveDataToFirestore(); });
-            element.querySelector('.delete-btn').addEventListener('click', () => {
-                appState.notes = appState.notes.filter(n => n.id !== note.id);
-                saveDataToFirestore(); renderWorkspace(); renderCalendar();
-            });
-            makeDraggable(element, note);
-        }
-        
-        function createZoneElement(zone) {
-            const element = document.createElement('div'); element.className = 'draggable zone';
-            element.style.left = `${zone.x}px`; element.style.top = `${zone.y}px`;
-            element.style.width = `${zone.width}px`; element.style.height = `${zone.height}px`;
-            element.innerHTML = `<input class="zone-title" value="${zone.title}" placeholder="Título de la Zona"><span class="delete-btn">×</span><div class="resize-handle"></div>`;
-            zonesContainer.appendChild(element);
-            element.querySelector('.zone-title').addEventListener('input', e => { zone.title = e.target.value; saveDataToFirestore(); });
-            element.querySelector('.delete-btn').addEventListener('click', () => {
-                appState.zones = appState.zones.filter(z => z.id !== zone.id);
-                saveDataToFirestore(); renderWorkspace();
-            });
-            makeDraggable(element, zone); makeResizable(element, zone);
-        }
-        
-        function addNote() { const newNote = { id: Date.now() + Math.random(), content: '', x: 20, y: 20, date: appState.selectedDate }; appState.notes.push(newNote); createNoteElement(newNote); saveDataToFirestore(); updateStats(); renderCalendar(); }
-        function addZone() { const newZone = { id: Date.now() + Math.random(), title: 'Nueva Zona', x: 50, y: 50, width: 400, height: 300, date: appState.selectedDate }; appState.zones.push(newZone); createZoneElement(newZone); saveDataToFirestore(); }
-        function updateStats() { const notesInView = appState.notes.filter(n => n.date === appState.selectedDate).length; document.getElementById('note-count').textContent = notesInView; }
-        
-        let calendarDate = new Date();
-        function renderCalendar() {
-            const daysEl = document.getElementById('calendar-days');
-            const monthYearEl = document.getElementById('month-year');
-            daysEl.innerHTML = '';
-            const month = calendarDate.getMonth(), year = calendarDate.getFullYear();
-            monthYearEl.textContent = new Date(year, month).toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
-            const noteDates = new Set(appState.notes.map(n => n.date).filter(Boolean));
-            const firstDayIndex = (new Date(year, month, 1).getDay() + 6) % 7;
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-            const today = new Date();
-            ['L', 'M', 'X', 'J', 'V', 'S', 'D'].forEach(day => daysEl.innerHTML += `<span class="day-name">${day}</span>`);
-            for (let i = 0; i < firstDayIndex; i++) daysEl.innerHTML += `<span></span>`;
-            for (let i = 1; i <= daysInMonth; i++) {
-                const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
-                let classes = 'day';
-                if (i === today.getDate() && month === today.getMonth() && year === today.getFullYear()) classes += ' current-day';
-                if (dateString === appState.selectedDate) classes += ' selected-day';
-                if (noteDates.has(dateString)) classes += ' has-notes';
-                daysEl.innerHTML += `<span class="${classes}" data-date="${dateString}">${i}</span>`;
-            }
-        }
-        
-        function setupAllWidgets() {
-            function setupClock() {
-                const timeEl = document.getElementById('current-time'), dateEl = document.getElementById('current-date');
-                function updateClock() { const now = new Date(); timeEl.textContent = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }); dateEl.textContent = now.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }); }
-                updateClock(); setInterval(updateClock, 1000);
-            }
-            function setupCalendar() {
-                document.getElementById('prev-month').onclick = () => { calendarDate.setMonth(calendarDate.getMonth() - 1); renderCalendar(); };
-                document.getElementById('next-month').onclick = () => { calendarDate.setMonth(calendarDate.getMonth() + 1); renderCalendar(); };
-                document.getElementById('calendar-days').addEventListener('click', e => {
-                    if (e.target.classList.contains('day') && e.target.dataset.date) {
-                        appState.selectedDate = e.target.dataset.date;
-                        saveDataToFirestore(); renderWorkspace(); renderCalendar();
+                onAuthStateChanged(this.firebase.auth, (user) => {
+                    if (user) {
+                        this.state.currentUser = user;
+                        this.updateUserProfile(user);
+                        this.DOM.body.classList.remove('logged-out');
+                        this.DOM.body.classList.add('logged-in');
+                        this.loadData();
+                    } else {
+                        this.state.currentUser = null;
+                        this.DOM.body.classList.add('logged-out');
+                        this.DOM.body.classList.remove('logged-in');
+                        this.clearWorkspace();
                     }
                 });
-            }
-            function setupYoutubePlayer() {
-                const youtubeInput = document.getElementById('youtube-url-input');
-                function loadVideo(url) {
+            },
+
+            bindEvents() {
+                this.DOM.signInBtn.addEventListener('click', () => signInWithPopup(this.firebase.auth, this.firebase.provider).catch(console.error));
+                this.DOM.signOutBtn.addEventListener('click', () => signOut(this.firebase.auth));
+                this.DOM.addNoteBtn.addEventListener('click', () => this.addNote());
+                this.DOM.addZoneBtn.addEventListener('click', () => this.addZone());
+                this.DOM.showGeneralBtn.addEventListener('click', () => this.showGeneralDashboard());
+                // Modals
+                this.DOM.alertModal.closeBtn.addEventListener('click', () => this.closeAlertModal());
+                this.DOM.alertModal.overlay.addEventListener('click', e => { if (e.target === this.DOM.alertModal.overlay) this.closeAlertModal(); });
+                this.DOM.timerModal.overlay.addEventListener('click', e => { if (e.target === this.DOM.timerModal.overlay) this.DOM.timerModal.overlay.classList.remove('visible'); });
+            },
+
+            // --- GESTIÓN DE DATOS Y USUARIO ---
+            updateUserProfile(user) {
+                if (user) {
+                    this.DOM.userName.textContent = user.displayName;
+                    this.DOM.profileAvatar.src = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName)}&background=random&color=fff`;
+                }
+            },
+
+            saveData: debounce(async function() {
+                if (!this.state.currentUser || !this.state.isDataLoaded) return;
+                this.DOM.saveStatus.textContent = 'Guardando...';
+                try {
+                    const userDocRef = doc(this.firebase.db, 'user_data', this.state.currentUser.uid);
+                    const dataToSave = {
+                        notes: this.state.notes,
+                        zones: this.state.zones,
+                        youtubeUrl: this.state.youtubeUrl
+                    };
+                    await setDoc(userDocRef, dataToSave);
+                    this.DOM.saveStatus.textContent = 'Guardado ✓';
+                    setTimeout(() => this.DOM.saveStatus.textContent = '', 2000);
+                } catch (error) {
+                    console.error("Error al guardar datos:", error);
+                    this.DOM.saveStatus.textContent = 'Error al guardar';
+                }
+            }, 1500),
+
+            async loadData() {
+                if (!this.state.currentUser) return;
+                const userDocRef = doc(this.firebase.db, 'user_data', this.state.currentUser.uid);
+                try {
+                    const docSnap = await getDoc(userDocRef);
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        this.state.notes = data.notes || [];
+                        this.state.zones = data.zones || [];
+                        this.state.youtubeUrl = data.youtubeUrl || '';
+                    } else {
+                        this.state.notes = [];
+                        this.state.zones = [];
+                        this.state.youtubeUrl = '';
+                    }
+                    this.state.isDataLoaded = true;
+                    this.renderWorkspace();
+                    this.renderCalendar();
+                    this.setupYoutubePlayer();
+                } catch (error) {
+                    console.error("Error al cargar datos:", error);
+                }
+            },
+            
+            // --- RENDERIZADO Y UI (sin cambios a partir de aquí) ---
+            renderWorkspace() {
+                this.DOM.notesContainer.innerHTML = '';
+                this.DOM.zonesContainer.innerHTML = '';
+                
+                const notesToShow = this.state.notes.filter(note => note.date === this.state.selectedDate);
+                const zonesToShow = this.state.zones.filter(zone => zone.date === this.state.selectedDate);
+
+                notesToShow.forEach(note => this.createNoteElement(note));
+                zonesToShow.forEach(zone => this.createZoneElement(zone));
+
+                if (this.state.selectedDate) {
+                    const [y, m, d] = this.state.selectedDate.split('-');
+                    this.DOM.workspaceTitle.textContent = `Notas para: ${new Date(y, m - 1, d).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}`;
+                } else {
+                    this.DOM.workspaceTitle.textContent = 'Tablero General';
+                }
+                this.updateStats();
+            },
+            
+            clearWorkspace() {
+                this.DOM.notesContainer.innerHTML = '';
+                this.DOM.zonesContainer.innerHTML = '';
+                this.DOM.workspaceTitle.textContent = '';
+                this.state.isDataLoaded = false;
+            },
+
+            updateStats() {
+                const notesInView = this.state.notes.filter(n => n.date === this.state.selectedDate).length;
+                this.DOM.noteCount.textContent = notesInView;
+            },
+            
+            makeDraggable(element, item) {
+                element.addEventListener('mousedown', e => {
+                    const target = e.target;
+                    if (target.tagName.toLowerCase() === 'textarea' || target.tagName.toLowerCase() === 'input' || target.classList.contains('delete-btn') || target.classList.contains('resize-handle')) return;
+                    
+                    element.classList.add('dragging');
+                    const offsetX = e.clientX - element.offsetLeft;
+                    const offsetY = e.clientY - element.offsetTop;
+
+                    const onMouseMove = (moveEvent) => {
+                        let newX = moveEvent.clientX - offsetX;
+                        let newY = moveEvent.clientY - offsetY;
+                        const appRect = document.getElementById('app').getBoundingClientRect();
+                        element.style.left = `${Math.max(0, Math.min(newX, appRect.width - element.offsetWidth))}px`;
+                        element.style.top = `${Math.max(0, Math.min(newY, appRect.height - element.offsetHeight))}px`;
+                    };
+
+                    const onMouseUp = () => {
+                        document.removeEventListener('mousemove', onMouseMove);
+                        document.removeEventListener('mouseup', onMouseUp);
+                        element.classList.remove('dragging');
+                        item.x = parseInt(element.style.left);
+                        item.y = parseInt(element.style.top);
+                        this.saveData();
+                    };
+
+                    document.addEventListener('mousemove', onMouseMove);
+                    document.addEventListener('mouseup', onMouseUp);
+                });
+            },
+
+            makeResizable(element, item) {
+                const handle = element.querySelector('.resize-handle');
+                handle.addEventListener('mousedown', e => {
+                    e.stopPropagation();
+                    const startX = e.clientX;
+                    const startY = e.clientY;
+                    const startWidth = parseInt(document.defaultView.getComputedStyle(element).width, 10);
+                    const startHeight = parseInt(document.defaultView.getComputedStyle(element).height, 10);
+
+                    const onMouseMove = (moveEvent) => {
+                        element.style.width = `${Math.max(250, startWidth + moveEvent.clientX - startX)}px`;
+                        element.style.height = `${Math.max(200, startHeight + moveEvent.clientY - startY)}px`;
+                    };
+
+                    const onMouseUp = () => {
+                        document.removeEventListener('mousemove', onMouseMove);
+                        document.removeEventListener('mouseup', onMouseUp);
+                        item.width = parseInt(element.style.width);
+                        item.height = parseInt(element.style.height);
+                        this.saveData();
+                    };
+
+                    document.addEventListener('mousemove', onMouseMove);
+                    document.addEventListener('mouseup', onMouseUp);
+                });
+            },
+            
+            createNoteElement(note) {
+                const element = document.createElement('div');
+                element.className = 'draggable note';
+                element.style.left = `${note.x || 20}px`;
+                element.style.top = `${note.y || 20}px`;
+                element.innerHTML = `<button class="delete-btn">×</button><textarea placeholder="Escribe algo...">${note.content}</textarea>`;
+                this.DOM.notesContainer.appendChild(element);
+                
+                element.querySelector('textarea').addEventListener('input', e => { note.content = e.target.value; this.saveData(); });
+                element.querySelector('.delete-btn').addEventListener('click', () => {
+                    this.state.notes = this.state.notes.filter(n => n.id !== note.id);
+                    this.saveData(); this.renderWorkspace(); this.renderCalendar();
+                });
+                this.makeDraggable(element, note);
+            },
+
+            createZoneElement(zone) {
+                const element = document.createElement('div');
+                element.className = 'draggable zone';
+                element.style.left = `${zone.x || 50}px`;
+                element.style.top = `${zone.y || 50}px`;
+                element.style.width = `${zone.width || 400}px`;
+                element.style.height = `${zone.height || 300}px`;
+                element.innerHTML = `<input class="zone-title" value="${zone.title}" placeholder="Título de la Zona"><span class="delete-btn">×</span><div class="resize-handle"></div>`;
+                this.DOM.zonesContainer.appendChild(element);
+
+                element.querySelector('.zone-title').addEventListener('input', e => { zone.title = e.target.value; this.saveData(); });
+                element.querySelector('.delete-btn').addEventListener('click', () => {
+                    this.state.zones = this.state.zones.filter(z => z.id !== zone.id);
+                    this.saveData(); this.renderWorkspace();
+                });
+                this.makeDraggable(element, zone);
+                this.makeResizable(element, zone);
+            },
+
+            addNote() {
+                const newNote = { id: Date.now() + Math.random(), content: '', x: 20, y: 20, date: this.state.selectedDate };
+                this.state.notes.push(newNote);
+                this.createNoteElement(newNote);
+                this.saveData();
+                this.updateStats();
+                this.renderCalendar();
+            },
+
+            addZone() {
+                const newZone = { id: Date.now() + Math.random(), title: 'Nueva Zona', x: 50, y: 50, width: 400, height: 300, date: this.state.selectedDate };
+                this.state.zones.push(newZone);
+                this.createZoneElement(newZone);
+                this.saveData();
+            },
+
+            showGeneralDashboard() {
+                this.state.selectedDate = null;
+                this.saveData();
+                this.renderWorkspace();
+                this.renderCalendar();
+            },
+            
+            setupAllWidgets() {
+                this.setupClock();
+                this.setupCalendar();
+                this.setupTimer();
+            },
+
+            setupClock() {
+                const timeEl = document.getElementById('current-time');
+                const dateEl = document.getElementById('current-date');
+                const updateClock = () => {
+                    const now = new Date();
+                    timeEl.textContent = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+                    dateEl.textContent = now.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
+                };
+                updateClock();
+                setInterval(updateClock, 1000);
+            },
+            
+            setupCalendar() {
+                this.DOM.prevMonthBtn.onclick = () => { this.state.calendarDate.setMonth(this.state.calendarDate.getMonth() - 1); this.renderCalendar(); };
+                this.DOM.nextMonthBtn.onclick = () => { this.state.calendarDate.setMonth(this.state.calendarDate.getMonth() + 1); this.renderCalendar(); };
+                this.DOM.calendarDays.addEventListener('click', e => {
+                    if (e.target.classList.contains('day') && e.target.dataset.date) {
+                        this.state.selectedDate = e.target.dataset.date;
+                        this.saveData(); this.renderWorkspace(); this.renderCalendar();
+                    }
+                });
+                this.renderCalendar();
+            },
+            
+            renderCalendar() {
+                this.DOM.calendarDays.innerHTML = '';
+                const month = this.state.calendarDate.getMonth();
+                const year = this.state.calendarDate.getFullYear();
+                this.DOM.monthYear.textContent = new Date(year, month).toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
+                
+                const noteDates = new Set(this.state.notes.map(n => n.date).filter(Boolean));
+                const firstDayIndex = (new Date(year, month, 1).getDay() + 6) % 7;
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+                const today = new Date();
+
+                ['L', 'M', 'X', 'J', 'V', 'S', 'D'].forEach(day => this.DOM.calendarDays.innerHTML += `<span class="day-name">${day}</span>`);
+                for (let i = 0; i < firstDayIndex; i++) this.DOM.calendarDays.innerHTML += `<span></span>`;
+                for (let i = 1; i <= daysInMonth; i++) {
+                    const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+                    let classes = 'day';
+                    if (i === today.getDate() && month === today.getMonth() && year === today.getFullYear()) classes += ' current-day';
+                    if (dateString === this.state.selectedDate) classes += ' selected-day';
+                    if (noteDates.has(dateString)) classes += ' has-notes';
+                    this.DOM.calendarDays.innerHTML += `<span class="${classes}" data-date="${dateString}">${i}</span>`;
+                }
+            },
+
+            setupYoutubePlayer() {
+                const loadVideo = (url) => {
                     const videoId = (u => { const m = u.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/); return (m && m[2].length === 11) ? m[2] : null; })(url);
                     if (videoId) {
-                        document.getElementById('youtube-player').innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}&controls=0" frameborder="0" allow="autoplay"></iframe>`;
-                        appState.youtubeUrl = url;
-                        saveDataToFirestore();
+                        this.DOM.youtubePlayer.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}&controls=0" frameborder="0" allow="autoplay"></iframe>`;
+                        this.state.youtubeUrl = url;
+                        this.saveData();
                     }
+                };
+                this.DOM.youtubeInput.addEventListener('change', e => loadVideo(e.target.value));
+                if (this.state.youtubeUrl) {
+                    this.DOM.youtubeInput.value = this.state.youtubeUrl;
+                    loadVideo(this.state.youtubeUrl);
                 }
-                youtubeInput.addEventListener('change', e => loadVideo(e.target.value));
-                if (appState.youtubeUrl) { youtubeInput.value = appState.youtubeUrl; loadVideo(appState.youtubeUrl); }
-            }
-            function setupTimer() {
-                const timerDisplay = document.getElementById('timer-display'), editBtn = document.getElementById('edit-timer-btn'), startBtn = document.getElementById('start-timer'), stopBtn = document.getElementById('stop-timer'), resetBtn = document.getElementById('reset-timer'), alarm = document.getElementById('alarm-sound'), setTimerModal = document.getElementById('set-timer-modal-overlay'), saveTimerBtn = document.getElementById('save-timer-btn'), hoursInput = document.getElementById('set-hours'), minutesInput = document.getElementById('set-minutes'), secondsInput = document.getElementById('set-seconds');
-                let timerInterval = null, preAlertShown = false, initialDuration = 25 * 60, totalSeconds = initialDuration;
-                function updateDisplay() {
-                    const h = String(Math.floor(totalSeconds / 3600)).padStart(2, '0'), m = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0'), s = String(totalSeconds % 60).padStart(2, '0');
-                    timerDisplay.textContent = `${h}:${m}:${s}`;
-                }
-                function resetTimer() { clearInterval(timerInterval); totalSeconds = initialDuration; preAlertShown = false; updateDisplay(); closeAlertModal(); }
-                startBtn.addEventListener('click', () => {
-                    if (timerInterval) clearInterval(timerInterval); if (totalSeconds <= 0) return;
-                    timerInterval = setInterval(() => {
-                        totalSeconds--; updateDisplay();
-                        if (totalSeconds === 120 && !preAlertShown) { showAlertModal('Recordatorio', 'Falta poco para tu actividad (2 minutos).'); preAlertShown = true; }
-                        if (totalSeconds <= 0) { clearInterval(timerInterval); showAlertModal('¡Tiempo Cumplido!', 'Tu actividad programada ha finalizado.'); alarm.play(); }
-                    }, 1000);
-                });
-                stopBtn.addEventListener('click', () => clearInterval(timerInterval));
-                resetBtn.addEventListener('click', resetTimer);
-                editBtn.addEventListener('click', () => {
-                    const h = Math.floor(initialDuration / 3600), m = Math.floor((initialDuration % 3600) / 60), s = initialDuration % 60;
-                    hoursInput.value = h > 0 ? h : ''; minutesInput.value = m > 0 ? m : ''; secondsInput.value = s > 0 ? s : '';
-                    setTimerModal.classList.add('visible');
-                });
-                saveTimerBtn.addEventListener('click', () => {
-                    const h = parseInt(hoursInput.value) || 0, m = parseInt(minutesInput.value) || 0, s = parseInt(secondsInput.value) || 0;
-                    initialDuration = (h * 3600) + (m * 60) + s;
-                    resetTimer(); setTimerModal.classList.remove('visible');
-                });
-                setTimerModal.addEventListener('click', e => { if (e.target === setTimerModal) setTimerModal.classList.remove('visible'); });
-                updateDisplay();
-            }
-            setupClock(); setupCalendar(); setupYoutubePlayer(); setupTimer();
-        }
-        
-        function initializeAll() {
-            renderWorkspace();
-            renderCalendar();
-            setupAllWidgets();
+            },
+
+            setupTimer() {
+                this.DOM.startTimerBtn.addEventListener('click', () => this.startTimer());
+                this.DOM.stopTimerBtn.addEventListener('click', () => this.stopTimer());
+                this.DOM.resetTimerBtn.addEventListener('click', () => this.resetTimer());
+                this.DOM.editTimerBtn.addEventListener('click', () => this.showTimerModal());
+                this.DOM.timerModal.saveBtn.addEventListener('click', () => this.saveTimerSettings());
+                this.updateTimerDisplay();
+            },
+
+            updateTimerDisplay() {
+                const h = String(Math.floor(this.state.timerSeconds / 3600)).padStart(2, '0');
+                const m = String(Math.floor((this.state.timerSeconds % 3600) / 60)).padStart(2, '0');
+                const s = String(this.state.timerSeconds % 60).padStart(2, '0');
+                this.DOM.timerDisplay.textContent = `${h}:${m}:${s}`;
+            },
+
+            startTimer() {
+                if (this.state.timerInterval) clearInterval(this.state.timerInterval);
+                if (this.state.timerSeconds <= 0) return;
+
+                this.state.timerInterval = setInterval(() => {
+                    this.state.timerSeconds--;
+                    this.updateTimerDisplay();
+                    if (this.state.timerSeconds === 120 && !this.state.timerPreAlertShown) {
+                        this.showAlertModal('Recordatorio', 'Faltan 2 minutos para que termine tu actividad.');
+                        this.state.timerPreAlertShown = true;
+                    }
+                    if (this.state.timerSeconds <= 0) {
+                        this.stopTimer();
+                        this.showAlertModal('¡Tiempo Cumplido!', 'Tu actividad programada ha finalizado.');
+                        this.DOM.alarmSound.play();
+                    }
+                }, 1000);
+            },
             
-            addNoteBtn.addEventListener('click', addNote);
-            addZoneBtn.addEventListener('click', addZone);
-            showGeneralBtn.addEventListener('click', () => {
-                appState.selectedDate = null;
-                saveDataToFirestore();
-                renderWorkspace();
-                renderCalendar();
-            });
-            alertModalCloseBtn.addEventListener('click', closeAlertModal);
-            alertModalOverlay.addEventListener('click', e => { if (e.target === alertModalOverlay) closeAlertModal(); });
+            stopTimer() {
+                clearInterval(this.state.timerInterval);
+                this.state.timerInterval = null;
+            },
+            
+            resetTimer() {
+                this.stopTimer();
+                this.state.timerSeconds = this.state.timerInitialDuration;
+                this.state.timerPreAlertShown = false;
+                this.updateTimerDisplay();
+                this.closeAlertModal();
+            },
+
+            showTimerModal() {
+                const h = Math.floor(this.state.timerInitialDuration / 3600);
+                const m = Math.floor((this.state.timerInitialDuration % 3600) / 60);
+                const s = this.state.timerInitialDuration % 60;
+                this.DOM.timerModal.hoursInput.value = h > 0 ? h : '';
+                this.DOM.timerModal.minutesInput.value = m > 0 ? m : '';
+                this.DOM.timerModal.secondsInput.value = s > 0 ? s : '';
+                this.DOM.timerModal.overlay.classList.add('visible');
+            },
+
+            saveTimerSettings() {
+                const h = parseInt(this.DOM.timerModal.hoursInput.value) || 0;
+                const m = parseInt(this.DOM.timerModal.minutesInput.value) || 0;
+                const s = parseInt(this.DOM.timerModal.secondsInput.value) || 0;
+                this.state.timerInitialDuration = (h * 3600) + (m * 60) + s;
+                this.resetTimer();
+                this.DOM.timerModal.overlay.classList.remove('visible');
+            },
+            
+            showAlertModal(title, message) {
+                this.DOM.alertModal.title.textContent = title;
+                this.DOM.alertModal.message.textContent = message;
+                this.DOM.alertModal.overlay.classList.add('visible');
+            },
+            
+            closeAlertModal() {
+                this.DOM.alertModal.overlay.classList.remove('visible');
+            }
+        };
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func.apply(this, args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
         }
-    });
+
+        document.addEventListener('DOMContentLoaded', () => App.init());
     </script>
 </body>
 </html>
