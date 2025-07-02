@@ -30,7 +30,6 @@
             margin: 0; padding: 0; overflow: hidden; height: 100vh;
         }
 
-        /* --- Estilos para el estado de Sesión --- */
         #google-signin-btn {
             position: fixed; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
@@ -44,9 +43,6 @@
         .logged-out .main-content { display: none; }
         .main-content { opacity: 0; transition: opacity 0.5s ease-in-out; }
         .logged-in .main-content { opacity: 1; }
-
-
-        /* ----- Estilos Generales ----- */
         #app { position: relative; width: 100%; height: calc(100vh - 140px); padding: 20px; padding-top: 60px; box-sizing: border-box; }
         #workspace-title { position: fixed; top: 15px; left: 20px; font-size: 24px; font-weight: 600; color: var(--text-dark); z-index: 1001; }
         #top-controls { position: fixed; top: 20px; right: 20px; z-index: 1001; display: flex; gap: 12px; }
@@ -63,7 +59,7 @@
         .delete-btn:hover { background-color: var(--highlight-color); color: white; }
         .resize-handle { position: absolute; bottom: 0; right: 0; width: 20px; height: 20px; cursor: nwse-resize; z-index: 2; }
         .resize-handle::after { content: ''; position: absolute; right: 5px; bottom: 5px; width: 8px; height: 8px; border-bottom: 2px solid var(--primary-accent); border-right: 2px solid var(--primary-accent); opacity: 0.5; }
-        #bottom-dashboard { position: fixed; bottom: 0; left: 0; width: 100%; height: 140px; background: var(--panel-bg); backdrop-filter: blur(10px); border-top: 1px solid var(--panel-border); box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.05); display: flex; align-items: stretch; justify-content: space-between; padding: 0 15px; box-sizing: border-box; z-index: 1002; }
+        #bottom-dashboard { position: fixed; bottom: 0; left: 0; width: 100%; height: 140px; background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(10px); border-top: 1px solid rgba(255, 255, 255, 0.8); box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.05); display: flex; align-items: stretch; justify-content: space-between; padding: 0 15px; box-sizing: border-box; z-index: 1002; }
         .dashboard-widget { display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-dark); padding: 10px; text-align: center; border-right: 1px solid rgba(0,0,0,0.05); flex-grow: 1; flex-basis: 0; }
         .dashboard-widget:last-child { border-right: none; }
         .dashboard-widget h3 { margin: 0 0 10px 0; font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-light); letter-spacing: 0.5px; }
@@ -171,15 +167,15 @@
     document.addEventListener('DOMContentLoaded', () => {
         // --- CONFIGURACIÓN DE FIREBASE ---
         // ▼▼▼ REEMPLAZA ESTE BLOQUE CON EL TUYO ▼▼▼
-        const firebaseConfig = {
-            apiKey: "AIzaSyCptS0stYpYu5GGLNXgtjNJD8NFzKZdEj0",
-            authDomain: "mi-dashboard-de-notas.firebaseapp.com",
-            projectId: "mi-dashboard-de-notas",
-            storageBucket: "mi-dashboard-de-notas.appspot.com",
-            messagingSenderId: "829232928135",
-            appId: "1:829232928135:web:04e2043af0d7f79d916f22",
-            measurementId: "G-T89JSJ7DEN"
-        };
+       const firebaseConfig = {
+  apiKey: "AIzaSyCptS0stYpYu5GGLNXgtjNJD8NFzKZdEj0",
+  authDomain: "mi-dashboard-de-notas.firebaseapp.com",
+  projectId: "mi-dashboard-de-notas",
+  storageBucket: "mi-dashboard-de-notas.appspot.com", // OJO: Firebase a veces usa '.firebasestorage.app'. Usa el que te dieron, pero '.appspot.com' es más común para Firestore.
+  messagingSenderId: "829232928135",
+  appId: "1:829232cptS0stYpYu5GGLNXgtjNJD8NFzKZdEj0:web:04e2043af0d7f79d916f22",
+  measurementId: "G-T89JSJ7DEN"
+};
         // ▲▲▲ FIN DEL BLOQUE A REEMPLAZAR ▲▲▲
 
         firebase.initializeApp(firebaseConfig);
@@ -206,7 +202,6 @@
         const alertModalMessage = document.getElementById('alert-modal-message');
         const alertModalCloseBtn = document.getElementById('alert-modal-close-btn');
 
-        // --- MANEJO DE AUTENTICACIÓN Y DATOS ---
         signInBtn.addEventListener('click', () => auth.signInWithPopup(provider).catch(console.error));
         signOutBtn.addEventListener('click', () => auth.signOut());
 
@@ -240,7 +235,7 @@
                 const doc = await userDocRef.get();
                 if (doc.exists) {
                     const data = doc.data();
-                    appState = { ...appState, ...data }; // Combina para no perder la estructura inicial
+                    appState = { ...appState, ...data }; 
                     if (!appState.notes) appState.notes = [];
                     if (!appState.zones) appState.zones = [];
                 } else {
@@ -250,7 +245,6 @@
             } catch (error) { console.error("Error al cargar datos:", error); }
         }
 
-        // --- LÓGICA DE LA APLICACIÓN ---
         function debounce(func, wait) { let timeout; return function executedFunction(...args) { const later = () => { clearTimeout(timeout); func(...args); }; clearTimeout(timeout); timeout = setTimeout(later, wait); }; }
         function showAlertModal(title, message) { alertModalTitle.textContent = title; alertModalMessage.textContent = message; alertModalOverlay.classList.add('visible'); }
         function closeAlertModal() { alertModalOverlay.classList.remove('visible'); }
