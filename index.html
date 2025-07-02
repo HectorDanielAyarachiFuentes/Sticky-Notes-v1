@@ -453,6 +453,12 @@
 
     <button id="google-signin-btn">🚀 Iniciar Sesión con Google</button>
 
+    <!--
+      /// CORRECCIÓN IMPORTANTE ///
+      Todos los elementos de la interfaz de la aplicación, incluyendo el menú lateral móvil
+      y el botón flotante, AHORA ESTÁN DENTRO DE ESTE DIV 'main-content'.
+      Esto asegura que cuando el body tenga la clase 'logged-out', TODO se oculte correctamente.
+    -->
     <div class="main-content">
         <div id="top-controls">
             <button id="sidebar-toggle-btn" class="control-btn">☰</button>
@@ -508,31 +514,32 @@
             </div>
             <div id="clock-widget" class="dashboard-widget"><h3>Hora</h3><span id="current-time"></span><span id="current-date"></span></div>
         </div>
-    </div>
-    
-    <!-- MODALES -->
-    <div id="alert-modal-overlay" class="modal-overlay"><div class="modal-content"><h2 id="alert-modal-title"></h2><p id="alert-modal-message"></p><button id="alert-modal-close-btn" class="action-btn">Entendido</button></div></div>
-    <div id="set-timer-modal-overlay" class="modal-overlay"><div class="modal-content"><h2>Configurar Temporizador</h2><p>Define la duración de tu temporizador.</p><div class="set-timer-inputs"><input type="number" id="set-hours" min="0" max="99" placeholder="HH" oninput="this.value = this.value ? Math.min(99, Math.max(0, parseInt(this.value))) : ''"><input type="number" id="set-minutes" min="0" max="59" placeholder="MM" oninput="this.value = this.value ? Math.min(59, Math.max(0, parseInt(this.value))) : ''"><input type="number" id="set-seconds" min="0" max="59" placeholder="SS" oninput="this.value = this.value ? Math.min(59, Math.max(0, parseInt(this.value))) : ''"></div><button id="save-timer-btn" class="action-btn">Guardar</button></div></div>
-    <div id="confirm-modal-overlay" class="modal-overlay"><div class="modal-content"><h2 id="confirm-modal-title"></h2><p id="confirm-modal-message"></p><div class="modal-actions"><button id="confirm-modal-cancel-btn" class="action-btn cancel-btn">Cancelar</button><button id="confirm-modal-confirm-btn" class="action-btn confirm-btn">Confirmar</button></div></div></div>
 
-    <!-- MENÚ LATERAL MÓVIL -->
-    <div id="mobile-sidebar-container"><div class="sidebar-overlay"></div><aside id="mobile-sidebar"><div class="sidebar-header"><h3>Panel de Control</h3><button id="close-sidebar-btn">×</button></div><div class="sidebar-content"></div></aside></div>
+        <!-- MODALES (pueden quedar aquí dentro, ya que usan position:fixed y no afecta) -->
+        <div id="alert-modal-overlay" class="modal-overlay"><div class="modal-content"><h2 id="alert-modal-title"></h2><p id="alert-modal-message"></p><button id="alert-modal-close-btn" class="action-btn">Entendido</button></div></div>
+        <div id="set-timer-modal-overlay" class="modal-overlay"><div class="modal-content"><h2>Configurar Temporizador</h2><p>Define la duración de tu temporizador.</p><div class="set-timer-inputs"><input type="number" id="set-hours" min="0" max="99" placeholder="HH" oninput="this.value = this.value ? Math.min(99, Math.max(0, parseInt(this.value))) : ''"><input type="number" id="set-minutes" min="0" max="59" placeholder="MM" oninput="this.value = this.value ? Math.min(59, Math.max(0, parseInt(this.value))) : ''"><input type="number" id="set-seconds" min="0" max="59" placeholder="SS" oninput="this.value = this.value ? Math.min(59, Math.max(0, parseInt(this.value))) : ''"></div><button id="save-timer-btn" class="action-btn">Guardar</button></div></div>
+        <div id="confirm-modal-overlay" class="modal-overlay"><div class="modal-content"><h2 id="confirm-modal-title"></h2><p id="confirm-modal-message"></p><div class="modal-actions"><button id="confirm-modal-cancel-btn" class="action-btn cancel-btn">Cancelar</button><button id="confirm-modal-confirm-btn" class="action-btn confirm-btn">Confirmar</button></div></div></div>
+        
+        <!-- MENÚ LATERAL MÓVIL (CORREGIDO - AHORA DENTRO DE MAIN-CONTENT) -->
+        <div id="mobile-sidebar-container"><div class="sidebar-overlay"></div><aside id="mobile-sidebar"><div class="sidebar-header"><h3>Panel de Control</h3><button id="close-sidebar-btn">×</button></div><div class="sidebar-content"></div></aside></div>
     
-    <!-- BOTÓN DE ACCIÓN FLOTANTE (FAB) -->
-    <div id="mobile-fab-container">
-        <div class="fab-actions">
-            <button id="fab-add-note" class="fab-action" title="Añadir Nota">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
-            </button>
-             <button id="fab-add-zone" class="fab-action" title="Añadir Zona">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line><line x1="15" y1="3" x2="15" y2="21"></line><line x1="3" y1="9" x2="21" y2="9"></line><line x1="3" y1="15" x2="21" y2="15"></line></svg>
+        <!-- BOTÓN DE ACCIÓN FLOTANTE (FAB) (CORREGIDO - AHORA DENTRO DE MAIN-CONTENT) -->
+        <div id="mobile-fab-container">
+            <div class="fab-actions">
+                <button id="fab-add-note" class="fab-action" title="Añadir Nota">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                </button>
+                 <button id="fab-add-zone" class="fab-action" title="Añadir Zona">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line><line x1="15" y1="3" x2="15" y2="21"></line><line x1="3" y1="9" x2="21" y2="9"></line><line x1="3" y1="15" x2="21" y2="15"></line></svg>
+                </button>
+            </div>
+            <button id="fab-toggle-btn" title="Añadir">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             </button>
         </div>
-        <button id="fab-toggle-btn" title="Añadir">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-        </button>
-    </div>
 
+    </div><!-- FIN DE DIV .main-content -->
+    
     <audio id="alarm-sound" src="audio/cat-meow-8-fx-306184.mp3"></audio>    
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
@@ -764,7 +771,6 @@
                 textarea.value = tab.content || '';
                 contentPanel.appendChild(textarea);
                 
-                // AJUSTE: Ajustar tamaño inicial al crear el elemento
                 this.autoResizeTextarea(textarea);
 
                 if (index === note.activeTabIndex) {
@@ -799,14 +805,13 @@
                 this.saveData();
             });
 
-            // AJUSTE: Llamar a autoResizeTextarea en cada input
             contentPanels.addEventListener('input', e => {
                 const target = e.target;
                 if (target.tagName.toLowerCase() === 'textarea') {
                     const panelIndex = parseInt(target.closest('.note-content-panel').dataset.index);
                     note.tabs[panelIndex].content = target.value;
                     
-                    this.autoResizeTextarea(target); // <-- Aquí está la magia
+                    this.autoResizeTextarea(target);
                     
                     this.saveData();
                 }
@@ -925,7 +930,6 @@
         closeConfirmModal() { this.DOM.confirmModal.overlay.classList.remove('visible'); this.state.pendingTimerAction = null; },
         handleConfirmAction() { if (typeof this.state.pendingTimerAction === 'function') { this.state.pendingTimerAction(); } this.closeConfirmModal(); },
         
-        // ADICIÓN: Función para auto-redimensionar el textarea
         autoResizeTextarea(element) {
             element.style.height = 'auto';
             element.style.height = (element.scrollHeight) + 'px';
