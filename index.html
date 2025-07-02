@@ -116,19 +116,19 @@
     }
 
     .note textarea {
-        font-family: 'Caveat', cursive;
-        font-size: 22px;
-        line-height: 1.5;
-        color: var(--text-dark);
-        border: none;
-        background: transparent;
-        outline: none;
-        resize: none;
-        width: 100%;
-        height: 100%;
-        padding: 0;
-        margin: 0;
-    }
+    font-family: 'Caveat', cursive;
+    font-size: 22px;
+    line-height: 1.5;
+    color: var(--text-dark);
+    border: none;
+    background: transparent;
+    outline: none;
+    resize: none;
+    width: 100%;
+    /* height: 100%; */ /* <-- LO HEMOS QUITADO DE AQUÍ */
+    padding: 0;
+    margin: 0;
+}
 
     .zone { 
         background-color: var(--zone-bg); 
@@ -241,7 +241,9 @@
             display: flex;
             flex-direction: row;
         }
-        
+        .note .note-content-panel textarea {
+    height: 100%;
+}
         /* REGLAS CORREGIDAS PARA QUE FUNCIONE EN NOTAS Y ZONAS */
         .note .resize-handle, .zone .resize-handle {
             position: absolute;
@@ -328,13 +330,11 @@
             position: relative;
         }
         .note-content-panel {
-            display: none;
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-        }
-        .note-content-panel.active { display: block; }
-    }
+    display: none;
+    width: 100%; 
+    height: 100%;
+    flex-grow: 1; /* <-- Añadimos esto para asegurar que ocupe el espacio */
+}
 
 
     /* --------------------------------------------------------------------------
@@ -775,7 +775,7 @@
                 textarea.value = tab.content || '';
                 contentPanel.appendChild(textarea);
                 
-                this.autoResizeTextarea(textarea);
+            
 
                 if (index === note.activeTabIndex) {
                     tabBtn.classList.add('active');
