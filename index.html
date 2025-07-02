@@ -252,150 +252,180 @@
 
 
 
-                /* --- ESTILOS PARA NOTAS CON PESTAÑAS --- */
+                        /* --- ESTILOS PARA NOTAS CON PESTAÑAS --- */
+
         .note {
-            display: flex; /* Cambiamos a flex para posicionar las pestañas */
-            flex-direction: row;
-            padding: 0; /* Quitamos el padding para controlar el espacio interno */
-            overflow: hidden; /* Oculta cualquier desbordamiento */
-            min-height: 240px;
-        }
-
-        .note-main-content {
-            flex-grow: 1; /* El contenido principal ocupa el espacio disponible */
-            display: flex;
-            flex-direction: column;
-            position: relative; /* Para el posicionamiento del botón de borrar */
-            padding: 15px;
-        }
-
-        .note .delete-btn {
-            position: absolute; /* Mantenemos el botón de borrar en su sitio */
-            top: 8px;
-            /* Se posicionará relativo a la esquina izquierda ahora */
-            left: 8px; 
-            right: auto;
-            z-index: 5;
-        }
-
-        .note-content-panels {
-            flex-grow: 1;
-            position: relative;
-            height: 100%;
-        }
-
-        .note-content-panel {
-            display: none; /* Por defecto, todos los paneles están ocultos */
-            position: absolute;
-            top: 15px;
-            left: 0;
-            width: 100%;
-            height: calc(100% - 15px);
-        }
-
-        .note-content-panel.active {
-            display: block; /* Solo el panel activo es visible */
-        }
-        
-        .note-content-panel textarea {
-            width: 100%;
-            height: 100%;
             padding: 0;
-        }
-        
-        .note-tabs {
-            display: flex;
-            flex-direction: column; /* Pestañas en columna */
-            flex-shrink: 0; /* Evita que el contenedor de pestañas se encoja */
-            width: 90px;
-            background-color: rgba(0, 0, 0, 0.04);
-            border-left: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            background-color: var(--note-color); /* Fondo base de la nota */
         }
 
-        .note-tab-btn {
-            background-color: transparent;
-            border: none;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-            padding: 12px 8px;
-            cursor: pointer;
-            text-align: center;
-            font-family: 'Poppins', sans-serif;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--text-light);
-            transition: all 0.2s ease;
-            position: relative;
-            word-wrap: break-word; /* Asegura que el texto no se desborde */
+        .note textarea {
+             font-family: 'Caveat', cursive; font-size: 22px; line-height: 1.5; color: var(--text-dark);
         }
 
-        .note-tab-btn:hover {
-            background-color: rgba(90, 125, 203, 0.1);
-        }
-
-        .note-tab-btn.active {
-            background-color: var(--bg-color);
-            color: var(--primary-accent);
-            font-weight: 600;
-        }
-
-        /* Indicador visual para la pestaña activa */
-        .note-tab-btn.active::before {
-            content: '';
-            position: absolute;
-            left: -1px;
-            top: 0;
-            height: 100%;
-            width: 3px;
-            background-color: var(--primary-accent);
-        }
-
-        .tab-name {
-            display: inline-block;
-            width: 100%;
-        }
-
-        .tab-name:focus {
-            outline: 1px dashed var(--primary-accent);
-            background-color: #fff;
-            border-radius: 4px;
-        }
-        
-        /* Ajustes para móvil */
-        @media (max-width: 768px) {
+        /* --- VISTA ESCRITORIO (min-width: 769px) --- */
+        @media (min-width: 769px) {
             .note {
-                flex-direction: column-reverse; /* Pestañas abajo en móvil */
-                min-height: 180px;
+                display: flex;
+                flex-direction: row;
+                min-height: 240px;
             }
             .note-tabs {
-                flex-direction: row; /* Pestañas en fila */
+                flex-shrink: 0;
+                width: 30px; /* ¡Mucho más delgada! */
+                background-color: rgba(0, 0, 0, 0.03);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center; /* Centra los puntos verticalmente */
+                gap: 12px;
+                border-right: 1px solid rgba(0, 0, 0, 0.06);
+            }
+            .note-tab-btn {
+                width: 14px;
+                height: 14px;
+                background-color: transparent;
+                border: 2px solid var(--text-light);
+                opacity: 0.5;
+                border-radius: 50%;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                padding: 0;
+            }
+            .note-tab-btn:hover {
+                opacity: 1;
+                transform: scale(1.1);
+            }
+            .note-tab-btn.active {
+                background-color: var(--primary-accent);
+                border-color: var(--primary-accent);
+                opacity: 1;
+            }
+
+            .note-main-content {
+                flex-grow: 1;
+                display: flex;
+                flex-direction: column;
+                padding: 10px 15px 15px 15px;
+                position: relative;
+            }
+
+            .note-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 5px;
+            }
+
+            .tab-name-display {
+                margin: 0;
+                font-family: 'Poppins', sans-serif;
+                font-size: 14px;
+                font-weight: 600;
+                color: var(--text-dark);
+                flex-grow: 1;
+                padding: 5px;
+                border-radius: 4px;
+            }
+            .tab-name-display:focus {
+                outline: 1px dashed var(--primary-accent);
+                background-color: rgba(255, 255, 255, 0.7);
+            }
+            .note .delete-btn {
+                position: static; /* Ya no es absoluto */
+                color: var(--text-light);
+                flex-shrink: 0;
+            }
+            .note .delete-btn:hover {
+                 background-color: var(--danger-color);
+                 color: white;
+            }
+
+            .note-content-panels {
+                flex-grow: 1;
+                position: relative;
+            }
+
+            .note-content-panel {
+                display: none;
+                position: absolute;
+                top: 0;
+                left: 0;
                 width: 100%;
-                border-left: none;
+                height: 100%;
+            }
+            .note-content-panel.active {
+                display: block;
+            }
+            .note-content-panel textarea {
+                width: 100%;
+                height: 100%;
+                padding: 0;
+                margin: 0;
+                background: transparent;
+                border: none;
+                outline: none;
+                resize: none;
+            }
+        }
+        
+        /* --- VISTA MÓVIL (max-width: 768px) --- */
+        @media (max-width: 768px) {
+            /* Mantenemos el diseño original de pestañas en la parte inferior para móvil */
+            .note {
+                display: flex;
+                flex-direction: column-reverse; /* Pestañas abajo */
+                min-height: 180px;
+            }
+             .note .delete-btn { /* Posición original para móvil */
+                 position: absolute; top: 8px; right: 8px; z-index: 5;
+            }
+             .note-main-content, .note-header { display: contents; } /* Hack para ignorar contenedores extra en móvil */
+
+            .note-tabs {
+                display: flex;
+                flex-direction: row;
+                width: 100%;
                 border-top: 1px solid rgba(0, 0, 0, 0.08);
             }
             .note-tab-btn {
-                flex-grow: 1; /* Ocupan todo el ancho disponible */
-                border-bottom: none;
+                background-color: transparent;
+                border: none;
                 border-right: 1px solid rgba(0, 0, 0, 0.08);
-                font-size: 12px;
+                flex-grow: 1;
                 padding: 10px 5px;
+                cursor: pointer;
+                text-align: center;
+                font-family: 'Poppins', sans-serif;
+                font-size: 12px;
+                color: var(--text-light);
+                transition: all 0.2s ease;
+                position: relative;
             }
-            .note-tab-btn:last-child {
-                border-right: none;
+             .note-tab-btn::after { /* Usamos un pseudoelemento para el texto editable */
+                content: attr(title); /* Muestra el title del botón */
             }
-            .note-tab-btn.active::before { /* Indicador para móvil (abajo) */
+             .note-tab-btn:last-child { border-right: none; }
+
+            .note-tab-btn.active {
+                background-color: #fff;
+                color: var(--primary-accent);
+                font-weight: 600;
+            }
+             .note-tab-btn.active::before {
+                content: '';
+                position: absolute;
                 width: 100%;
                 height: 3px;
-                top: auto;
-                bottom: -1px;
-                left: 0;
+                background-color: var(--primary-accent);
+                bottom: 0; left: 0;
             }
-            .note-main-content {
-                padding-bottom: 0;
-            }
-            .note-content-panel {
-                top: 0;
-                height: 100%;
-            }
+
+            .note-content-panels { height: 120px; padding: 15px; padding-top: 35px; } /* Ajuste de espacio */
+             .note-content-panel { position: static; display: none; }
+             .note-content-panel.active { display: block; height: 100%; }
+             .note-content-panel textarea { font-size: 18px; }
         }
     </style>
 </head>
@@ -674,42 +704,43 @@
             });
         },
         
-               createNoteElement(note) {
+                     createNoteElement(note) {
             const element = document.createElement('div');
-            // La clase principal 'note' ahora será un contenedor flex
             element.className = 'note';
 
-            // Contenedor principal para el contenido (botón de borrar y áreas de texto)
+            // Contenedor para las pestañas (la nueva barra delgada)
+            const tabsContainer = document.createElement('div');
+            tabsContainer.className = 'note-tabs';
+
+            // Contenedor para el contenido principal (título, texto, botón de borrar)
             const mainContent = document.createElement('div');
             mainContent.className = 'note-main-content';
+            
+            // NUEVO: Un encabezado para el nombre de la pestaña y el botón de borrar
+            const mainHeader = document.createElement('div');
+            mainHeader.className = 'note-header';
+
+            // NUEVO: Un elemento para mostrar (y editar) el nombre de la pestaña activa
+            const tabNameDisplay = document.createElement('h4');
+            tabNameDisplay.className = 'tab-name-display';
+            tabNameDisplay.contentEditable = "true";
+            
+            // Crear botón de borrar (ahora irá en el encabezado)
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'delete-btn';
+            deleteBtn.innerHTML = '×';
 
             // Contenedor para los paneles de texto de cada pestaña
             const contentPanels = document.createElement('div');
             contentPanels.className = 'note-content-panels';
 
-            // Contenedor para los botones de las pestañas (en el lado derecho)
-            const tabsContainer = document.createElement('div');
-            tabsContainer.className = 'note-tabs';
-
-            // Crear botón de borrar
-            const deleteBtn = document.createElement('button');
-            deleteBtn.className = 'delete-btn';
-            deleteBtn.innerHTML = '×';
-            deleteBtn.addEventListener('click', () => {
-                this.state.notes = this.state.notes.filter(n => n.id !== note.id);
-                this.saveData();
-                this.renderWorkspace();
-                this.renderCalendar();
-            });
-
             // Iterar sobre las pestañas de la nota para crear los elementos
             note.tabs.forEach((tab, index) => {
-                // Crear el botón para la pestaña
+                // Crear el botón para la pestaña (ahora será un círculo/punto)
                 const tabBtn = document.createElement('button');
                 tabBtn.className = 'note-tab-btn';
                 tabBtn.dataset.index = index;
-                // Usamos un span 'contenteditable' para poder editar el nombre
-                tabBtn.innerHTML = `<span contenteditable="true" class="tab-name">${tab.name}</span>`;
+                tabBtn.title = tab.name; // IMPORTANTE: para ver el nombre al pasar el mouse
 
                 // Crear el panel con el textarea para el contenido
                 const contentPanel = document.createElement('div');
@@ -717,43 +748,45 @@
                 contentPanel.dataset.index = index;
                 contentPanel.innerHTML = `<textarea placeholder="Escribe algo...">${tab.content || ''}</textarea>`;
 
-                // Si es la pestaña activa, añadir la clase 'active'
                 if (index === note.activeTabIndex) {
                     tabBtn.classList.add('active');
                     contentPanel.classList.add('active');
+                    tabNameDisplay.innerText = tab.name; // Mostrar el nombre de la pestaña activa
                 }
 
                 tabsContainer.appendChild(tabBtn);
                 contentPanels.appendChild(contentPanel);
             });
 
-            // Event listener para cambiar de pestaña (delegación de eventos)
+            // Lógica para cambiar de pestaña
             tabsContainer.addEventListener('click', (e) => {
                 const clickedTab = e.target.closest('.note-tab-btn');
                 if (!clickedTab) return;
 
                 const newIndex = parseInt(clickedTab.dataset.index);
                 note.activeTabIndex = newIndex;
-
-                // Actualizar clases 'active'
+                const activeTab = note.tabs[newIndex];
+                
+                // Actualizar clases y contenido
                 tabsContainer.querySelectorAll('.note-tab-btn').forEach(btn => btn.classList.remove('active'));
                 contentPanels.querySelectorAll('.note-content-panel').forEach(panel => panel.classList.remove('active'));
 
                 clickedTab.classList.add('active');
                 contentPanels.querySelector(`.note-content-panel[data-index="${newIndex}"]`).classList.add('active');
+                tabNameDisplay.innerText = activeTab.name; // Actualizar el título visible
                 this.saveData();
             });
 
-            // Event listener para guardar cambios en el nombre de la pestaña (delegación)
-            tabsContainer.addEventListener('input', e => {
-                if (e.target.classList.contains('tab-name')) {
-                    const tabIndex = parseInt(e.target.closest('.note-tab-btn').dataset.index);
-                    note.tabs[tabIndex].name = e.target.innerText;
-                    this.saveData();
-                }
+            // Lógica para guardar la edición del nombre de la pestaña
+            tabNameDisplay.addEventListener('input', () => {
+                const activeTab = note.tabs[note.activeTabIndex];
+                activeTab.name = tabNameDisplay.innerText;
+                // Actualizar también el 'title' del botón correspondiente
+                tabsContainer.querySelector(`.note-tab-btn[data-index="${note.activeTabIndex}"]`).title = activeTab.name;
+                this.saveData();
             });
 
-            // Event listener para guardar cambios en el contenido (delegación)
+            // Lógica para guardar el contenido del textarea
             contentPanels.addEventListener('input', e => {
                 if (e.target.tagName.toLowerCase() === 'textarea') {
                     const panelIndex = parseInt(e.target.closest('.note-content-panel').dataset.index);
@@ -762,20 +795,27 @@
                 }
             });
             
+            // Lógica del botón de borrar
+            deleteBtn.addEventListener('click', () => {
+                this.state.notes = this.state.notes.filter(n => n.id !== note.id);
+                this.saveData(); this.renderWorkspace(); this.renderCalendar();
+            });
+            
             // Montar la estructura final
-            mainContent.appendChild(deleteBtn);
+            mainHeader.appendChild(tabNameDisplay);
+            mainHeader.appendChild(deleteBtn);
+            mainContent.appendChild(mainHeader);
             mainContent.appendChild(contentPanels);
-            element.appendChild(mainContent);
-            element.appendChild(tabsContainer);
+            
+            element.appendChild(tabsContainer); // Barra de pestañas a la izquierda
+            element.appendChild(mainContent);   // Contenido principal a la derecha
 
-            // Mantener la funcionalidad de arrastrar para escritorio
             if (window.innerWidth > 768) {
                 element.classList.add('draggable');
                 element.style.left = `${note.x || 20}px`;
                 element.style.top = `${note.y || 20}px`;
                 this.makeDraggable(element, note);
             }
-
             return element;
         },
         createZoneElement(zone) {
