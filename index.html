@@ -72,7 +72,7 @@
         .dragging { z-index: 999 !important; }
         .note { width: 240px; height: 240px; background-color: var(--note-color); box-shadow: 0 8px 25px var(--note-shadow); border-radius: 8px; padding: 15px; box-sizing: border-box; cursor: move; display: flex; flex-direction: column; }
         .note textarea { flex-grow: 1; border: none; background: transparent; resize: none; font-family: 'Caveat', cursive; font-size: 22px; line-height: 1.5; color: var(--text-dark); outline: none; cursor: text; margin-top: 15px; }
-        .zone { background-color: var(--zone-bg); backdrop-filter: blur(5px); border: 1px solid var(--zone-border); border-radius: 12px; box-sizing: border-box; cursor: move; z-index: 1; padding: 45px 15px 15px 15px; min-width: 250px; min-height: 200px; }
+        .zone { background-color: var(--zone-bg); backdrop-filter: blur(5px); border: 1px solid var(--zone-border); border-radius: 12px; box-sizing: border-box; cursor: move; z-index: 1; padding: 45px 15px 15px 15px; min-width: 250px; min-height: 200px; position: absolute; }
         .zone-title { position: absolute; top: 12px; left: 15px; font-weight: 600; font-size: 16px; color: var(--primary-accent-dark); border: none; background: transparent; width: calc(100% - 60px); outline: none; }
         .delete-btn { position: absolute; top: 8px; right: 8px; width: 24px; height: 24px; text-align: center; line-height: 24px; font-size: 20px; border-radius: 50%; cursor: pointer; user-select: none; transition: background-color 0.2s, color 0.2s; color: var(--text-light); }
         .delete-btn:hover { background-color: var(--highlight-color); color: white; }
@@ -163,34 +163,8 @@
             #mobile-sidebar-container { display: block; }
             #dashboard-toggle { display: none; }
             
-            #top-controls {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 60px;
-                padding: 0 10px;
-                box-sizing: border-box;
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                background: rgba(239, 243, 245, 0.8);
-                backdrop-filter: blur(10px);
-                border-bottom: 1px solid rgba(255, 255, 255, 0.9);
-                z-index: 1001;
-            }
-            #workspace-title {
-                position: static;
-                flex-grow: 1;
-                margin: 0;
-                padding: 0 5px;
-                text-align: left;
-                font-size: 16px;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                max-width: none;
-            }
+            #top-controls { position: fixed; top: 0; left: 0; width: 100%; height: 60px; padding: 0 10px; box-sizing: border-box; display: flex; align-items: center; gap: 8px; background: rgba(239, 243, 245, 0.8); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255, 255, 255, 0.9); z-index: 1001; }
+            #workspace-title { position: static; flex-grow: 1; margin: 0; padding: 0 5px; text-align: left; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: none; }
             #addZoneBtn, #addNoteBtn { display: none; }
             .profile-avatar { width: 40px; height: 40px; }
             .control-btn.secondary { padding: 6px 10px; font-size: 13px; display: flex; }
@@ -216,18 +190,26 @@
             .sidebar-content .day { padding: 4px 0; }
             
             #app { display: flex; flex-direction: column; gap: 16px; padding: 75px 15px 100px 15px; height: auto; }
-            #notesContainer, #zonesContainer { display: none; }
-            .draggable, .note, .zone { position: static !important; left: auto !important; top: auto !important; width: 100% !important; height: auto !important; min-height: 0; transform: none !important; cursor: default !important; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-            .zone { padding: 15px; padding-top: 55px; background: var(--zone-bg); }
-            .note { min-height: 120px; }
+            /* MODIFICACIÓN: Las notas y zonas ya no son estáticas por defecto */
+            .zone { position: relative !important; left: auto !important; top: auto !important; width: 100% !important; height: auto !important; min-height: 0; transform: none !important; cursor: default !important; box-shadow: 0 4px 12px rgba(0,0,0,0.08); padding: 15px; padding-top: 55px; background: var(--zone-bg); }
+            .note { position: relative !important; width: 100% !important; height: auto !important; min-height: 120px; cursor: default !important; transform: none !important; margin: 0 !important; }
+            .note .delete-btn { right: 12px; top: 12px; z-index: 2; }
             .resize-handle { display: none !important; }
             .note textarea { min-height: 100px; font-size: 18px; }
             .modal-content { padding: 25px 20px; width: 90%; }
             .modal-content h2 { font-size: 22px; }
             .modal-content p { font-size: 14px; }
             .set-timer-inputs input { width: 50px; padding: 8px; font-size: 20px; }
-            .zone .zone-notes-container-mobile { margin-top: 15px; display: flex; flex-direction: column; gap: 12px; padding-left: 15px; border-left: 3px solid var(--primary-accent); }
+            
+            /* MODIFICACIÓN: Estilos para la jerarquía móvil */
+            .zone .zone-notes-container { margin-top: 15px; display: flex; flex-direction: column; gap: 12px; }
+            .zone-mobile-actions { display: flex; align-items: center; justify-content: flex-end; padding: 8px 0; margin: 8px 0 -5px 0; border-top: 1px dashed var(--zone-border); }
+            .add-note-to-zone-btn { background-color: var(--primary-accent); color: white; border: none; border-radius: 50%; width: 32px; height: 32px; font-size: 24px; font-weight: bold; line-height: 32px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background-color 0.2s ease; }
+            .add-note-to-zone-btn:hover { background-color: var(--primary-accent-dark); }
+            .add-note-to-zone-btn.hidden { display: none; }
+            
             #mobile-fab-container { display: flex; }
+            #notesContainer { display: flex; flex-direction: column; gap: 16px; } /* Contenedor para notas huerfanas */
         }
     </style>
 </head>
@@ -242,7 +224,7 @@
             <span id="save-status"></span>
             <button id="show-general-btn" class="control-btn secondary">Ver Tablero General</button>
             <button id="addZoneBtn" class="control-btn">Añadir Zona</button>
-            <button id="addNoteBtn" class="control-btn">Añadir Nota</button>
+            <button id="addNoteBtn" class="control-btn">Añadir Nota Flotante</button>
             <div id="user-profile-menu" class="profile-menu-container">
                 <img id="profile-avatar" src="" alt="Avatar de Usuario" class="profile-avatar">
                 <div class="profile-dropdown">
@@ -256,8 +238,7 @@
             </div>
         </div>
         <div id="app">
-            <div id="zonesContainer"></div>
-            <div id="notesContainer"></div>
+            <!-- El contenido se genera dinámicamente -->
         </div>
         
         <div id="bottom-dashboard">
@@ -303,7 +284,7 @@
     <!-- BOTÓN DE ACCIÓN FLOTANTE (FAB) -->
     <div id="mobile-fab-container">
         <div class="fab-actions">
-            <button id="fab-add-note" class="fab-action" title="Añadir Nota">
+            <button id="fab-add-note" class="fab-action" title="Añadir Nota Flotante">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
             </button>
              <button id="fab-add-zone" class="fab-action" title="Añadir Zona">
@@ -350,8 +331,6 @@
             this.DOM.body = document.body;
             this.DOM.app = document.getElementById('app');
             this.DOM.signInBtn = document.getElementById('google-signin-btn');
-            this.DOM.notesContainer = document.getElementById('notesContainer');
-            this.DOM.zonesContainer = document.getElementById('zonesContainer');
             this.DOM.workspaceTitle = document.getElementById('workspace-title');
             this.DOM.addNoteBtn = document.getElementById('addNoteBtn');
             this.DOM.addZoneBtn = document.getElementById('addZoneBtn');
@@ -406,56 +385,111 @@
         
         makeDraggable(element, item) {
             element.addEventListener('mousedown', e => {
+                if (window.innerWidth <= 768) return;
                 const target = e.target;
                 if (target.tagName.toLowerCase() === 'textarea' || target.tagName.toLowerCase() === 'input' || target.classList.contains('delete-btn') || target.classList.contains('resize-handle')) return;
+                
                 element.classList.add('dragging');
-                const offsetX = e.clientX - element.offsetLeft;
-                const offsetY = e.clientY - element.offsetTop;
+                const isNote = element.classList.contains('note');
+                const appRect = this.DOM.app.getBoundingClientRect();
+                
+                // MODIFICACIÓN: Calcular offset relativo al #app, no al elemento padre directo
+                const elemRect = element.getBoundingClientRect();
+                const offsetX = e.clientX - elemRect.left;
+                const offsetY = e.clientY - elemRect.top;
+
                 const onMouseMove = (moveEvent) => {
-                    let newX = moveEvent.clientX - offsetX;
-                    let newY = moveEvent.clientY - offsetY;
-                    const appRect = this.DOM.app.getBoundingClientRect();
+                    let newX = moveEvent.clientX - appRect.left - offsetX;
+                    let newY = moveEvent.clientY - appRect.top - offsetY;
+
                     element.style.left = `${Math.max(0, Math.min(newX, appRect.width - element.offsetWidth))}px`;
                     element.style.top = `${Math.max(0, Math.min(newY, appRect.height - element.offsetHeight))}px`;
                 };
+
                 const onMouseUp = () => {
                     document.removeEventListener('mousemove', onMouseMove);
                     document.removeEventListener('mouseup', onMouseUp);
                     element.classList.remove('dragging');
-                    item.x = parseInt(element.style.left);
-                    item.y = parseInt(element.style.top);
-                    if (element.classList.contains('note')) {
-                        const parentZone = this.findParentZone(item);
+
+                    const newAbsX = parseInt(element.style.left);
+                    const newAbsY = parseInt(element.style.top);
+                    
+                    if (isNote) {
+                        const parentZone = this.findParentZone(element, newAbsX, newAbsY);
                         item.zoneId = parentZone ? parentZone.id : null;
+                        if (parentZone) {
+                            item.x = newAbsX - parentZone.x;
+                            item.y = newAbsY - parentZone.y;
+                        } else {
+                            item.x = newAbsX;
+                            item.y = newAbsY;
+                        }
+                    } else { // Es una zona
+                        item.x = newAbsX;
+                        item.y = newAbsY;
                     }
                     this.saveData();
+                    this.renderWorkspace(); // Re-render para actualizar la jerarquía visual
                 };
                 document.addEventListener('mousemove', onMouseMove);
                 document.addEventListener('mouseup', onMouseUp);
             });
         },
-        findParentZone(note) {
-            const noteCenterX = note.x + 120; // Ancho de la nota / 2
-            const noteCenterY = note.y + 120; // Alto de la nota / 2
+
+        findParentZone(noteElement, absX, absY) {
+            const noteCenterX = absX + (noteElement.offsetWidth / 2);
+            const noteCenterY = absY + (noteElement.offsetHeight / 2);
             return this.state.zones.find(zone =>
-                note.date === zone.date &&
+                zone.date === this.state.selectedDate &&
                 noteCenterX >= zone.x && noteCenterX <= (zone.x + zone.width) &&
                 noteCenterY >= zone.y && noteCenterY <= (zone.y + zone.height)
             );
         },
         
-        // =====================================================================
-        // INICIO: LÓGICA DE RENDERIZADO MODIFICADA
-        // =====================================================================
         renderWorkspace() {
+            this.DOM.app.innerHTML = '';
             const isMobile = window.innerWidth <= 768;
-            this.DOM.app.innerHTML = ''; 
+            
+            const zonesToShow = this.state.zones.filter(zone => zone.date === this.state.selectedDate);
+            const notesToShow = this.state.notes.filter(note => note.date === this.state.selectedDate);
 
+            // 1. Crear contenedores y cachearlos
+            const zonesContainer = document.createElement('div');
+            const standaloneNotesContainer = document.createElement('div');
             if (isMobile) {
-                this.renderMobileLayout();
-            } else {
-                this.renderDesktopLayout();
+                standaloneNotesContainer.id = "notesContainer";
             }
+            this.DOM.app.appendChild(zonesContainer);
+            this.DOM.app.appendChild(standaloneNotesContainer);
+            
+            // 2. Renderizar Zonas
+            zonesToShow.forEach(zone => {
+                const zoneEl = this.createZoneElement(zone);
+                zoneEl.id = `zone-el-${zone.id}`; // ID para encontrarlo después
+                zonesContainer.appendChild(zoneEl);
+            });
+
+            // 3. Renderizar Notas y asignarlas a su contenedor correcto
+            notesToShow.forEach(note => {
+                const noteEl = this.createNoteElement(note);
+                const parentZoneEl = note.zoneId ? this.DOM.app.querySelector(`#zone-el-${note.zoneId}`) : null;
+
+                if (parentZoneEl) {
+                    const notesContainer = parentZoneEl.querySelector('.zone-notes-container');
+                    notesContainer.appendChild(noteEl);
+                    if (!isMobile) {
+                        noteEl.style.left = `${note.x}px`;
+                        noteEl.style.top = `${note.y}px`;
+                    }
+                } else {
+                    standaloneNotesContainer.appendChild(noteEl);
+                     if (!isMobile) {
+                        noteEl.style.position = 'absolute';
+                        noteEl.style.left = `${note.x}px`;
+                        noteEl.style.top = `${note.y}px`;
+                    }
+                }
+            });
 
             if (this.state.selectedDate) {
                 const [y, m, d] = this.state.selectedDate.split('-');
@@ -466,81 +500,36 @@
             this.updateStats();
             this.updateTopControlsVisibility();
         },
-
-        renderDesktopLayout() {
-            this.DOM.app.innerHTML = `<div id="zonesContainer"></div><div id="notesContainer"></div>`;
-            this.cacheDOM(); 
-
-            const notesToShow = this.state.notes.filter(note => note.date === this.state.selectedDate);
-            const zonesToShow = this.state.zones.filter(zone => zone.date === this.state.selectedDate);
-            
-            zonesToShow.forEach(zone => {
-                const zoneEl = this.createZoneElement(zone);
-                this.DOM.zonesContainer.appendChild(zoneEl);
-            });
-
-            notesToShow.forEach(note => {
-                const noteEl = this.createNoteElement(note);
-                this.DOM.notesContainer.appendChild(noteEl);
-            });
-        },
-        
-        renderMobileLayout() {
-            // Esta función ahora organiza los elementos por jerarquía para una vista móvil coherente.
-            const notesToShow = this.state.notes.filter(note => note.date === this.state.selectedDate);
-            const zonesToShow = this.state.zones.filter(zone => zone.date === this.state.selectedDate);
-            
-            // 1. Renderizar Zonas y sus notas hijas
-            zonesToShow.forEach(zone => {
-                const zoneEl = this.createZoneElement(zone);
-                const mobileNotesContainer = zoneEl.querySelector('.zone-notes-container-mobile');
-                
-                // Buscar y renderizar las notas que pertenecen a esta zona
-                const notesInThisZone = notesToShow.filter(note => note.zoneId === zone.id);
-                notesInThisZone.forEach(note => {
-                    const noteEl = this.createNoteElement(note);
-                    mobileNotesContainer.appendChild(noteEl);
-                });
-
-                this.DOM.app.appendChild(zoneEl);
-            });
-
-            // 2. Renderizar notas "huérfanas" (sin zona asignada) al final
-            const standaloneNotes = notesToShow.filter(note => !note.zoneId || !zonesToShow.some(z => z.id === note.zoneId));
-            standaloneNotes.forEach(note => {
-                const noteEl = this.createNoteElement(note);
-                this.DOM.app.appendChild(noteEl);
-            });
-        },
-        // =====================================================================
-        // FIN: LÓGICA DE RENDERIZADO MODIFICADA
-        // =====================================================================
         
         createNoteElement(note) {
             const element = document.createElement('div');
-            element.className = 'note'; 
+            element.className = 'note draggable'; 
             element.innerHTML = `<button class="delete-btn">×</button><textarea placeholder="Escribe algo...">${note.content || ''}</textarea>`;
             
             element.querySelector('textarea').addEventListener('input', e => { note.content = e.target.value; this.saveData(); });
-            element.querySelector('.delete-btn').addEventListener('click', () => { this.state.notes = this.state.notes.filter(n => n.id !== note.id); this.saveData(); this.renderWorkspace(); this.renderCalendar(); });
+            element.querySelector('.delete-btn').addEventListener('click', () => { 
+                this.state.notes = this.state.notes.filter(n => n.id !== note.id); 
+                this.saveData(); 
+                this.renderWorkspace(); 
+                this.renderCalendar(); 
+            });
             
-            if (window.innerWidth > 768) {
-                element.classList.add('draggable');
-                element.style.left = `${note.x || 20}px`;
-                element.style.top = `${note.y || 20}px`;
-                this.makeDraggable(element, note);
-            }
+            this.makeDraggable(element, note);
             return element;
         },
         createZoneElement(zone) {
+            const isMobile = window.innerWidth <= 768;
             const element = document.createElement('div');
-            element.className = 'zone'; 
+            element.className = 'zone draggable'; 
             element.innerHTML = `
-                <input class="zone-title" value="${zone.title}" placeholder="Título de la Zona">
+                <input class="zone-title" value="${zone.title || 'Nueva Zona'}" placeholder="Título de la Zona">
                 <span class="delete-btn">×</span>
                 <div class="resize-handle"></div>
-                <!-- Este contenedor es crucial para la jerarquía en móvil -->
-                <div class="zone-notes-container-mobile"></div>
+                ${isMobile ? `
+                <div class="zone-mobile-actions">
+                    <button class="add-note-to-zone-btn" title="Añadir Nota a esta Zona">+</button>
+                </div>` : ''}
+                <div class="zone-notes-container"></div>
             `;
             
             element.querySelector('.zone-title').addEventListener('input', e => { zone.title = e.target.value; this.saveData(); });
@@ -550,9 +539,13 @@
                 this.saveData(); 
                 this.renderWorkspace(); 
             });
-            
-            if(window.innerWidth > 768) {
-               element.classList.add('draggable');
+
+            if(isMobile) {
+                element.querySelector('.add-note-to-zone-btn').addEventListener('click', e => {
+                    e.stopPropagation();
+                    this.addNote({ zoneId: zone.id });
+                });
+            } else {
                element.style.left = `${zone.x || 50}px`;
                element.style.top = `${zone.y || 50}px`;
                element.style.width = `${zone.width || 400}px`;
@@ -570,14 +563,40 @@
 
             if (isMobile) {
                 generalBtn.style.display = this.state.selectedDate ? 'flex' : 'none'; 
-                userProfileMenu.style.marginLeft = 'auto'; // Empuja el avatar a la derecha
+                userProfileMenu.style.marginLeft = 'auto'; 
             } else {
                  generalBtn.style.display = 'block';
                  userProfileMenu.style.marginLeft = '0';
             }
         },
 
-        addNote() { const newNote = { id: Date.now() + Math.random(), content: '', x: 20, y: 20, date: this.state.selectedDate, zoneId: null }; this.state.notes.push(newNote); this.renderWorkspace(); this.saveData(); this.updateStats(); this.renderCalendar(); },
+        addNote(options = {}) { 
+            const { zoneId = null } = options;
+            let initialX = 20, initialY = 20;
+
+            if (zoneId && window.innerWidth > 768) {
+                // Posicionar la nueva nota dentro de la zona de forma aleatoria
+                const zone = this.state.zones.find(z => z.id === zoneId);
+                if (zone) {
+                    initialX = Math.random() * (zone.width - 260); // 260 = note width + padding
+                    initialY = Math.random() * (zone.height - 260);
+                }
+            }
+
+            const newNote = { 
+                id: Date.now() + Math.random(), 
+                content: '', 
+                x: initialX, 
+                y: initialY, 
+                date: this.state.selectedDate, 
+                zoneId: zoneId 
+            }; 
+            this.state.notes.push(newNote); 
+            this.renderWorkspace(); 
+            this.saveData(); 
+            this.updateStats(); 
+            this.renderCalendar(); 
+        },
         addZone() { const newZone = { id: Date.now() + Math.random(), title: 'Nueva Zona', x: 50, y: 50, width: 400, height: 300, date: this.state.selectedDate }; this.state.zones.push(newZone); this.renderWorkspace(); this.saveData(); },
         
         requestConfirm(title, message, action) { this.DOM.confirmModal.title.textContent = title; this.DOM.confirmModal.message.textContent = message; this.state.pendingTimerAction = action.bind(this); this.DOM.confirmModal.overlay.classList.add('visible'); },
