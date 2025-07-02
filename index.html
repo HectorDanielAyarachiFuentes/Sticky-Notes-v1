@@ -89,9 +89,10 @@
         .delete-btn:hover { background-color: var(--highlight-color); color: white; }
         .resize-handle { position: absolute; bottom: 0; right: 0; width: 20px; height: 20px; cursor: nwse-resize; z-index: 11; }
         .resize-handle::after { content: ''; position: absolute; right: 5px; bottom: 5px; width: 8px; height: 8px; border-bottom: 2px solid var(--primary-accent); border-right: 2px solid var(--primary-accent); opacity: 0.5; }
-        #bottom-dashboard { position: fixed; bottom: 0; left: 0; width: 100%; height: 140px; background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(10px); border-top: 1px solid rgba(255, 255, 255, 0.8); box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.05); display: flex; align-items: stretch; justify-content: space-between; padding: 0 15px; box-sizing: border-box; z-index: 1002; }
-        .dashboard-widget { display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-dark); padding: 10px; text-align: center; border-right: 1px solid rgba(0,0,0,0.05); flex-grow: 1; flex-basis: 0; }
-        .dashboard-widget:last-child { border-right: none; }
+        
+        /* <!-- MODIFICADO --> ESTILOS DEL DASHBOARD INFERIOR CORREGIDOS */
+        #bottom-dashboard { position: fixed; bottom: 0; left: 0; width: 100%; height: 140px; background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(10px); border-top: 1px solid rgba(255, 255, 255, 0.8); box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.05); display: flex; align-items: stretch; justify-content: center; /* Centra los widgets */ padding: 0 20px; box-sizing: border-box; z-index: 1002; gap: 20px; /* Añade espaciado */ }
+        .dashboard-widget { display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-dark); padding: 10px; text-align: center; /* Se elimina flex-grow y border-right */ }
         .dashboard-widget h3 { margin: 0 0 10px 0; font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-light); letter-spacing: 0.5px; }
         #stats-widget span { font-size: 36px; font-weight: 600; }
         #clock-widget #current-time { font-size: 36px; font-weight: 600; }
@@ -137,7 +138,6 @@
         #sidebar-toggle-btn { display: none; padding: 8px 12px; font-size: 18px; line-height: 1; }
         #mobile-sidebar-container { display: none; }
         
-        /* <!-- MODIFICADO --> ESTILOS PARA REPRODUCTOR YOUTUBE */
         #youtube-player-container { position: relative; width: 220px; height: 124px; background: #000; border-radius: 8px; overflow: hidden; margin-top: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         #youtube-player-container iframe { width: 100%; height: 100%; border: none; }
         #youtube-controls { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background-color: rgba(0, 0, 0, 0.3); opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
@@ -146,25 +146,24 @@
         .yt-control-btn:hover { transform: scale(1.1); background-color: #fff; }
         .yt-control-btn svg { width: 24px; height: 24px; fill: var(--text-dark); }
 
-        /* <!-- MODIFICADO --> ESTILOS PARA DASHBOARD DESLIZABLE */
+        /* <!-- MODIFICADO --> ESTILOS PARA DASHBOARD DESLIZABLE Y PESTAÑA */
         #bottom-dashboard { transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
         #app { transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
-        #dashboard-toggle { position: absolute; top: 0; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 30px; background-color: #fff; border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 15px 15px 0 0; box-shadow: 0 -4px 12px rgba(0,0,0,0.05); cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-light); transition: color 0.3s ease; z-index: 1003; }
-        #dashboard-toggle:hover { color: var(--primary-accent); }
-        #dashboard-toggle svg { width: 20px; height: 20px; transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+        #dashboard-toggle { position: absolute; top: 0; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 30px; background-color: var(--primary-accent); /* Color principal */ border: none; border-radius: 15px 15px 0 0; box-shadow: 0 -4px 12px rgba(0,0,0,0.1); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background-color 0.3s ease; z-index: 1003; }
+        #dashboard-toggle:hover { background-color: var(--primary-accent-dark); }
+        #dashboard-toggle svg { width: 20px; height: 20px; stroke: white; /* Flecha blanca */ transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
         body.dashboard-hidden #bottom-dashboard { transform: translateY(calc(100% - 30px)); opacity: 0.85; }
         body.dashboard-hidden #app { height: 100vh; }
         body.dashboard-hidden #dashboard-toggle svg { transform: rotate(0deg); }
         body:not(.dashboard-hidden) #dashboard-toggle svg { transform: rotate(180deg); }
 
-        /* <!-- MODIFICADO --> CSS RESPONSIVO */
         @media (max-width: 768px) {
             body { overflow-y: auto; overflow-x: hidden; height: auto; }
             body.sidebar-active { overflow: hidden; }
             #bottom-dashboard { display: none !important; }
             #sidebar-toggle-btn { display: block; }
             #mobile-sidebar-container { display: block; }
-            #dashboard-toggle { display: none; } /* Oculta la pestaña en móvil */
+            #dashboard-toggle { display: none; }
             
             #top-controls { padding: 0 10px; width: auto; right: 10px; }
             .control-btn.secondary, #addZoneBtn, #addNoteBtn { display: none; }
@@ -179,7 +178,7 @@
             .sidebar-header h3 { margin: 0; font-size: 18px; color: var(--text-dark); }
             #close-sidebar-btn { background: none; border: none; font-size: 28px; cursor: pointer; color: var(--text-light); padding: 0 5px; }
             .sidebar-content { overflow-y: auto; flex-grow: 1; }
-            .sidebar-content .dashboard-widget { flex-direction: column; align-items: flex-start; text-align: left; padding: 20px; border-right: none; border-bottom: 1px solid #eee; }
+            .sidebar-content .dashboard-widget { flex-direction: column; align-items: flex-start; text-align: left; padding: 20px; border-bottom: 1px solid #eee; }
             .sidebar-content .dashboard-widget:last-child { border-bottom: none; }
             .sidebar-content .dashboard-widget h3 { margin-bottom: 15px; }
             .sidebar-content #stats-widget span, .sidebar-content #clock-widget #current-time, .sidebar-content #timer-display { font-size: 28px; }
@@ -233,13 +232,14 @@
             <div id="notesContainer"></div>
         </div>
         
-        <!-- MODIFICADO: Se añade la pestaña para ocultar/mostrar -->
         <div id="bottom-dashboard">
+            <!-- MODIFICADO: Pestaña para ocultar/mostrar -->
             <button id="dashboard-toggle" title="Ocultar/Mostrar Dashboard">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
             </button>
             <div id="stats-widget" class="dashboard-widget"><h3>Notas</h3><span id="note-count">0</span></div>
-            <div id="calendar-widget" class="dashboard-widget"><div class="calendar-header"><button id="prev-month"><</button><h3 id="month-year"></h3><button id="next-month">></button></div><div class="calendar-grid" id="calendar-days"></div></div>
+            <!-- MODIFICADO: Se añade el título h3 al calendario -->
+            <div id="calendar-widget" class="dashboard-widget"><h3>Calendario</h3><div class="calendar-header"><button id="prev-month"><</button><h3 id="month-year"></h3><button id="next-month">></button></div><div class="calendar-grid" id="calendar-days"></div></div>
            
             <div id="youtube-widget" class="dashboard-widget">
                 <h3>Música de Fondo</h3>
