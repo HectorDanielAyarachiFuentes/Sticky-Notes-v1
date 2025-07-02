@@ -8,27 +8,23 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     
-     <!-- Icono (Favicon) - Un cohete de productividad 🚀 -->
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%235a7dcb' d='M83.2,16.8C75.1,8.7,66.2,2,50,2S24.9,8.7,16.8,16.8C8.7,24.9,2,33.8,2,50s6.7,25.1,14.8,33.2 c8.1,8.1,17,14.8,33.2,14.8s25.1-6.7,33.2-14.8C91.3,75.1,98,66.2,98,50S91.3,24.9,83.2,16.8z M72.2,38.1L57.5,52.8 c-2.5,2.5-5.8,3.7-9.2,3.7s-6.7-1.2-9.2-3.7L24.5,38.1c-1-1-1.5-2.2-1.5-3.5s0.5-2.5,1.5-3.5c2-2,5.1-2,7.1,0l12.4,12.4V22.2 c0-2.8,2.3-5.1,5.1-5.1s5.1,2.3,5.1,5.1v21.3l12.4-12.4c2-2,5.1-2,7.1,0C74.2,33,74.2,36.1,72.2,38.1z M68.5,75.7 c0,1.4-0.5,2.7-1.5,3.7c-2,2-5.1,2-7.1,0L50,69.5l-9.9,9.9c-2,2-5.1,2-7.1,0c-1-1-1.5-2.3-1.5-3.7c0-1.4,0.5-2.7,1.5-3.7L43,62.1 c2.5-2.5,5.8-3.7,9.2-3.7s6.7,1.2,9.2,3.7l9.9,9.9C68,73,68.5,74.3,68.5,75.7z'%3E%3C/path%3E%3C/svg%3E" type="image/svg+xml">
     
-    <!-- Metadatos Esenciales y SEO -->
     <meta name="description" content="Organiza tus tareas, gestiona tu tiempo y aumenta tu enfoque con este dashboard de productividad personal. Incluye notas, zonas de trabajo, temporizador y más.">
     <meta name="author" content="Hector Daniel Ayarachi Fuentes">
     <meta name="theme-color" content="#5a7dcb"> 
 
-    <!-- Metadatos de Open Graph para Redes Sociales -->
     <meta property="og:title" content="Dashboard de Productividad | Impulsa tu Enfoque">
     <meta property="og:description" content="Organiza tus tareas, gestiona tu tiempo y aumenta tu enfoque con este dashboard de productividad personal.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://hectordanielayarachifuentes.github.io/Sticky-Notes-v1/">
     <meta property="og:image" content="https://hectordanielayarachifuentes.github.io/Sticky-Notes-v1/img/luna.jpg"> 
 
-    <!-- Metadatos para Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Dashboard de Productividad | Impulsa tu Enfoque">
     <meta name="twitter:description" content="Organiza tus tareas, gestiona tu tiempo y aumenta tu enfoque con este dashboard de productividad personal.">
     <meta name="twitter:image" content="https://hectordanielayarachifuentes.github.io/Sticky-Notes-v1/img/luna.jpg">
-        <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="https://www.youtube.com/iframe_api"></script>
 
     <style>
         :root {
@@ -101,8 +97,6 @@
         #clock-widget #current-time { font-size: 36px; font-weight: 600; }
         #clock-widget #current-date { font-size: 14px; color: var(--text-light); }
         #youtube-widget input { border: 1px solid #ccc; border-radius: 4px; padding: 6px 8px; width: 180px; font-size: 12px; margin-bottom: 8px; text-align: center; }
-        #youtube-player { width: 150px; height: 60px; background: #eee; border-radius: 4px; overflow: hidden; }
-        #youtube-player iframe { width: 100%; height: 100%; border: none; }
         #calendar-widget { min-width: 280px; }
         .calendar-header { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 8px; }
         .calendar-header button { background: none; border: none; cursor: pointer; font-size: 18px; color: var(--primary-accent); }
@@ -140,48 +134,44 @@
         .modal-actions .confirm-btn:hover { background-color: var(--primary-accent-dark); }
         .modal-actions .cancel-btn { background-color: #ecf0f1; color: var(--text-dark); }
         .modal-actions .cancel-btn:hover { background-color: #bdc3c7; }
-
-        /* ======================================= */
-        /* === NUEVOS ESTILOS BASE PARA MÓVIL === */
-        /* ======================================= */
         #sidebar-toggle-btn { display: none; padding: 8px 12px; font-size: 18px; line-height: 1; }
         #mobile-sidebar-container { display: none; }
+        
+        /* <!-- MODIFICADO --> ESTILOS PARA REPRODUCTOR YOUTUBE */
+        #youtube-player-container { position: relative; width: 220px; height: 124px; background: #000; border-radius: 8px; overflow: hidden; margin-top: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        #youtube-player-container iframe { width: 100%; height: 100%; border: none; }
+        #youtube-controls { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background-color: rgba(0, 0, 0, 0.3); opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
+        #youtube-player-container:hover #youtube-controls, #youtube-player-container.paused #youtube-controls { opacity: 1; pointer-events: all; }
+        .yt-control-btn { background-color: rgba(255, 255, 255, 0.9); border: none; border-radius: 50%; width: 50px; height: 50px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.3); transition: transform 0.2s ease, background-color 0.2s ease; }
+        .yt-control-btn:hover { transform: scale(1.1); background-color: #fff; }
+        .yt-control-btn svg { width: 24px; height: 24px; fill: var(--text-dark); }
 
-        /* ============================================= */
-        /* === CSS RESPONSIVO PARA MÓVIL (HASTA 768px) === */
-        /* ============================================= */
+        /* <!-- MODIFICADO --> ESTILOS PARA DASHBOARD DESLIZABLE */
+        #bottom-dashboard { transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+        #app { transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+        #dashboard-toggle { position: absolute; top: 0; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 30px; background-color: #fff; border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 15px 15px 0 0; box-shadow: 0 -4px 12px rgba(0,0,0,0.05); cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-light); transition: color 0.3s ease; z-index: 1003; }
+        #dashboard-toggle:hover { color: var(--primary-accent); }
+        #dashboard-toggle svg { width: 20px; height: 20px; transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+        body.dashboard-hidden #bottom-dashboard { transform: translateY(calc(100% - 30px)); opacity: 0.85; }
+        body.dashboard-hidden #app { height: 100vh; }
+        body.dashboard-hidden #dashboard-toggle svg { transform: rotate(0deg); }
+        body:not(.dashboard-hidden) #dashboard-toggle svg { transform: rotate(180deg); }
+
+        /* <!-- MODIFICADO --> CSS RESPONSIVO */
         @media (max-width: 768px) {
             body { overflow-y: auto; overflow-x: hidden; height: auto; }
             body.sidebar-active { overflow: hidden; }
             #bottom-dashboard { display: none !important; }
             #sidebar-toggle-btn { display: block; }
             #mobile-sidebar-container { display: block; }
+            #dashboard-toggle { display: none; } /* Oculta la pestaña en móvil */
             
             #top-controls { padding: 0 10px; width: auto; right: 10px; }
             .control-btn.secondary, #addZoneBtn, #addNoteBtn { display: none; }
             
-            #workspace-title {
-                left: 60px;
-                top: 21px;
-                font-size: 16px;
-                max-width: calc(100% - 120px);
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-
-            .sidebar-overlay {
-                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-                background-color: rgba(0, 0, 0, 0.5); z-index: 1099;
-                opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease;
-            }
-            #mobile-sidebar {
-                position: fixed; top: 0; left: -300px; width: 300px;
-                max-width: 85%; height: 100%; background: #ffffff;
-                z-index: 1100; box-shadow: 5px 0 15px rgba(0,0,0,0.1);
-                transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-                display: flex; flex-direction: column;
-            }
+            #workspace-title { left: 60px; top: 21px; font-size: 16px; max-width: calc(100% - 120px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+            .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1099; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
+            #mobile-sidebar { position: fixed; top: 0; left: -300px; width: 300px; max-width: 85%; height: 100%; background: #ffffff; z-index: 1100; box-shadow: 5px 0 15px rgba(0,0,0,0.1); transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; }
             body.sidebar-active .sidebar-overlay { opacity: 1; visibility: visible; }
             body.sidebar-active #mobile-sidebar { left: 0; }
             
@@ -189,124 +179,29 @@
             .sidebar-header h3 { margin: 0; font-size: 18px; color: var(--text-dark); }
             #close-sidebar-btn { background: none; border: none; font-size: 28px; cursor: pointer; color: var(--text-light); padding: 0 5px; }
             .sidebar-content { overflow-y: auto; flex-grow: 1; }
-            
-            .sidebar-content .dashboard-widget {
-                flex-direction: column; align-items: flex-start; text-align: left;
-                padding: 20px; border-right: none; border-bottom: 1px solid #eee;
-            }
-             .sidebar-content .dashboard-widget:last-child { border-bottom: none; }
-             .sidebar-content .dashboard-widget h3 { margin-bottom: 15px; }
-             .sidebar-content #stats-widget span, 
-             .sidebar-content #clock-widget #current-time,
-             .sidebar-content #timer-display { font-size: 28px; }
+            .sidebar-content .dashboard-widget { flex-direction: column; align-items: flex-start; text-align: left; padding: 20px; border-right: none; border-bottom: 1px solid #eee; }
+            .sidebar-content .dashboard-widget:last-child { border-bottom: none; }
+            .sidebar-content .dashboard-widget h3 { margin-bottom: 15px; }
+            .sidebar-content #stats-widget span, .sidebar-content #clock-widget #current-time, .sidebar-content #timer-display { font-size: 28px; }
             .sidebar-content .timer-display-container { justify-content: flex-start;}
             .sidebar-content #youtube-widget input { width: calc(100% - 16px); }
-            .sidebar-content #youtube-player { width: 100%; height: 120px; }
+            .sidebar-content #youtube-player-container { width: 100%; height: 140px; }
+            .sidebar-content .yt-control-btn { width: 45px; height: 45px; }
+            .sidebar-content .yt-control-btn svg { width: 20px; height: 20px; }
             .sidebar-content .calendar-header { padding: 0 5px; }
             .sidebar-content .calendar-grid { gap: 1px; }
-             .sidebar-content .day { padding: 4px 0; }
-
-            #app {
-                display: flex; flex-direction: column; gap: 16px;
-                padding: 80px 15px 20px 15px; height: auto;
-            }
+            .sidebar-content .day { padding: 4px 0; }
+            #app { display: flex; flex-direction: column; gap: 16px; padding: 80px 15px 20px 15px; height: auto; }
             #notesContainer, #zonesContainer { position: static; display: flex; flex-direction: column; gap: 16px; }
-            .draggable, .note, .zone {
-                position: static !important;
-                left: auto !important; top: auto !important;
-                width: 100% !important; height: auto !important;
-                min-height: 150px; transform: none !important;
-                cursor: default !important; box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            }
+            .draggable, .note, .zone { position: static !important; left: auto !important; top: auto !important; width: 100% !important; height: auto !important; min-height: 150px; transform: none !important; cursor: default !important; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
             .zone { padding-top: 55px; }
             .resize-handle { display: none !important; }
             .note textarea { min-height: 120px; font-size: 18px; }
-
             .modal-content { padding: 25px 20px; width: 90%; }
             .modal-content h2 { font-size: 22px; }
             .modal-content p { font-size: 14px; }
             .set-timer-inputs input { width: 50px; padding: 8px; font-size: 20px; }
         }
-
-        /* ======================================= */
-/* === ESTILOS PARA REPRODUCTOR YOUTUBE === */
-/* ======================================= */
-#youtube-player-container {
-    position: relative;
-    width: 220px; /* Ancho ajustado para el dashboard */
-    height: 124px; /* Proporción 16:9 */
-    background: #000;
-    border-radius: 8px;
-    overflow: hidden;
-    margin-top: 8px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-
-#youtube-player-container iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-}
-
-#youtube-controls {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(0, 0, 0, 0.3);
-    opacity: 0; /* Oculto por defecto */
-    transition: opacity 0.3s ease;
-    pointer-events: none; /* No interfiere con el click al video por defecto */
-}
-
-/* Mostrar controles al pasar el mouse o cuando el video está pausado/terminado */
-#youtube-player-container:hover #youtube-controls,
-#youtube-player-container.paused #youtube-controls {
-    opacity: 1;
-    pointer-events: all; /* Permite hacer clic en los botones */
-}
-
-.yt-control-btn {
-    background-color: rgba(255, 255, 255, 0.9);
-    border: none;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-    transition: transform 0.2s ease, background-color 0.2s ease;
-}
-
-.yt-control-btn:hover {
-    transform: scale(1.1);
-    background-color: #fff;
-}
-
-.yt-control-btn svg {
-    width: 24px;
-    height: 24px;
-    fill: var(--text-dark);
-}
-/* Para el reproductor en la barra lateral móvil, lo hacemos más simple y pequeño */
-.sidebar-content #youtube-player-container {
-    width: 100%;
-    height: 140px;
-}
-.sidebar-content .yt-control-btn {
-    width: 45px;
-    height: 45px;
-}
-.sidebar-content .yt-control-btn svg {
-    width: 20px;
-    height: 20px;
-}
     </style>
 </head>
 <body class="logged-out">
@@ -316,7 +211,6 @@
     <div class="main-content">
         <h2 id="workspace-title"></h2>
         <div id="top-controls">
-            <!-- BOTÓN DE MENÚ PARA MÓVIL -->
             <button id="sidebar-toggle-btn" class="control-btn">☰</button>
             <span id="save-status"></span>
             <button id="show-general-btn" class="control-btn secondary">Ver Tablero General</button>
@@ -338,24 +232,25 @@
             <div id="zonesContainer"></div>
             <div id="notesContainer"></div>
         </div>
-        <!-- ESTE ES EL DASHBOARD INFERIOR ORIGINAL, SE OCULTARÁ EN MÓVIL -->
+        
+        <!-- MODIFICADO: Se añade la pestaña para ocultar/mostrar -->
         <div id="bottom-dashboard">
+            <button id="dashboard-toggle" title="Ocultar/Mostrar Dashboard">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+            </button>
             <div id="stats-widget" class="dashboard-widget"><h3>Notas</h3><span id="note-count">0</span></div>
             <div id="calendar-widget" class="dashboard-widget"><div class="calendar-header"><button id="prev-month"><</button><h3 id="month-year"></h3><button id="next-month">></button></div><div class="calendar-grid" id="calendar-days"></div></div>
            
-<div id="youtube-widget" class="dashboard-widget">
-    <h3>Música de Fondo</h3>
-    <input type="text" id="youtube-url-input" placeholder="Pega link de YouTube">
-    <!-- Contenedor principal para el reproductor y los controles -->
-    <div id="youtube-player-container">
-        <!-- El reproductor de YouTube será inyectado aquí por la API -->
-        <div id="youtube-player"></div>
-        <!-- Nuestros controles personalizados -->
-        <div id="youtube-controls">
-            <button id="yt-play-pause-btn" class="yt-control-btn" title="Reproducir/Pausar"></button>
-        </div>
-    </div>
-</div>            
+            <div id="youtube-widget" class="dashboard-widget">
+                <h3>Música de Fondo</h3>
+                <input type="text" id="youtube-url-input" placeholder="Pega link de YouTube">
+                <div id="youtube-player-container">
+                    <div id="youtube-player"></div>
+                    <div id="youtube-controls">
+                        <button id="yt-play-pause-btn" class="yt-control-btn" title="Reproducir/Pausar"></button>
+                    </div>
+                </div>
+            </div>            
             <div id="timer-widget" class="dashboard-widget">
                 <h3>Cronómetro</h3>
                 <div class="timer-display-container">
@@ -372,7 +267,6 @@
         </div>
     </div>
     
-    <!-- MODALES (sin cambios) -->
     <div id="alert-modal-overlay" class="modal-overlay">
         <div class="modal-content">
             <h2 id="alert-modal-title"></h2>
@@ -403,7 +297,6 @@
         </div>
     </div>
 
-    <!-- NUEVA ESTRUCTURA HTML PARA EL MENÚ LATERAL MÓVIL -->
     <div id="mobile-sidebar-container">
         <div class="sidebar-overlay"></div>
         <aside id="mobile-sidebar">
@@ -411,9 +304,7 @@
                 <h3>Panel de Control</h3>
                 <button id="close-sidebar-btn">×</button>
             </div>
-            <div class="sidebar-content">
-                <!-- Los widgets se clonan aquí mediante JavaScript para mantener su funcionalidad -->
-            </div>
+            <div class="sidebar-content"></div>
         </aside>
     </div>
 
@@ -423,7 +314,6 @@
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
     import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-    // --- CONFIGURACIÓN DE FIREBASE (sin cambios) ---
     const firebaseConfig = {
         apiKey: "AIzaSyCptS0stYpYu5GGLNXgtjNJD8NFzKZdEj0",
         authDomain: "mi-dashboard-de-notas.firebaseapp.com",
@@ -441,7 +331,7 @@
             notes: [],
             zones: [],
             youtubeUrl: '',
-            youtubePlayer: null, // NUEVO: Para guardar la instancia del reproductor de YouTube
+            youtubePlayer: null, 
             selectedDate: null,
             isDataLoaded: false,
             calendarDate: new Date(),
@@ -452,7 +342,6 @@
             pendingTimerAction: null,
         },
         DOM: {},
-        // NUEVO: Constantes para los iconos SVG del reproductor
         ICONS: {
             PLAY: `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>`,
             PAUSE: `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>`
@@ -460,6 +349,12 @@
         
         init() {
             this.cacheDOM();
+
+            // MODIFICADO: Revisa si el dashboard debería estar oculto desde el inicio
+            if (localStorage.getItem('dashboardIsHidden') === 'true') {
+                this.DOM.body.classList.add('dashboard-hidden');
+            }
+            
             this.initFirebase();
             this.setupMobileUI();
             this.bindEvents();
@@ -489,9 +384,10 @@
             this.DOM.sidebarOverlay = document.querySelector('.sidebar-overlay');
             this.DOM.sidebarContent = document.querySelector('#mobile-sidebar .sidebar-content');
             this.DOM.closeSidebarBtn = document.getElementById('close-sidebar-btn');
+            // MODIFICADO: Se añade el botón de la pestaña al DOM cacheado
+            this.DOM.dashboardToggle = document.getElementById('dashboard-toggle');
         },
 
-        // VERSIÓN CORREGIDA (sin cambios en esta iteración)
         setupMobileUI() {
             const widgets = this.DOM.bottomDashboard.querySelectorAll('.dashboard-widget');
             widgets.forEach(widget => {
@@ -544,6 +440,12 @@
             document.querySelectorAll('#start-timer').forEach(btn => btn.addEventListener('click', () => this.requestConfirm('Iniciar Temporizador', '¿Estás seguro de que quieres iniciar el tiempo?', this.startTimer)));
             document.querySelectorAll('#stop-timer').forEach(btn => btn.addEventListener('click', () => this.requestConfirm('Pausar Temporizador', '¿Quieres pausar el tiempo?', this.stopTimer)));
             document.querySelectorAll('#reset-timer').forEach(btn => btn.addEventListener('click', () => this.requestConfirm('Reiniciar Temporizador', 'Esto restablecerá el tiempo a su valor inicial. ¿Continuar?', this.resetTimer)));
+        
+            // MODIFICADO: Se añade el evento de clic para la pestaña deslizable
+            this.DOM.dashboardToggle.addEventListener('click', () => {
+                const isHidden = this.DOM.body.classList.toggle('dashboard-hidden');
+                localStorage.setItem('dashboardIsHidden', isHidden);
+            });
         },
         
         requestConfirm(title, message, action) { this.DOM.confirmModal.title.textContent = title; this.DOM.confirmModal.message.textContent = message; this.state.pendingTimerAction = action.bind(this); this.DOM.confirmModal.overlay.classList.add('visible'); },
@@ -602,103 +504,44 @@
                 }
             });
         },
-        setupAllYoutubePlayers() { 
-            // ACTUALIZADO: Se llama a la función principal. La lógica de inicialización está ahora dentro de setupYoutubePlayer.
-            this.setupYoutubePlayer(); 
-        },
-
-        // REEMPLAZADO: Toda la lógica del reproductor de YouTube ha sido actualizada para usar la API.
+        setupAllYoutubePlayers() { this.setupYoutubePlayer(); },
         setupYoutubePlayer() {
-            // Nota: Esta función ahora inicializa todos los reproductores, pero asumimos que solo hay uno principal.
             const container = document.querySelector('#youtube-widget');
             const input = container.querySelector('#youtube-url-input');
             const playerContainer = container.querySelector('#youtube-player-container');
-            
             if (!input || !playerContainer) return;
-
             const loadVideo = (url) => {
-                const videoId = (u => {
-                    const m = u.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/);
-                    return (m && m[2].length === 11) ? m[2] : null;
-                })(url);
-
+                const videoId = (u => { const m = u.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/); return (m && m[2].length === 11) ? m[2] : null; })(url);
                 if (videoId) {
                     if (this.state.youtubePlayer && typeof this.state.youtubePlayer.loadVideoById === 'function') {
                         this.state.youtubePlayer.loadVideoById(videoId);
                     } else {
-                        // Si el objeto YT está disponible, crea el reproductor.
                         if (typeof YT !== 'undefined' && YT.Player) {
-                            this.state.youtubePlayer = new YT.Player('youtube-player', {
-                                height: '100%',
-                                width: '100%',
-                                videoId: videoId,
-                                playerVars: { 'playsinline': 1, 'controls': 0, 'modestbranding': 1, 'rel': 0 },
-                                events: {
-                                    'onReady': this.onPlayerReady.bind(this),
-                                    'onStateChange': this.onPlayerStateChange.bind(this)
-                                }
-                            });
+                            this.state.youtubePlayer = new YT.Player('youtube-player', { height: '100%', width: '100%', videoId: videoId, playerVars: { 'playsinline': 1, 'controls': 0, 'modestbranding': 1, 'rel': 0 }, events: { 'onReady': this.onPlayerReady.bind(this), 'onStateChange': this.onPlayerStateChange.bind(this) } });
                         }
                     }
-                    if (this.state.youtubeUrl !== url) {
-                        this.state.youtubeUrl = url;
-                        this.saveData();
-                    }
+                    if (this.state.youtubeUrl !== url) { this.state.youtubeUrl = url; this.saveData(); }
                 }
             };
-
             input.addEventListener('change', e => loadVideo(e.target.value));
-
             if (this.state.isDataLoaded && this.state.youtubeUrl) {
                 input.value = this.state.youtubeUrl;
-                
-                window.onYouTubeIframeAPIReady = () => {
-                    loadVideo(this.state.youtubeUrl);
-                };
-                
-                if (typeof YT !== 'undefined' && YT.loaded) {
-                    window.onYouTubeIframeAPIReady();
-                }
+                window.onYouTubeIframeAPIReady = () => { loadVideo(this.state.youtubeUrl); };
+                if (typeof YT !== 'undefined' && YT.loaded) { window.onYouTubeIframeAPIReady(); }
             } else if (!this.state.youtubeUrl) {
-                 // Asegura que onYouTubeIframeAPIReady esté definido incluso si no hay URL inicial
                  window.onYouTubeIframeAPIReady = () => {};
             }
         },
-
-        // NUEVO: Callback para cuando el reproductor está listo.
         onPlayerReady(event) {
             document.querySelectorAll('#yt-play-pause-btn').forEach(btn => {
                 btn.innerHTML = this.ICONS.PLAY;
-                btn.onclick = () => {
-                    const playerState = this.state.youtubePlayer.getPlayerState();
-                    if (playerState === YT.PlayerState.PLAYING) {
-                        this.state.youtubePlayer.pauseVideo();
-                    } else {
-                        this.state.youtubePlayer.playVideo();
-                    }
-                };
+                btn.onclick = () => { const playerState = this.state.youtubePlayer.getPlayerState(); if (playerState === YT.PlayerState.PLAYING) { this.state.youtubePlayer.pauseVideo(); } else { this.state.youtubePlayer.playVideo(); } };
             });
         },
-
-        // NUEVO: Callback para cuando cambia el estado del reproductor (play, pausa, etc.)
         onPlayerStateChange(event) {
-            document.querySelectorAll('#yt-play-pause-btn').forEach(btn => {
-                 if (event.data === YT.PlayerState.PLAYING) {
-                    btn.innerHTML = this.ICONS.PAUSE;
-                } else {
-                    btn.innerHTML = this.ICONS.PLAY;
-                }
-            });
-
-            document.querySelectorAll('#youtube-player-container').forEach(container => {
-                if (event.data === YT.PlayerState.PLAYING) {
-                    container.classList.remove('paused');
-                } else {
-                    container.classList.add('paused');
-                }
-            });
+            document.querySelectorAll('#yt-play-pause-btn').forEach(btn => { if (event.data === YT.PlayerState.PLAYING) { btn.innerHTML = this.ICONS.PAUSE; } else { btn.innerHTML = this.ICONS.PLAY; } });
+            document.querySelectorAll('#youtube-player-container').forEach(container => { if (event.data === YT.PlayerState.PLAYING) { container.classList.remove('paused'); } else { container.classList.add('paused'); } });
         },
-
         setupAllTimers() { document.querySelectorAll('#timer-widget').forEach(container => this.setupTimer(container)); },
         setupTimer(container) { const editBtn = container.querySelector('#edit-timer-btn'); if (!editBtn) return; editBtn.addEventListener('click', () => this.showTimerModal()); this.DOM.timerModal.saveBtn.addEventListener('click', () => this.saveTimerSettings()); this.updateTimerDisplay(); },
         updateTimerDisplay() { const h = String(Math.floor(this.state.timerSeconds / 3600)).padStart(2, '0'); const m = String(Math.floor((this.state.timerSeconds % 3600) / 60)).padStart(2, '0'); const s = String(this.state.timerSeconds % 60).padStart(2, '0'); const timeString = `${h}:${m}:${s}`; document.querySelectorAll('#timer-display').forEach(el => el.textContent = timeString); },
