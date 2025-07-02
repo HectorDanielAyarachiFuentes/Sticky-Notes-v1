@@ -487,32 +487,52 @@
             this.DOM.fabAddZoneBtn.addEventListener('click', () => { this.addZone(); this.DOM.fabContainer.classList.remove('fab-active'); });
         },
         
+        // =========  FUNCIÓN CORREGIDA =========
         makeDraggable(element, item) {
             element.addEventListener('mousedown', e => {
                 const target = e.target;
-                if (target.tagName.toLowerCase() === 'textarea' || target.tagName.toLowerCase() === 'input' || target.classList.contains('delete-btn') || target.classList.contains('resize-handle')) return;
+                if (target.tagName.toLowerCase() === 'textarea' || target.tagName.toLowerCase() === 'input' || target.classList.contains('delete-btn') || target.classList.contains('resize-handle') || target.closest('.note-tab-btn')) return;
+                
                 element.classList.add('dragging');
-                const offsetX = e.clientX - element.offsetLeft;
-                const offsetY = e.clientY - element.offsetTop;
+
+                const parentRect = this.DOM.app.getBoundingClientRect();
+                const elemRect = element.getBoundingClientRect();
+
+                // Calcular el desfase del ratón DENTRO del elemento que se arrastra
+                const offsetX = e.clientX - elemRect.left;
+                const offsetY = e.clientY - elemRect.top;
+
                 const onMouseMove = (moveEvent) => {
-                    let newX = moveEvent.clientX - offsetX;
-                    let newY = moveEvent.clientY - offsetY;
-                    const appRect = this.DOM.app.getBoundingClientRect();
-                    element.style.left = `${Math.max(0, Math.min(newX, appRect.width - element.offsetWidth))}px`;
-                    element.style.top = `${Math.max(0, Math.min(newY, appRect.height - element.offsetHeight))}px`;
+                    // Calcular la nueva posición del elemento relativa a su contenedor (#app)
+                    // Se resta el desfase del ratón para que no "salte"
+                    let newX = moveEvent.clientX - parentRect.left - offsetX;
+                    let newY = moveEvent.clientY - parentRect.top - offsetY;
+
+                    // Limitar el movimiento a los bordes del contenedor #app
+                    const clampedX = Math.max(0, Math.min(newX, parentRect.width - element.offsetWidth));
+                    const clampedY = Math.max(0, Math.min(newY, parentRect.height - element.offsetHeight));
+
+                    element.style.left = `${clampedX}px`;
+                    element.style.top = `${clampedY}px`;
                 };
+
                 const onMouseUp = () => {
                     document.removeEventListener('mousemove', onMouseMove);
                     document.removeEventListener('mouseup', onMouseUp);
                     element.classList.remove('dragging');
+                    
+                    // Guardar la nueva posición final
                     item.x = parseInt(element.style.left);
                     item.y = parseInt(element.style.top);
+
+                    // Si es una nota, comprobar si está dentro de una zona
                     if (element.classList.contains('note')) {
                         const parentZone = this.findParentZone(item);
                         item.zoneId = parentZone ? parentZone.id : null;
                     }
                     this.saveData();
                 };
+
                 document.addEventListener('mousemove', onMouseMove);
                 document.addEventListener('mouseup', onMouseUp);
             });
@@ -531,13 +551,11 @@
         renderWorkspace() {
             const isMobile = window.innerWidth <= 768;
             this.DOM.app.innerHTML = ''; 
-
             if (isMobile) {
                 this.renderMobileLayout();
             } else {
                 this.renderDesktopLayout();
             }
-
             if (this.state.selectedDate) {
                 const [y, m, d] = this.state.selectedDate.split('-');
                 this.DOM.workspaceTitle.textContent = new Date(y, m - 1, d).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -551,15 +569,12 @@
         renderDesktopLayout() {
             this.DOM.app.innerHTML = `<div id="zonesContainer"></div><div id="notesContainer"></div>`;
             this.cacheDOM(); 
-
             const notesToShow = this.state.notes.filter(note => note.date === this.state.selectedDate);
             const zonesToShow = this.state.zones.filter(zone => zone.date === this.state.selectedDate);
-            
             zonesToShow.forEach(zone => {
                 const zoneEl = this.createZoneElement(zone);
                 this.DOM.zonesContainer.appendChild(zoneEl);
             });
-
             notesToShow.forEach(note => {
                 const noteEl = this.createNoteElement(note);
                 this.DOM.notesContainer.appendChild(noteEl);
@@ -569,20 +584,16 @@
         renderMobileLayout() {
             const notesToShow = this.state.notes.filter(note => note.date === this.state.selectedDate);
             const zonesToShow = this.state.zones.filter(zone => zone.date === this.state.selectedDate);
-            
             zonesToShow.forEach(zone => {
                 const zoneEl = this.createZoneElement(zone);
                 const mobileNotesContainer = zoneEl.querySelector('.zone-notes-container-mobile');
-                
                 const notesInThisZone = notesToShow.filter(note => note.zoneId === zone.id);
                 notesInThisZone.forEach(note => {
                     const noteEl = this.createNoteElement(note);
                     mobileNotesContainer.appendChild(noteEl);
                 });
-
                 this.DOM.app.appendChild(zoneEl);
             });
-
             const standaloneNotes = notesToShow.filter(note => !note.zoneId || !zonesToShow.some(z => z.id === note.zoneId));
             standaloneNotes.forEach(note => {
                 const noteEl = this.createNoteElement(note);
@@ -687,7 +698,7 @@
 
         createZoneElement(zone) {
             const element = document.createElement('div');
-            element.className = 'zone'; 
+            element.className = 'zone';
             element.innerHTML = `
                 <input class="zone-title" value="${zone.title || 'Nueva Zona'}" placeholder="Título de la Zona">
                 <span class="delete-btn">×</span>
@@ -748,7 +759,6 @@
             this.state.notes.push(newNote);
             this.renderWorkspace(); this.saveData(); this.updateStats(); this.renderCalendar();
         },
-
         addZone() { 
             const newZone = { 
                 id: Date.now() + Math.random(), title: 'Nueva Zona', 
@@ -757,7 +767,6 @@
             }; 
             this.state.zones.push(newZone); this.renderWorkspace(); this.saveData(); 
         },
-        
         requestConfirm(title, message, action) { this.DOM.confirmModal.title.textContent = title; this.DOM.confirmModal.message.textContent = message; this.state.pendingTimerAction = action.bind(this); this.DOM.confirmModal.overlay.classList.add('visible'); },
         closeConfirmModal() { this.DOM.confirmModal.overlay.classList.remove('visible'); this.state.pendingTimerAction = null; },
         handleConfirmAction() { if (typeof this.state.pendingTimerAction === 'function') { this.state.pendingTimerAction(); } this.closeConfirmModal(); },
@@ -797,7 +806,7 @@
         },        
         clearWorkspace() { this.DOM.app.innerHTML = ''; this.DOM.workspaceTitle.textContent = ''; this.state.isDataLoaded = false; },
         updateStats() { const notesInView = this.state.notes.filter(n => n.date === this.state.selectedDate).length; document.querySelectorAll('#note-count').forEach(el => el.textContent = notesInView); },
-        makeResizable(element, item) { const handle = element.querySelector('.resize-handle'); handle.addEventListener('mousedown', e => { e.stopPropagation(); const startX = e.clientX; const startY = e.clientY; const startWidth = parseInt(document.defaultView.getComputedStyle(element).width, 10); const startHeight = parseInt(document.defaultView.getComputedStyle(element).height, 10); const onMouseMove = (moveEvent) => { let newWidth = startWidth + moveEvent.clientX - startX; let newHeight = startHeight + moveEvent.clientY - startY; element.style.width = `${Math.max(250, newWidth)}px`; element.style.height = `${Math.max(200, newHeight)}px`; }; const onMouseUp = () => { document.removeEventListener('mousemove', onMouseMove); document.removeEventListener('mouseup', onMouseUp); item.width = parseInt(element.style.width); item.height = parseInt(element.style.height); this.saveData(); }; document.addEventListener('mousemove', onMouseMove); document.addEventListener('mouseup', onMouseUp); }); },
+        makeResizable(element, item) { const handle = element.querySelector('.resize-handle'); if (!handle) return; handle.addEventListener('mousedown', e => { e.stopPropagation(); const startX = e.clientX; const startY = e.clientY; const startWidth = parseInt(document.defaultView.getComputedStyle(element).width, 10); const startHeight = parseInt(document.defaultView.getComputedStyle(element).height, 10); const onMouseMove = (moveEvent) => { let newWidth = startWidth + moveEvent.clientX - startX; let newHeight = startHeight + moveEvent.clientY - startY; element.style.width = `${Math.max(250, newWidth)}px`; element.style.height = `${Math.max(200, newHeight)}px`; }; const onMouseUp = () => { document.removeEventListener('mousemove', onMouseMove); document.removeEventListener('mouseup', onMouseUp); item.width = parseInt(element.style.width); item.height = parseInt(element.style.height); this.saveData(); }; document.addEventListener('mousemove', onMouseMove); document.addEventListener('mouseup', onMouseUp); }); },
         showGeneralDashboard() { this.state.selectedDate = null; this.saveData(); this.renderWorkspace(); this.renderCalendar(); },
         closeSidebar() { this.DOM.body.classList.remove('sidebar-active'); },
         setupAllWidgets() { this.setupAllClocks(); this.setupAllCalendars(); this.setupAllTimers(); this.setupAllYoutubePlayers(); },
@@ -823,7 +832,7 @@
                 const month = this.state.calendarDate.getMonth();
                 const year = this.state.calendarDate.getFullYear();
                 monthYearEl.textContent = new Date(year, month).toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
-                const noteDates = new Set(this.state.notes.map(n => n.date).filter(Boolean));
+                const noteDates = new Set([...this.state.notes, ...this.state.zones].map(n => n.date).filter(Boolean));
                 const firstDayIndex = (new Date(year, month, 1).getDay() + 6) % 7;
                 const daysInMonth = new Date(year, month + 1, 0).getDate();
                 const today = new Date();
@@ -839,52 +848,40 @@
                 }
             });
         },
-        setupAllYoutubePlayers() {
-            document.querySelectorAll('#youtube-widget').forEach(container => {
-                const input = container.querySelector('#youtube-url-input');
-                let playerDiv = container.querySelector('#youtube-player');
-                if (!input || !playerDiv) return;
-
-                // Ensure unique ID for each player instance
-                let playerId = playerDiv.id;
-                if (!playerId || document.querySelectorAll(`#${playerId}`).length > 1) {
-                    playerId = `ytplayer-${Math.random().toString(36).substr(2, 9)}`;
-                    playerDiv.id = playerId;
+        setupAllYoutubePlayers() { document.querySelectorAll('#youtube-widget').forEach(container => this.setupYoutubePlayer(container));},
+        setupYoutubePlayer(container) {
+            const input = container.querySelector('#youtube-url-input');
+            const playerContainer = container.querySelector('#youtube-player-container');
+            const playerDiv = playerContainer.querySelector('#youtube-player');
+            if (!input || !playerDiv) return;
+            const playerId = playerDiv.id || `ytplayer-${Math.random().toString(36).substr(2, 9)}`;
+            playerDiv.id = playerId;
+            
+            const loadVideo = (url) => {
+                const videoId = (u => { const m = u.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/); return (m && m[2].length === 11) ? m[2] : null; })(url);
+                if (videoId) {
+                    if (container.player) container.player.destroy();
+                    container.player = new YT.Player(playerId, { height: '100%', width: '100%', videoId: videoId, playerVars: { 'playsinline': 1, 'controls': 0, 'modestbranding': 1, 'rel': 0 }, events: { 'onReady': (e) => this.onPlayerReady(e, container), 'onStateChange': (e) => this.onPlayerStateChange(e, container) } });
+                    if (this.state.youtubeUrl !== url) { this.state.youtubeUrl = url; this.saveData(); }
                 }
-                
-                const loadVideo = (url) => {
-                    const videoId = (u => { const m = u.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/); return (m && m[2].length === 11) ? m[2] : null; })(url);
-                    if (videoId) {
-                        const playerInstance = new YT.Player(playerId, { height: '100%', width: '100%', videoId: videoId, playerVars: { 'playsinline': 1, 'controls': 0, 'modestbranding': 1, 'rel': 0 }, events: { 'onReady': (e) => this.onPlayerReady(e, container), 'onStateChange': (e) => this.onPlayerStateChange(e, container) } });
-                        if (this.state.youtubeUrl !== url) { this.state.youtubeUrl = url; this.saveData(); }
-                    }
-                };
-                
-                input.addEventListener('change', e => loadVideo(e.target.value));
-                
-                if (container.closest('#mobile-sidebar')) {
-                    if (this.state.youtubeUrl) {
-                        input.value = this.state.youtubeUrl;
-                        if(typeof YT !== 'undefined' && YT.loaded) loadVideo(this.state.youtubeUrl);
-                    }
-                } else if(this.state.isDataLoaded && this.state.youtubeUrl) {
-                     input.value = this.state.youtubeUrl;
-                     if(typeof window.onYouTubeIframeAPIReady !== 'function'){
-                         window.onYouTubeIframeAPIReady = () => loadVideo(this.state.youtubeUrl);
-                         if (typeof YT !== 'undefined' && YT.loaded) window.onYouTubeIframeAPIReady();
-                     }
-                }
-            });
+            };
+            input.onchange = e => loadVideo(e.target.value);
+            if (this.state.isDataLoaded && this.state.youtubeUrl) {
+                input.value = this.state.youtubeUrl;
+                if (typeof YT !== 'undefined' && YT.loaded) loadVideo(this.state.youtubeUrl);
+                else { window.onYouTubeIframeAPIReady = () => loadVideo(this.state.youtubeUrl); }
+            }
         },
         onPlayerReady(event, container) {
             const btn = container.querySelector('.yt-control-btn');
             btn.innerHTML = this.ICONS.PLAY;
-            btn.onclick = () => { const playerState = event.target.getPlayerState(); if (playerState === YT.PlayerState.PLAYING) { event.target.pauseVideo(); } else { event.target.playVideo(); } };
+            btn.onclick = () => { const playerState = event.target.getPlayerState(); if (playerState === YT.PlayerState.PLAYING) event.target.pauseVideo(); else event.target.playVideo(); };
         },
         onPlayerStateChange(event, container) {
             const btn = container.querySelector('.yt-control-btn');
             const playerContainer = container.querySelector('#youtube-player-container');
-            if (event.data === YT.PlayerState.PLAYING) { btn.innerHTML = this.ICONS.PAUSE; playerContainer.classList.remove('paused'); } else { btn.innerHTML = this.ICONS.PLAY; playerContainer.classList.add('paused');}
+            if (event.data === YT.PlayerState.PLAYING) { btn.innerHTML = this.ICONS.PAUSE; playerContainer.classList.remove('paused'); }
+            else { btn.innerHTML = this.ICONS.PLAY; playerContainer.classList.add('paused');}
         },
         setupAllTimers() { document.querySelectorAll('#timer-widget').forEach(container => this.setupTimer(container)); },
         setupTimer(container) { const editBtn = container.querySelector('#edit-timer-btn'); if (!editBtn) return; editBtn.addEventListener('click', () => this.showTimerModal()); this.DOM.timerModal.saveBtn.addEventListener('click', () => this.saveTimerSettings()); this.updateTimerDisplay(); },
