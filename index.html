@@ -230,6 +230,11 @@
        7.1 VISTA DE ESCRITORIO (min-width: 769px)
        -------------------------------------------------------------------------- */
     @media (min-width: 769px) {
+        /* NUEVO: Oculta el título "Tablero General" en escritorio */
+        body.general-view #workspace-title {
+            visibility: hidden;
+        }
+
         .note {
             display: flex;
             flex-direction: row;
@@ -706,8 +711,10 @@
             if (this.state.selectedDate) {
                 const [y, m, d] = this.state.selectedDate.split('-');
                 this.DOM.workspaceTitle.textContent = new Date(y, m - 1, d).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+                this.DOM.body.classList.remove('general-view');
             } else {
                 this.DOM.workspaceTitle.textContent = 'Tablero General';
+                this.DOM.body.classList.add('general-view');
             }
             this.updateStats();
             this.updateTopControlsVisibility();
