@@ -396,8 +396,8 @@
         .sidebar-content .day { padding: 4px 0; }
 
         /* Estilos de Notas y Zonas en Móvil */
-        .note, .zone { position: static !important; width: 100% !important; height: auto !important; transform: none !important; cursor: default !important; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-        .zone { padding: 15px; padding-top: 55px; background: var(--zone-bg); }
+/* ---- CÓDIGO CORREGIDO (DENTRO DEL @media móvil) ---- */
+.note, .zone { position: relative; width: 100% !important; height: auto !important; transform: none !important; cursor: default !important; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }        .zone { padding: 15px; padding-top: 55px; background: var(--zone-bg); }
         
         .note { display: flex; flex-direction: column-reverse; min-height: 180px; }
         .note .delete-btn { position: absolute; top: 8px; right: 8px; z-index: 5; }
