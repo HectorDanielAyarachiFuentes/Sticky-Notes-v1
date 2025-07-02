@@ -62,7 +62,7 @@
         .logged-out .main-content { display: none; }
         .main-content { opacity: 0; transition: opacity 0.5s ease-in-out; }
         .logged-in .main-content { opacity: 1; }
-        #app { position: relative; width: 100%; height: calc(100vh - 140px); padding: 20px; padding-top: 70px; box-sizing: border-box; }
+        #app { position: relative; width: 100%; height: calc(100vh - 180px); padding: 20px; padding-top: 70px; box-sizing: border-box; }
         #workspace-title { position: fixed; top: 20px; left: 20px; font-size: 24px; font-weight: 600; color: var(--text-dark); z-index: 1001; }
         #top-controls { position: fixed; top: 15px; right: 20px; z-index: 1001; display: flex; gap: 12px; align-items: center; }
         #save-status { font-size: 14px; color: var(--text-light); transition: opacity 0.3s ease; margin-right: 10px; }
@@ -91,8 +91,8 @@
         .resize-handle::after { content: ''; position: absolute; right: 5px; bottom: 5px; width: 8px; height: 8px; border-bottom: 2px solid var(--primary-accent); border-right: 2px solid var(--primary-accent); opacity: 0.5; }
         
         /* <!-- MODIFICADO --> ESTILOS DEL DASHBOARD INFERIOR CORREGIDOS CON DISEÑO DE TARJETAS */
-        #bottom-dashboard { position: fixed; bottom: 0; left: 0; width: 100%; height: 160px; /* Aumentamos un poco la altura */ background: rgba(239, 243, 245, 0.7); backdrop-filter: blur(10px); border-top: 1px solid rgba(255, 255, 255, 0.8); box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.05); display: flex; align-items: flex-start; /* Clave: alinea las tarjetas arriba */ justify-content: center; padding: 20px; box-sizing: border-box; z-index: 1002; gap: 25px; }
-        .dashboard-widget { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; /* Alinea contenido arriba */ color: var(--text-dark); text-align: center; background-color: rgba(255, 255, 255, 0.7); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.07); padding: 15px; border: 1px solid rgba(255, 255, 255, 0.9); transition: all 0.3s ease; transform: translateY(0); }
+        #bottom-dashboard { position: fixed; bottom: 0; left: 0; width: 100%; /* height se elimina para ser auto */ background: rgba(239, 243, 245, 0.7); backdrop-filter: blur(10px); border-top: 1px solid rgba(255, 255, 255, 0.8); box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.05); display: flex; align-items: flex-start; justify-content: center; padding: 30px 20px; /* Aumentamos el padding para el margen lindo */ box-sizing: border-box; z-index: 1002; gap: 25px; }
+        .dashboard-widget { height: auto; /* Permite que el contenido defina la altura */ display: flex; flex-direction: column; align-items: center; justify-content: flex-start; color: var(--text-dark); text-align: center; background-color: rgba(255, 255, 255, 0.8); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.07); padding: 15px; border: 1px solid rgba(255, 255, 255, 0.9); transition: all 0.3s ease; transform: translateY(0); }
         .dashboard-widget:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
         .dashboard-widget h3 { margin: 0 0 12px 0; padding-bottom: 8px; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--text-light); letter-spacing: 0.8px; width: 100%; border-bottom: 1px solid rgba(0,0,0,0.08); }
         #stats-widget span { font-size: 36px; font-weight: 600; }
@@ -101,7 +101,7 @@
         #youtube-widget input { border: 1px solid #ccc; border-radius: 4px; padding: 6px 8px; width: 180px; font-size: 12px; margin-bottom: 0; }
         #calendar-widget { min-width: 270px; }
         .calendar-header { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 8px; }
-        .calendar-header h3 { border-bottom: none; padding-bottom: 0; margin-bottom: 0; } /* Reseteo para el h3 del mes */
+        .calendar-header h3 { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
         .calendar-header button { background: none; border: none; cursor: pointer; font-size: 18px; color: var(--primary-accent); }
         #month-year { font-size: 14px; font-weight: 600; }
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; width: 100%; }
@@ -151,13 +151,15 @@
 
         #bottom-dashboard { transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
         #app { transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
-        #dashboard-toggle { position: absolute; top: 0; left: 50%; transform: translate(-50%, -100%); width: 60px; height: 30px; background-color: var(--primary-accent); border: none; border-radius: 15px 15px 0 0; box-shadow: 0 -4px 12px rgba(0,0,0,0.1); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background-color 0.3s ease; z-index: 1003; }
+        #dashboard-toggle { position: absolute; top: 0; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 30px; background-color: var(--primary-accent); border: none; border-radius: 15px 15px 0 0; box-shadow: 0 -4px 12px rgba(0,0,0,0.1); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background-color 0.3s ease; z-index: 1003; }
         #dashboard-toggle:hover { background-color: var(--primary-accent-dark); }
         #dashboard-toggle svg { width: 20px; height: 20px; stroke: white; transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
-        body.dashboard-hidden #bottom-dashboard { transform: translateY(100%); }
-        body.dashboard-hidden #app { height: calc(100vh - 30px); /* Deja espacio para la pestaña */ }
-        body.dashboard-hidden #dashboard-toggle { transform: translate(-50%, -100%); }
+        
+        /* <!-- MODIFICADO --> Lógica de ocultar/mostrar corregida */
+        body.dashboard-hidden #bottom-dashboard { transform: translateY(calc(100% - 30px)); }
+        body.dashboard-hidden #app { height: calc(100vh - 30px); }
         body.dashboard-hidden #dashboard-toggle svg { transform: rotate(0deg); }
+        body:not(.dashboard-hidden) #app { height: calc(100vh - 230px); /* Ajusta a la nueva altura del panel */ }
         body:not(.dashboard-hidden) #dashboard-toggle svg { transform: rotate(180deg); }
 
         @media (max-width: 768px) {
