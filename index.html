@@ -452,6 +452,24 @@
         .modal-content p { font-size: 14px; }
         .set-timer-inputs input { width: 50px; padding: 8px; font-size: 20px; }
     }
+
+    #workspace-title {
+    /* ... tus estilos existentes ... */
+    transition: color 0.2s ease; /* Opcional: para un efecto suave al pasar el ratón */
+}
+
+#workspace-title:hover {
+    cursor: pointer;
+    color: var(--primary-accent); /* Opcional: cambia de color para dar feedback visual */
+}
+
+#workspace-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--text-dark);
+    flex-grow: 1;
+    transition: color 0.2s ease; /* <-- Añadir o asegurar que esté esta línea */
+}
 </style>
 </head>
 <body class="logged-out">
@@ -614,7 +632,12 @@
             this.DOM.signOutBtn.addEventListener('click', () => signOut(this.firebase.auth));
             this.DOM.addNoteBtn.addEventListener('click', () => this.addNote());
             this.DOM.addZoneBtn.addEventListener('click', () => this.addZone());
-            this.DOM.showGeneralBtn.addEventListener('click', () => { this.showGeneralDashboard(); this.closeSidebar(); });
+            
+            // Lógica para volver al tablero general
+            const goHome = () => { this.showGeneralDashboard(); this.closeSidebar(); };
+            this.DOM.showGeneralBtn.addEventListener('click', goHome);
+            this.DOM.workspaceTitle.addEventListener('click', goHome); // <-- FUNCIONALIDAD AÑADIDA
+            
             const toggleSidebar = () => this.DOM.body.classList.toggle('sidebar-active');
             this.DOM.sidebarToggleBtn.addEventListener('click', toggleSidebar);
             this.DOM.sidebarOverlay.addEventListener('click', toggleSidebar);
@@ -776,7 +799,7 @@
                 textarea.value = tab.content || '';
                 contentPanel.appendChild(textarea);
                 
-            
+                this.autoResizeTextarea(textarea);
 
                 if (index === note.activeTabIndex) {
                     tabBtn.classList.add('active');
