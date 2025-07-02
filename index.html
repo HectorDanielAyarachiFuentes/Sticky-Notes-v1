@@ -234,6 +234,168 @@
     </div>
 
 <audio id="alarm-sound" src="audio/cat-meow-8-fx-306184.mp3"></audio>    
+
+
+<style>
+    /* ================================== */
+    /* === ESTILOS RESPONSIVOS PARA TABLET === */
+    /* ================================== */
+    @media (max-width: 1024px) {
+        #bottom-dashboard {
+            /* Permitimos que los widgets se envuelvan a la siguiente línea */
+            flex-wrap: wrap;
+            /* Aumentamos la altura para acomodar dos filas de widgets */
+            height: 280px; 
+            align-content: center; /* Centramos las filas de widgets verticalmente */
+        }
+
+        /* Ajustamos la altura del área de trabajo principal */
+        #app {
+            /* Nueva altura = 100vh - altura del header (60px) - nueva altura del footer (280px) */
+            height: calc(100vh - 340px); 
+        }
+
+        .dashboard-widget {
+            /* Damos una base de ancho para que se acomoden mejor */
+            flex-basis: 33%; 
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        /* Hacemos que el widget de calendario ocupe más espacio si es necesario */
+        #calendar-widget {
+            flex-grow: 2;
+        }
+
+        /* Reducimos un poco el tamaño de las fuentes grandes */
+        #stats-widget span,
+        #clock-widget #current-time,
+        #timer-display {
+            font-size: 32px;
+        }
+    }
+
+    /* ================================== */
+    /* === ESTILOS RESPONSIVOS PARA MÓVIL === */
+    /* ================================== */
+    @media (max-width: 768px) {
+        body {
+            /* Permitimos el scroll vertical en el cuerpo de la página */
+            overflow: auto; 
+            height: auto;
+        }
+
+        .main-content {
+            /* Habilitamos el scroll dentro del contenido principal */
+            height: auto;
+            overflow-y: auto;
+        }
+
+        /* --- Ajustes en el Header --- */
+        #workspace-title {
+            /* Reducimos el tamaño y lo movemos para que no colisione */
+            font-size: 18px;
+            top: 20px;
+        }
+        #top-controls {
+            /* Reducimos el espacio entre los botones */
+            gap: 8px;
+        }
+        .control-btn {
+            /* Hacemos los botones más pequeños */
+            padding: 8px 14px;
+            font-size: 12px;
+        }
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+        }
+
+        /* --- Área de trabajo principal --- */
+        #app {
+            /* Ya no tiene altura fija, se adapta al contenido. Damos un alto mínimo. */
+            height: auto;
+            min-height: 60vh; 
+            padding: 70px 10px 10px 10px; /* Más padding superior para el header fijo */
+            position: relative; /* Cambiamos de absoluto a relativo */
+        }
+
+        /* --- El gran cambio: el Dashboard Inferior --- */
+        #bottom-dashboard {
+            /* Ya no es fijo, fluye con el contenido de la página */
+            position: relative; 
+            /* Se convierte en una columna vertical */
+            flex-direction: column; 
+            height: auto; /* Altura automática */
+            width: 100%;
+            padding: 10px 0;
+            margin-top: 20px; /* Espacio con el área de trabajo */
+            border-top: 2px solid var(--primary-accent);
+            box-shadow: none;
+        }
+
+        .dashboard-widget {
+            /* Los widgets ocupan todo el ancho */
+            width: 100%;
+            flex-basis: auto;
+            flex-grow: 0;
+            padding: 20px 15px;
+            border-right: none; /* Quitamos el borde derecho */
+            border-bottom: 1px solid #e0e0e0; /* Añadimos borde inferior */
+            min-width: unset; /* Reseteamos el ancho mínimo */
+        }
+        .dashboard-widget:last-child {
+            border-bottom: none;
+        }
+
+        /* --- Ajustes específicos de los Widgets --- */
+        #youtube-widget input {
+            width: 90%;
+        }
+        #youtube-player {
+            width: 80%;
+            height: 120px;
+        }
+        #calendar-widget {
+             min-width: 100%;
+        }
+        .calendar-grid {
+            gap: 1px;
+        }
+        .calendar-grid span {
+            font-size: 11px;
+        }
+        
+        /* --- Ajustes para Notas y Zonas --- */
+        .note {
+            /* Reducimos el tamaño por defecto de las notas */
+            width: 180px;
+            height: 180px;
+        }
+        .note textarea {
+            font-size: 18px;
+        }
+
+        /* --- Ajustes para Modales --- */
+        .modal-content {
+            padding: 25px 20px;
+            width: 90%;
+        }
+        .modal-content h2 {
+            font-size: 22px;
+        }
+        .modal-content p {
+            font-size: 14px;
+        }
+        .set-timer-inputs input {
+            width: 50px;
+            padding: 8px;
+            font-size: 20px;
+        }
+    }
+</style>
+
+
+
 <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
