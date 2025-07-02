@@ -63,7 +63,6 @@
         height: 100vh;
     }
 
-    /* Manejo del estado de login */
     #google-signin-btn { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 15px 30px; font-size: 18px; font-weight: 600; color: white; background-color: #DB4437; border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.2); z-index: 10000; }
     .logged-in #google-signin-btn { display: none; }
     .logged-out .main-content { display: none; }
@@ -114,7 +113,6 @@
         overflow: hidden;
         padding: 0;
     }
-
     .note textarea {
         font-family: 'Caveat', cursive;
         font-size: 22px;
@@ -128,7 +126,6 @@
         padding: 0;
         margin: 0;
     }
-
     .zone { 
         background-color: var(--zone-bg); 
         backdrop-filter: blur(5px); 
@@ -141,7 +138,6 @@
     }
     .zone-title { position: absolute; top: 12px; left: 15px; font-weight: 600; font-size: 16px; color: var(--primary-accent-dark); border: none; background: transparent; width: calc(100% - 60px); outline: none; }
     .add-note-in-zone-btn, .view-full-zone-btn { display: none; }
-    
     .delete-btn { width: 24px; height: 24px; text-align: center; line-height: 24px; font-size: 20px; border-radius: 50%; cursor: pointer; user-select: none; transition: background-color 0.2s, color 0.2s; color: var(--text-light); }
     .delete-btn:hover { background-color: var(--danger-color); color: white; }
 
@@ -333,7 +329,6 @@
         }
     }
 
-
     /* --------------------------------------------------------------------------
        7.2 VISTA MÓVIL (max-width: 768px)
        -------------------------------------------------------------------------- */
@@ -363,6 +358,8 @@
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.9);
         }
+        
+        /* ESTILOS DEL TÍTULO SOLO PARA MÓVIL */
         #workspace-title { 
             font-size: 16px; 
             text-align: left; 
@@ -375,6 +372,7 @@
             cursor: pointer;
             color: var(--primary-accent);
         }
+        /* FIN DE ESTILOS DE TÍTULO */
 
         #sidebar-toggle-btn { display: block; padding: 8px 12px; font-size: 18px; line-height: 1; }
         .profile-avatar { width: 40px; height: 40px; }
@@ -403,6 +401,8 @@
 
         .note, .zone { position: relative; width: 100% !important; height: auto !important; transform: none !important; cursor: default !important; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
         .zone { padding: 15px; padding-top: 55px; background: var(--zone-bg); }
+        
+        /* Botón de borrar para zonas en móvil */
         .zone .delete-btn {
             position: absolute;
             top: 14px;
