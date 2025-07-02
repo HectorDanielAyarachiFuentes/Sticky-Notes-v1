@@ -849,7 +849,7 @@
 
         createZoneElement(zone) {
             const element = document.createElement('div');
-            element.className = 'zone'; 
+            element.className = 'zone';
             element.innerHTML = `
                 <input class="zone-title" value="${zone.title}" placeholder="Título de la Zona">
                 <span class="delete-btn">×</span>
@@ -877,6 +877,7 @@
                 if (isFullscreen) { element.scrollTop = 0; }
             });
             
+            // CÓDIGO CORREGIDO Y LIMPIO
             if(window.innerWidth > 768) {
                element.classList.add('draggable');
                element.style.left = `${zone.x || 50}px`;
@@ -884,27 +885,9 @@
                element.style.width = `${zone.width || 400}px`;
                element.style.height = `${zone.height || 300}px`;
                this.makeDraggable(element, zone);
-               this.makeResizable(element, zone);
+               this.makeResizable(element, zone); // Esta es la línea clave, ahora en el lugar correcto.
             }
             return element;
-
-
-// ...dentro de la función createZoneElement(zone)
-
-        if(window.innerWidth > 768) {
-           element.classList.add('draggable');
-           element.style.left = `${zone.x || 50}px`;
-           element.style.top = `${zone.y || 50}px`;
-           element.style.width = `${zone.width || 400}px`;
-           element.style.height = `${zone.height || 300}px`;
-           this.makeDraggable(element, zone);
-           this.makeResizable(element, zone); // <-- AÑADE ESTA LÍNEA
-        }
-        return element;
-    },
-
-
-
         },
 
         updateTopControlsVisibility() {
