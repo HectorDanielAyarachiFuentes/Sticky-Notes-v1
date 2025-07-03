@@ -24,7 +24,7 @@
 
 <style>
     /* ==========================================================================
-       INICIO DE ESTILOS PARA EL FONDO DE LOGIN
+       INICIO DE ESTILOS PARA EL LOGIN Y ELEMENTOS FIJOS (VERSIÓN CORREGIDA)
        ========================================================================== */
     #login-background {
         position: fixed;
@@ -32,38 +32,79 @@
         left: 0;
         width: 100vw;
         height: 100vh;
-        z-index: 9999; /* Detrás del botón de login */
+        z-index: 1; 
         overflow: hidden;
+        pointer-events: none;
     }
 
-    #login-background svg {
+    #skyBG { 
         position: absolute;
-    }
-
-    #skyBG {
-        z-index: 1;
-    }
-
-    .flagpole {
-        z-index: 2;
+        z-index: 1; 
         width: 100%;
         height: 100%;
     }
 
-    /* Ocultar el fondo de la bandera cuando se ha iniciado sesión */
-    body.logged-in #login-background {
-        display: none;
+    /* NUEVO: Contenedor para el conjunto del mástil y la bandera */
+    #flag-wrapper {
+        position: fixed;
+        top: 0;
+        left: 5%; /* <-- ¡AQUÍ CONTROLAS LA POSICIÓN! Ajústala como desees */
+        height: 100%;
+        width: 250px; /* Un ancho suficiente para el mástil y la bandera ondeando */
+        z-index: 2; /* Por encima del cielo */
     }
 
-    /* Ocultar el fondo de grilla original en la pantalla de login */
-    body.logged-out {
-        background-image: none !important; /* Quita la grilla */
+    /* El SVG de la bandera ahora solo necesita llenar su nuevo contenedor */
+    .flagpole { 
+        width: 100%; 
+        height: 100%; 
     }
+    
+    body.logged-in #login-background,
+    body.logged-in .github-link { 
+        display: none; 
+    }
+    body.logged-out { background-image: none !important; }
+
+    .github-link {
+        position: fixed;
+        bottom: 15px;
+        right: 15px;
+        z-index: 1050;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        background-color: rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(2px);
+        color: #2c3e50;
+        text-decoration: none;
+        font-size: 14px;
+        font-family: 'Poppins', sans-serif;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        transition: all 0.3s;
+    }
+    .github-link:hover {
+        background-color: rgba(255, 255, 255, 0.7);
+        color: black;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        transform: translateY(-2px);
+    }
+    .github-link svg {
+        width: 20px;
+        height: 20px;
+        fill: #2c3e50;
+        transition: fill 0.3s;
+    }
+     .github-link:hover svg {
+        fill: black;
+     }
 
     /* ==========================================================================
-       FIN DE ESTILOS PARA EL FONDO DE LOGIN
+       FIN DE ESTILOS PARA EL LOGIN Y ELEMENTOS FIJOS
        ========================================================================== */
-
+    
     /* ==========================================================================
        1. VARIABLES GLOBALES Y KEYFRAMES
        ========================================================================== */
@@ -153,7 +194,7 @@
         background-color: var(--note-color);
         overflow: hidden;
         padding: 0;
-        display: flex; /* <-- Importante para la estructura interna */
+        display: flex;
     }
     .note textarea {
         font-family: 'Caveat', cursive;
@@ -371,16 +412,24 @@
         }
         .note .note-content-panel textarea {
             height: 100%;
-            resize: none; /* Asegura que no se pueda redimensionar manualmente en escritorio */
+            resize: none; 
         }
     }
 
-    /* --------------------------------------------------------------------------
-       7.2 VISTA MÓVIL (max-width: 768px)
+        /* --------------------------------------------------------------------------
+       7.2 VISTA MÓVIL (max-width: 768px) - VERSIÓN CORREGIDA PARA MOSTRAR BANDERA
        -------------------------------------------------------------------------- */
     @media (max-width: 768px) {
         body { overflow-y: auto; overflow-x: hidden; height: auto; }
         body.sidebar-active, body.zone-view-active { overflow: hidden; }
+
+        .github-link { display: none; }
+
+        /* CORRECCIÓN: Ajustamos la bandera para que se vea en móvil */
+        #flag-wrapper {
+            width: 150px; /* Hacemos el contenedor más angosto */
+            left: 10px;   /* Lo posicionamos a 10px del borde izquierdo */
+        }
 
         #app {
             display: flex;
@@ -468,7 +517,7 @@
         .note textarea {
             min-height: 80px;
             font-size: 18px;
-            overflow-y: hidden; /* Para que autoResize funcione bien */
+            overflow-y: hidden;
             resize: none;
         }
         
@@ -508,7 +557,6 @@
 </head>
 <body class="logged-out">
 
-    <!-- ==== INICIO DEL CÓDIGO AÑADIDO: FONDO ANIMADO PARA LOGIN ==== -->
     <div id="login-background">
         <svg height="100%" width="100%" id="skyBG">
             <defs>
@@ -519,8 +567,7 @@
                 </linearGradient>
                 <filter id="sky">
                     <feTurbulence baseFrequency="0.003 0.005" numOctaves="10" />
-                    <feColorMatrix type="hueRotate" values="0">
-                    </feColorMatrix>
+                    <feColorMatrix type="hueRotate" values="0"></feColorMatrix>
                     <feColorMatrix values="4.2 -4.6 3.1 -1.4 4.8 -0.8 -0.8 -1.9 2.7 4.4 0.8 -3.6 4.1 1.9 4.3 -3.4 0.1 1.7 3.5 -2.1" />
                     <feComposite operator="in" in2="SourceGraphic" />
                 </filter>
@@ -529,63 +576,56 @@
             <rect height="100%" width="100%" filter="url(#sky)" />
         </svg>
     
-        <svg viewBox="0 0 100 200" class="flagpole">
-            <defs>
-                <filter id="turb2" x="-100%" y="-100%" width="300%" height="300%">
-                    <feTurbulence type="turbulence" baseFrequency="0.015" numOctaves="3" seed="1" result="turbMap" />
-                    <feComponentTransfer in="turbMap" result="adjustedTurbMap">
-                        <feFuncR type="linear" slope="0.5" intercept="0.25" />
-                        <feFuncG type="linear" slope="0.5" intercept="0.25" />
-                    </feComponentTransfer>
-                    <feGaussianBlur in="adjustedTurbMap" stdDeviation="1" result="smoothedTurbMap" />
-                    <feDisplacementMap in="SourceGraphic" in2="smoothedTurbMap" scale="8" result="displacedGraphic" />
-                    <feOffset in="displacedGraphic" dx="-2" dy="-2" result="offsetGraphic" />
-                    <feGaussianBlur in="offsetGraphic" stdDeviation="0.1" />
-                </filter>
-    
-                <symbol id="fireContainer">
-                    <g class="argentina" transform="translate(10 10) scale(0.8)" filter="url(#flagLightFilter)">
-                        <rect width='100' height='52.65' fill='#75AADB' />
-                        <rect x='0' y='17.55' width='100' height='17.55' fill='#FFFFFF' />
-                        <g id="solDeMayo" transform="translate(50, 26.325)">
-                            <circle r="5.5" fill="#FCD116" />
-                            <g stroke="#FCD116" stroke-width="1" stroke-linecap="round">
-                                <line y1="-6" y2="-11" transform="rotate(0)" />
-                                <line y1="-6" y2="-11" transform="rotate(22.5)" />
-                                <line y1="-6" y2="-11" transform="rotate(45)" />
-                                <line y1="-6" y2="-11" transform="rotate(67.5)" />
-                                <line y1="-6" y2="-11" transform="rotate(90)" />
-                                <line y1="-6" y2="-11" transform="rotate(112.5)" />
-                                <line y1="-6" y2="-11" transform="rotate(135)" />
-                                <line y1="-6" y2="-11" transform="rotate(157.5)" />
-                                <line y1="-6" y2="-11" transform="rotate(180)" />
-                                <line y1="-6" y2="-11" transform="rotate(202.5)" />
-                                <line y1="-6" y2="-11" transform="rotate(225)" />
-                                <line y1="-6" y2="-11" transform="rotate(247.5)" />
-                                <line y1="-6" y2="-11" transform="rotate(270)" />
-                                <line y1="-6" y2="-11" transform="rotate(292.5)" />
-                                <line y1="-6" y2="-11" transform="rotate(315)" />
-                                <line y1="-6" y2="-11" transform="rotate(337.5)" />
+        <!-- INICIO DE LA MODIFICACIÓN HTML -->
+        <div id="flag-wrapper">
+<svg viewBox="0 0 100 200" class="flagpole" preserveAspectRatio="none">                <defs>
+                    <filter id="turb2" x="-100%" y="-100%" width="300%" height="300%">
+                        <feTurbulence type="turbulence" baseFrequency="0.015" numOctaves="3" seed="1" result="turbMap" />
+                        <feComponentTransfer in="turbMap" result="adjustedTurbMap">
+                            <feFuncR type="linear" slope="0.5" intercept="0.25" />
+                            <feFuncG type="linear" slope="0.5" intercept="0.25" />
+                        </feComponentTransfer>
+                        <feGaussianBlur in="adjustedTurbMap" stdDeviation="1" result="smoothedTurbMap" />
+                        <feDisplacementMap in="SourceGraphic" in2="smoothedTurbMap" scale="8" result="displacedGraphic" />
+                        <feOffset in="displacedGraphic" dx="-2" dy="-2" result="offsetGraphic" />
+                        <feGaussianBlur in="offsetGraphic" stdDeviation="0.1" />
+                    </filter>
+        
+                    <symbol id="fireContainer">
+                        <g class="argentina" transform="translate(10 10) scale(0.8)">
+                            <rect width='100' height='52.65' fill='#75AADB' />
+                            <rect x='0' y='17.55' width='100' height='17.55' fill='#FFFFFF' />
+                            <g id="solDeMayo" transform="translate(50, 26.325)">
+                                <circle r="5.5" fill="#FCD116" />
+                                <g stroke="#FCD116" stroke-width="1" stroke-linecap="round">
+                                    <line y1="-6" y2="-11" transform="rotate(0)" /><line y1="-6" y2="-11" transform="rotate(22.5)" /><line y1="-6" y2="-11" transform="rotate(45)" /><line y1="-6" y2="-11" transform="rotate(67.5)" /><line y1="-6" y2="-11" transform="rotate(90)" /><line y1="-6" y2="-11" transform="rotate(112.5)" /><line y1="-6" y2="-11" transform="rotate(135)" /><line y1="-6" y2="-11" transform="rotate(157.5)" /><line y1="-6" y2="-11" transform="rotate(180)" /><line y1="-6" y2="-11" transform="rotate(202.5)" /><line y1="-6" y2="-11" transform="rotate(225)" /><line y1="-6" y2="-11" transform="rotate(247.5)" /><line y1="-6" y2="-11" transform="rotate(270)" /><line y1="-6" y2="-11" transform="rotate(292.5)" /><line y1="-6" y2="-11" transform="rotate(315)" /><line y1="-6" y2="-11" transform="rotate(337.5)" />
+                                </g>
                             </g>
                         </g>
-                    </g>
-                    <line x1="0" y1="2.5" x2="10" y2="10" stroke="#000" stroke-width="0.5" />
-                    <line x1="0" y1="65" x2="10" y2="52" stroke="#000" stroke-width="0.5" />
-                </symbol>
-            </defs>
-    
-            <g class="fireBall" filter="url(#turb2) url(#flagLightFilter)">
-                <use href="#fireContainer">
-                    <animate attributeName="x" values="0; -5000" dur="100s" begin="0s" repeatCount="indefinite" />
-                    <animate attributeName="y" values="0; -7000" dur="100s" begin="0s" repeatCount="indefinite" additive="sum" />
-                </use>
-                <animateTransform attributeName="transform" attributeType="XML" type="translate" values="0 0; 5000 7000" dur="100s" begin="0s" repeatCount="indefinite" />
-            </g>
-            <path class="flagpole" d="M2 2v198" stroke="silver" stroke-width="4" fill="none" stroke-linecap="round" />
-        </svg>
+                        <line x1="0" y1="2.5" x2="10" y2="10" stroke="#000" stroke-width="0.5" />
+                        <line x1="0" y1="65" x2="10" y2="52" stroke="#000" stroke-width="0.5" />
+                    </symbol>
+                </defs>
+        
+                <g class="fireBall" filter="url(#turb2)">
+                    <use href="#fireContainer">
+                        <animate attributeName="x" values="0; -5000" dur="100s" begin="0s" repeatCount="indefinite" />
+                        <animate attributeName="y" values="0; -7000" dur="100s" begin="0s" repeatCount="indefinite" additive="sum" />
+                    </use>
+                    <animateTransform attributeName="transform" attributeType="XML" type="translate" values="0 0; 5000 7000" dur="100s" begin="0s" repeatCount="indefinite" />
+                </g>
+                <path class="flagpole" d="M2 2v198" stroke="silver" stroke-width="4" fill="none" stroke-linecap="round" />
+            </svg>
+        </div>
+        <!-- FIN DE LA MODIFICACIÓN HTML -->
     </div>
-    <!-- ==== FIN DEL CÓDIGO AÑADIDO ==== -->
 
+    <a href="https://github.com/HectorDanielAyarachiFuentes" target="_blank" class="github-link" title="GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+        </svg>
+        <span>GitHub</span>
+    </a>
 
     <button id="google-signin-btn">🚀 Iniciar Sesión con Google</button>
 
@@ -645,12 +685,10 @@
             <div id="clock-widget" class="dashboard-widget"><h3>Hora</h3><span id="current-time"></span><span id="current-date"></span></div>
         </div>
 
-        <!-- MODALES -->
         <div id="alert-modal-overlay" class="modal-overlay"><div class="modal-content"><h2 id="alert-modal-title"></h2><p id="alert-modal-message"></p><button id="alert-modal-close-btn" class="action-btn">Entendido</button></div></div>
         <div id="set-timer-modal-overlay" class="modal-overlay"><div class="modal-content"><h2>Configurar Temporizador</h2><p>Define la duración de tu temporizador.</p><div class="set-timer-inputs"><input type="number" id="set-hours" min="0" max="99" placeholder="HH" oninput="this.value = this.value ? Math.min(99, Math.max(0, parseInt(this.value))) : ''"><input type="number" id="set-minutes" min="0" max="59" placeholder="MM" oninput="this.value = this.value ? Math.min(59, Math.max(0, parseInt(this.value))) : ''"><input type="number" id="set-seconds" min="0" max="59" placeholder="SS" oninput="this.value = this.value ? Math.min(59, Math.max(0, parseInt(this.value))) : ''"></div><button id="save-timer-btn" class="action-btn">Guardar</button></div></div>
         <div id="confirm-modal-overlay" class="modal-overlay"><div class="modal-content"><h2 id="confirm-modal-title"></h2><p id="confirm-modal-message"></p><div class="modal-actions"><button id="confirm-modal-cancel-btn" class="action-btn cancel-btn">Cancelar</button><button id="confirm-modal-confirm-btn" class="action-btn confirm-btn">Confirmar</button></div></div></div>
         
-        <!-- UI MÓVIL -->
         <div id="mobile-sidebar-container"><div class="sidebar-overlay"></div><aside id="mobile-sidebar"><div class="sidebar-header"><h3>Panel de Control</h3><button id="close-sidebar-btn">×</button></div><div class="sidebar-content"></div></aside></div>
     
         <div id="mobile-fab-container">
@@ -666,8 +704,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             </button>
         </div>
-
-    </div><!-- FIN DE DIV .main-content -->
+    </div>
     
     <audio id="alarm-sound" src="audio/cat-meow-8-fx-306184.mp3"></audio>    
 <script type="module">
@@ -700,153 +737,19 @@
             this.setupAllWidgets();
             this.restoreTimerState();
         },
-
-        // ... El resto del código hasta la sección del timer es idéntico y no necesita cambios ...
+        
         cacheDOM() { this.DOM.body = document.body; this.DOM.app = document.getElementById('app'); this.DOM.signInBtn = document.getElementById('google-signin-btn'); this.DOM.notesContainer = document.getElementById('notesContainer'); this.DOM.zonesContainer = document.getElementById('zonesContainer'); this.DOM.workspaceTitle = document.getElementById('workspace-title'); this.DOM.addNoteBtn = document.getElementById('addNoteBtn'); this.DOM.addZoneBtn = document.getElementById('addZoneBtn'); this.DOM.showGeneralBtn = document.getElementById('show-general-btn'); this.DOM.saveStatus = document.getElementById('save-status'); this.DOM.profileAvatar = document.getElementById('profile-avatar'); this.DOM.userName = document.getElementById('user-name'); this.DOM.signOutBtn = document.getElementById('signout-btn'); this.DOM.alarmSound = document.getElementById('alarm-sound'); this.DOM.bottomDashboard = document.getElementById('bottom-dashboard'); this.DOM.alertModal = { overlay: document.getElementById('alert-modal-overlay'), title: document.getElementById('alert-modal-title'), message: document.getElementById('alert-modal-message'), closeBtn: document.getElementById('alert-modal-close-btn') }; this.DOM.timerModal = { overlay: document.getElementById('set-timer-modal-overlay'), hoursInput: document.getElementById('set-hours'), minutesInput: document.getElementById('set-minutes'), secondsInput: document.getElementById('set-seconds'), saveBtn: document.getElementById('save-timer-btn') }; this.DOM.confirmModal = { overlay: document.getElementById('confirm-modal-overlay'), title: document.getElementById('confirm-modal-title'), message: document.getElementById('confirm-modal-message'), confirmBtn: document.getElementById('confirm-modal-confirm-btn'), cancelBtn: document.getElementById('confirm-modal-cancel-btn') }; this.DOM.sidebarToggleBtn = document.getElementById('sidebar-toggle-btn'); this.DOM.mobileSidebar = document.getElementById('mobile-sidebar'); this.DOM.sidebarOverlay = document.querySelector('.sidebar-overlay'); this.DOM.sidebarContent = document.querySelector('#mobile-sidebar .sidebar-content'); this.DOM.closeSidebarBtn = document.getElementById('close-sidebar-btn'); this.DOM.dashboardToggle = document.getElementById('dashboard-toggle'); this.DOM.fabContainer = document.getElementById('mobile-fab-container'); this.DOM.fabToggleBtn = document.getElementById('fab-toggle-btn'); this.DOM.fabAddNoteBtn = document.getElementById('fab-add-note'); this.DOM.fabAddZoneBtn = document.getElementById('fab-add-zone'); },
         bindEvents() { this.DOM.signInBtn.addEventListener('click', () => signInWithPopup(this.firebase.auth, this.firebase.provider).catch(console.error)); this.DOM.signOutBtn.addEventListener('click', () => signOut(this.firebase.auth)); this.DOM.addNoteBtn.addEventListener('click', () => this.addNote()); this.DOM.addZoneBtn.addEventListener('click', () => this.addZone()); this.DOM.showGeneralBtn.addEventListener('click', () => { this.showGeneralDashboard(); this.closeSidebar(); }); this.DOM.workspaceTitle.addEventListener('click', () => { if (window.innerWidth <= 768) { this.showGeneralDashboard(); this.closeSidebar(); } }); const toggleSidebar = () => this.DOM.body.classList.toggle('sidebar-active'); this.DOM.sidebarToggleBtn.addEventListener('click', toggleSidebar); this.DOM.sidebarOverlay.addEventListener('click', toggleSidebar); this.DOM.closeSidebarBtn.addEventListener('click', toggleSidebar); this.DOM.alertModal.closeBtn.addEventListener('click', () => this.closeAlertModal()); this.DOM.alertModal.overlay.addEventListener('click', e => { if (e.target === this.DOM.alertModal.overlay) this.closeAlertModal(); }); this.DOM.timerModal.overlay.addEventListener('click', e => { if (e.target === this.DOM.timerModal.overlay) this.DOM.timerModal.overlay.classList.remove('visible'); }); this.DOM.confirmModal.confirmBtn.addEventListener('click', () => this.handleConfirmAction()); this.DOM.confirmModal.cancelBtn.addEventListener('click', () => this.closeConfirmModal()); this.DOM.confirmModal.overlay.addEventListener('click', e => { if (e.target === this.DOM.confirmModal.overlay) this.closeConfirmModal(); }); document.querySelectorAll('#start-timer').forEach(btn => btn.addEventListener('click', () => this.requestConfirm('Iniciar Temporizador', '¿Estás seguro de que quieres iniciar el tiempo?', () => this.startTimer()))); document.querySelectorAll('#stop-timer').forEach(btn => btn.addEventListener('click', () => this.requestConfirm('Pausar Temporizador', '¿Quieres pausar el tiempo?', this.stopTimer))); document.querySelectorAll('#reset-timer').forEach(btn => btn.addEventListener('click', () => this.requestConfirm('Reiniciar Temporizador', 'Esto restablecerá el tiempo a su valor inicial. ¿Continuar?', this.resetTimer))); this.DOM.dashboardToggle.addEventListener('click', () => { const isHidden = this.DOM.body.classList.toggle('dashboard-hidden'); localStorage.setItem('dashboardIsHidden', isHidden); }); this.DOM.fabToggleBtn.addEventListener('click', () => this.DOM.fabContainer.classList.toggle('fab-active')); this.DOM.fabAddNoteBtn.addEventListener('click', () => { this.addNote(); this.DOM.fabContainer.classList.remove('fab-active'); }); this.DOM.fabAddZoneBtn.addEventListener('click', () => { this.addZone(); this.DOM.fabContainer.classList.remove('fab-active'); }); },
-
-        // ==================================================================
-        // INICIO DE LA SECCIÓN DEL CRONÓMETRO (VERSIÓN FINAL)
-        // ==================================================================
-        
-        setupAllTimers() {
-            document.querySelectorAll('#timer-widget').forEach(container => this.setupTimer(container));
-        },
-        
-        setupTimer(container) {
-            const editBtn = container.querySelector('#edit-timer-btn');
-            if (!editBtn) return;
-            editBtn.addEventListener('click', () => this.showTimerModal());
-            this.DOM.timerModal.saveBtn.addEventListener('click', () => this.saveTimerSettings());
-        },
-        
-        updateTimerDisplay() {
-            const h = String(Math.floor(this.state.timerSeconds / 3600)).padStart(2, '0');
-            const m = String(Math.floor((this.state.timerSeconds % 3600) / 60)).padStart(2, '0');
-            const s = String(this.state.timerSeconds % 60).padStart(2, '0');
-            const timeString = `${h}:${m}:${s}`;
-            document.querySelectorAll('#timer-display').forEach(el => el.textContent = timeString);
-        },
-
-        saveTimerStateToLocalStorage() {
-            const timerData = {
-                state: this.state.timerState,
-                seconds: this.state.timerSeconds,
-                initialDuration: this.state.timerInitialDuration,
-                savedTimestamp: Date.now()
-            };
-            localStorage.setItem('timerData', JSON.stringify(timerData));
-        },
-
-        // NUEVA FUNCIÓN INTERNA: solo se encarga del intervalo
-        _beginTicking() {
-            if (this.state.timerInterval) clearInterval(this.state.timerInterval); // Prevenir intervalos duplicados
-
-            this.state.timerInterval = setInterval(() => { 
-                this.state.timerSeconds--; 
-                this.updateTimerDisplay(); 
-                
-                if (this.state.timerSeconds <= 0) { 
-                    this.DOM.alarmSound.play();
-                    this.stopTimer(true); // Finaliza el timer
-                    this.showAlertModal('¡Tiempo Cumplido!', 'Tu actividad programada ha finalizado.'); 
-                } 
-            }, 1000); 
-        },
-
-        // MODIFICADA: Ahora gestiona el estado y LUEGO llama al ticker
-        startTimer() { 
-            if (this.state.timerState === 'running' || this.state.timerSeconds <= 0) return; 
-
-            this.state.timerState = 'running';
-            this.saveTimerStateToLocalStorage(); // Guardamos el estado ANTES de empezar a contar.
-            
-            document.querySelectorAll('#timer-display').forEach(el => { el.classList.add('timer-running'); el.classList.remove('timer-paused'); });
-            document.querySelectorAll('#start-timer').forEach(btn => btn.classList.add('hidden')); 
-            document.querySelectorAll('#stop-timer').forEach(btn => btn.classList.remove('hidden'));
-            
-            this._beginTicking(); // <-- Llamada a la función interna
-        },
-        
-        stopTimer(isFinished = false) { 
-            clearInterval(this.state.timerInterval); 
-            this.state.timerInterval = null; 
-            
-            this.state.timerState = isFinished ? 'stopped' : 'paused';
-
-            document.querySelectorAll('#start-timer').forEach(btn => btn.classList.remove('hidden')); 
-            document.querySelectorAll('#stop-timer').forEach(btn => btn.classList.add('hidden')); 
-            document.querySelectorAll('#timer-display').forEach(el => el.classList.remove('timer-running'));
-
-            if (this.state.timerState === 'paused') {
-                document.querySelectorAll('#timer-display').forEach(el => el.classList.add('timer-paused')); 
-            } else {
-                 document.querySelectorAll('#timer-display').forEach(el => el.classList.remove('timer-paused')); 
-            }
-            
-            this.saveTimerStateToLocalStorage();
-        },
-        
-        resetTimer() { 
-            this.stopTimer(true); // Pasa a estado "stopped"
-            this.state.timerSeconds = this.state.timerInitialDuration; 
-            this.state.timerState = 'stopped';
-            this.updateTimerDisplay(); 
-            this.saveTimerStateToLocalStorage();
-        },
-
-        saveTimerSettings() { 
-            const h = parseInt(this.DOM.timerModal.hoursInput.value) || 0; 
-            const m = parseInt(this.DOM.timerModal.minutesInput.value) || 0; 
-            const s = parseInt(this.DOM.timerModal.secondsInput.value) || 0; 
-            this.state.timerInitialDuration = (h * 3600) + (m * 60) + s; 
-            this.resetTimer();
-            this.DOM.timerModal.overlay.classList.remove('visible'); 
-        },
-        
-        // MODIFICADA: Lógica de restauración mejorada
-        restoreTimerState() {
-            const savedDataJSON = localStorage.getItem('timerData');
-            if (!savedDataJSON) {
-                this.updateTimerDisplay(); // Si no hay nada, solo muestra el default
-                return;
-            }
-
-            const data = JSON.parse(savedDataJSON);
-            this.state.timerInitialDuration = data.initialDuration || 25 * 60;
-            this.state.timerSeconds = data.seconds;
-            this.state.timerState = data.state;
-            
-            if (this.state.timerState === 'running') {
-                const elapsedSeconds = Math.round((Date.now() - data.savedTimestamp) / 1000);
-                const newSeconds = this.state.timerSeconds - elapsedSeconds;
-
-                if (newSeconds > 0) {
-                    this.state.timerSeconds = newSeconds;
-                    // Actualizamos la UI para que se vea corriendo inmediatamente
-                    document.querySelectorAll('#timer-display').forEach(el => { el.classList.add('timer-running'); el.classList.remove('timer-paused'); });
-                    document.querySelectorAll('#start-timer').forEach(btn => btn.classList.add('hidden')); 
-                    document.querySelectorAll('#stop-timer').forEach(btn => btn.classList.remove('hidden'));
-                    
-                    this.updateTimerDisplay();
-                    this._beginTicking(); // <-- Llamamos directo al ticker
-                } else {
-                    this.state.timerSeconds = 0;
-                    this.stopTimer(true);
-                    this.showAlertModal('¡Tiempo Cumplido!', 'Tu actividad finalizó mientras la página estaba cerrada.');
-                }
-            } else if (this.state.timerState === 'paused') {
-                this.updateTimerDisplay();
-                document.querySelectorAll('#timer-display').forEach(el => el.classList.add('timer-paused'));
-                document.querySelectorAll('#start-timer').forEach(btn => btn.classList.remove('hidden'));
-                document.querySelectorAll('#stop-timer').forEach(btn => btn.classList.add('hidden'));
-            } else { // 'stopped'
-                this.state.timerSeconds = this.state.timerInitialDuration;
-                this.updateTimerDisplay();
-            }
-        },
-
-        // ... El resto del código de la aplicación (Firebase, notas, modales, etc.) sigue aquí sin cambios ...
+        setupAllTimers() { document.querySelectorAll('#timer-widget').forEach(container => this.setupTimer(container)); },
+        setupTimer(container) { const editBtn = container.querySelector('#edit-timer-btn'); if (!editBtn) return; editBtn.addEventListener('click', () => this.showTimerModal()); this.DOM.timerModal.saveBtn.addEventListener('click', () => this.saveTimerSettings()); },
+        updateTimerDisplay() { const h = String(Math.floor(this.state.timerSeconds / 3600)).padStart(2, '0'); const m = String(Math.floor((this.state.timerSeconds % 3600) / 60)).padStart(2, '0'); const s = String(this.state.timerSeconds % 60).padStart(2, '0'); const timeString = `${h}:${m}:${s}`; document.querySelectorAll('#timer-display').forEach(el => el.textContent = timeString); },
+        saveTimerStateToLocalStorage() { const timerData = { state: this.state.timerState, seconds: this.state.timerSeconds, initialDuration: this.state.timerInitialDuration, savedTimestamp: Date.now() }; localStorage.setItem('timerData', JSON.stringify(timerData)); },
+        _beginTicking() { if (this.state.timerInterval) clearInterval(this.state.timerInterval); this.state.timerInterval = setInterval(() => { this.state.timerSeconds--; this.updateTimerDisplay(); if (this.state.timerSeconds <= 0) { this.DOM.alarmSound.play(); this.stopTimer(true); this.showAlertModal('¡Tiempo Cumplido!', 'Tu actividad programada ha finalizado.'); } }, 1000); },
+        startTimer() { if (this.state.timerState === 'running' || this.state.timerSeconds <= 0) return; this.state.timerState = 'running'; this.saveTimerStateToLocalStorage(); document.querySelectorAll('#timer-display').forEach(el => { el.classList.add('timer-running'); el.classList.remove('timer-paused'); }); document.querySelectorAll('#start-timer').forEach(btn => btn.classList.add('hidden')); document.querySelectorAll('#stop-timer').forEach(btn => btn.classList.remove('hidden')); this._beginTicking(); },
+        stopTimer(isFinished = false) { clearInterval(this.state.timerInterval); this.state.timerInterval = null; this.state.timerState = isFinished ? 'stopped' : 'paused'; document.querySelectorAll('#start-timer').forEach(btn => btn.classList.remove('hidden')); document.querySelectorAll('#stop-timer').forEach(btn => btn.classList.add('hidden')); document.querySelectorAll('#timer-display').forEach(el => el.classList.remove('timer-running')); if (this.state.timerState === 'paused') { document.querySelectorAll('#timer-display').forEach(el => el.classList.add('timer-paused')); } else { document.querySelectorAll('#timer-display').forEach(el => el.classList.remove('timer-paused')); } this.saveTimerStateToLocalStorage(); },
+        resetTimer() { this.stopTimer(true); this.state.timerSeconds = this.state.timerInitialDuration; this.state.timerState = 'stopped'; this.updateTimerDisplay(); this.saveTimerStateToLocalStorage(); },
+        saveTimerSettings() { const h = parseInt(this.DOM.timerModal.hoursInput.value) || 0; const m = parseInt(this.DOM.timerModal.minutesInput.value) || 0; const s = parseInt(this.DOM.timerModal.secondsInput.value) || 0; this.state.timerInitialDuration = (h * 3600) + (m * 60) + s; this.resetTimer(); this.DOM.timerModal.overlay.classList.remove('visible'); },
+        restoreTimerState() { const savedDataJSON = localStorage.getItem('timerData'); if (!savedDataJSON) { this.updateTimerDisplay(); return; } const data = JSON.parse(savedDataJSON); this.state.timerInitialDuration = data.initialDuration || 25 * 60; this.state.timerSeconds = data.seconds; this.state.timerState = data.state; if (this.state.timerState === 'running') { const elapsedSeconds = Math.round((Date.now() - data.savedTimestamp) / 1000); const newSeconds = this.state.timerSeconds - elapsedSeconds; if (newSeconds > 0) { this.state.timerSeconds = newSeconds; document.querySelectorAll('#timer-display').forEach(el => { el.classList.add('timer-running'); el.classList.remove('timer-paused'); }); document.querySelectorAll('#start-timer').forEach(btn => btn.classList.add('hidden')); document.querySelectorAll('#stop-timer').forEach(btn => btn.classList.remove('hidden')); this.updateTimerDisplay(); this._beginTicking(); } else { this.state.timerSeconds = 0; this.stopTimer(true); this.showAlertModal('¡Tiempo Cumplido!', 'Tu actividad finalizó mientras la página estaba cerrada.'); } } else if (this.state.timerState === 'paused') { this.updateTimerDisplay(); document.querySelectorAll('#timer-display').forEach(el => el.classList.add('timer-paused')); document.querySelectorAll('#start-timer').forEach(btn => btn.classList.remove('hidden')); document.querySelectorAll('#stop-timer').forEach(btn => btn.classList.add('hidden')); } else { this.state.timerSeconds = this.state.timerInitialDuration; this.updateTimerDisplay(); } },
         showTimerModal() { const h = Math.floor(this.state.timerInitialDuration / 3600); const m = Math.floor((this.state.timerInitialDuration % 3600) / 60); const s = this.state.timerInitialDuration % 60; this.DOM.timerModal.hoursInput.value = h > 0 ? h : ''; this.DOM.timerModal.minutesInput.value = m > 0 ? m : ''; this.DOM.timerModal.secondsInput.value = s > 0 ? s : ''; this.DOM.timerModal.overlay.classList.add('visible'); },
         showAlertModal(title, message) { this.DOM.alertModal.title.textContent = title; this.DOM.alertModal.message.textContent = message; this.DOM.alertModal.overlay.classList.add('visible'); },
         closeAlertModal() { this.DOM.alertModal.overlay.classList.remove('visible'); },
