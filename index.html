@@ -24,6 +24,47 @@
 
 <style>
     /* ==========================================================================
+       INICIO DE ESTILOS PARA EL FONDO DE LOGIN
+       ========================================================================== */
+    #login-background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 9999; /* Detrás del botón de login */
+        overflow: hidden;
+    }
+
+    #login-background svg {
+        position: absolute;
+    }
+
+    #skyBG {
+        z-index: 1;
+    }
+
+    .flagpole {
+        z-index: 2;
+        width: 100%;
+        height: 100%;
+    }
+
+    /* Ocultar el fondo de la bandera cuando se ha iniciado sesión */
+    body.logged-in #login-background {
+        display: none;
+    }
+
+    /* Ocultar el fondo de grilla original en la pantalla de login */
+    body.logged-out {
+        background-image: none !important; /* Quita la grilla */
+    }
+
+    /* ==========================================================================
+       FIN DE ESTILOS PARA EL FONDO DE LOGIN
+       ========================================================================== */
+
+    /* ==========================================================================
        1. VARIABLES GLOBALES Y KEYFRAMES
        ========================================================================== */
     :root {
@@ -466,6 +507,85 @@
 </style>
 </head>
 <body class="logged-out">
+
+    <!-- ==== INICIO DEL CÓDIGO AÑADIDO: FONDO ANIMADO PARA LOGIN ==== -->
+    <div id="login-background">
+        <svg height="100%" width="100%" id="skyBG">
+            <defs>
+                <linearGradient id="grad" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0%" stop-color="skyblue" stop-opacity="1" />
+                    <stop offset="70%" stop-color="skyblue" stop-opacity="0.3" />
+                    <stop offset="100%" stop-color="skyblue" stop-opacity="0" />
+                </linearGradient>
+                <filter id="sky">
+                    <feTurbulence baseFrequency="0.003 0.005" numOctaves="10" />
+                    <feColorMatrix type="hueRotate" values="0">
+                    </feColorMatrix>
+                    <feColorMatrix values="4.2 -4.6 3.1 -1.4 4.8 -0.8 -0.8 -1.9 2.7 4.4 0.8 -3.6 4.1 1.9 4.3 -3.4 0.1 1.7 3.5 -2.1" />
+                    <feComposite operator="in" in2="SourceGraphic" />
+                </filter>
+            </defs>
+            <rect height="100%" width="100%" fill="url(#grad)" />
+            <rect height="100%" width="100%" filter="url(#sky)" />
+        </svg>
+    
+        <svg viewBox="0 0 100 200" class="flagpole">
+            <defs>
+                <filter id="turb2" x="-100%" y="-100%" width="300%" height="300%">
+                    <feTurbulence type="turbulence" baseFrequency="0.015" numOctaves="3" seed="1" result="turbMap" />
+                    <feComponentTransfer in="turbMap" result="adjustedTurbMap">
+                        <feFuncR type="linear" slope="0.5" intercept="0.25" />
+                        <feFuncG type="linear" slope="0.5" intercept="0.25" />
+                    </feComponentTransfer>
+                    <feGaussianBlur in="adjustedTurbMap" stdDeviation="1" result="smoothedTurbMap" />
+                    <feDisplacementMap in="SourceGraphic" in2="smoothedTurbMap" scale="8" result="displacedGraphic" />
+                    <feOffset in="displacedGraphic" dx="-2" dy="-2" result="offsetGraphic" />
+                    <feGaussianBlur in="offsetGraphic" stdDeviation="0.1" />
+                </filter>
+    
+                <symbol id="fireContainer">
+                    <g class="argentina" transform="translate(10 10) scale(0.8)" filter="url(#flagLightFilter)">
+                        <rect width='100' height='52.65' fill='#75AADB' />
+                        <rect x='0' y='17.55' width='100' height='17.55' fill='#FFFFFF' />
+                        <g id="solDeMayo" transform="translate(50, 26.325)">
+                            <circle r="5.5" fill="#FCD116" />
+                            <g stroke="#FCD116" stroke-width="1" stroke-linecap="round">
+                                <line y1="-6" y2="-11" transform="rotate(0)" />
+                                <line y1="-6" y2="-11" transform="rotate(22.5)" />
+                                <line y1="-6" y2="-11" transform="rotate(45)" />
+                                <line y1="-6" y2="-11" transform="rotate(67.5)" />
+                                <line y1="-6" y2="-11" transform="rotate(90)" />
+                                <line y1="-6" y2="-11" transform="rotate(112.5)" />
+                                <line y1="-6" y2="-11" transform="rotate(135)" />
+                                <line y1="-6" y2="-11" transform="rotate(157.5)" />
+                                <line y1="-6" y2="-11" transform="rotate(180)" />
+                                <line y1="-6" y2="-11" transform="rotate(202.5)" />
+                                <line y1="-6" y2="-11" transform="rotate(225)" />
+                                <line y1="-6" y2="-11" transform="rotate(247.5)" />
+                                <line y1="-6" y2="-11" transform="rotate(270)" />
+                                <line y1="-6" y2="-11" transform="rotate(292.5)" />
+                                <line y1="-6" y2="-11" transform="rotate(315)" />
+                                <line y1="-6" y2="-11" transform="rotate(337.5)" />
+                            </g>
+                        </g>
+                    </g>
+                    <line x1="0" y1="2.5" x2="10" y2="10" stroke="#000" stroke-width="0.5" />
+                    <line x1="0" y1="65" x2="10" y2="52" stroke="#000" stroke-width="0.5" />
+                </symbol>
+            </defs>
+    
+            <g class="fireBall" filter="url(#turb2) url(#flagLightFilter)">
+                <use href="#fireContainer">
+                    <animate attributeName="x" values="0; -5000" dur="100s" begin="0s" repeatCount="indefinite" />
+                    <animate attributeName="y" values="0; -7000" dur="100s" begin="0s" repeatCount="indefinite" additive="sum" />
+                </use>
+                <animateTransform attributeName="transform" attributeType="XML" type="translate" values="0 0; 5000 7000" dur="100s" begin="0s" repeatCount="indefinite" />
+            </g>
+            <path class="flagpole" d="M2 2v198" stroke="silver" stroke-width="4" fill="none" stroke-linecap="round" />
+        </svg>
+    </div>
+    <!-- ==== FIN DEL CÓDIGO AÑADIDO ==== -->
+
 
     <button id="google-signin-btn">🚀 Iniciar Sesión con Google</button>
 
