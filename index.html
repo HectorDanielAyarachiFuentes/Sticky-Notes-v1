@@ -567,7 +567,7 @@
     
     const App = {
         firebase: {},
-        state: { currentUser: null, notes: [], zones: [], youtubeUrl: '', youtubePlayer: null, selectedDate: null, isDataLoaded: false, calendarDate: new Date(), timerInterval: null, timerSeconds: 25 * 60, timerInitialDuration: 25 * 60, timerPreAlertShown: false, pendingTimerAction: null, },
+        state: { currentUser: null, notes: [], zones: [], youtubeUrl: '', youtubePlayer: null, selectedDate: null, isDataLoaded: false, calendarDate: new Date(), timerInterval: null, timerSeconds: 25 * 60, timerInitialDuration: 25 * 60, timerState: 'stopped', /* 'stopped', 'running', 'paused' */ timerPreAlertShown: false, pendingTimerAction: null, },
         DOM: {},
         ICONS: { PLAY: `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>`, PAUSE: `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>` },
         
@@ -582,53 +582,18 @@
         },
 
         cacheDOM() {
-            this.DOM.body = document.body;
-            this.DOM.app = document.getElementById('app');
-            this.DOM.signInBtn = document.getElementById('google-signin-btn');
-            this.DOM.notesContainer = document.getElementById('notesContainer');
-            this.DOM.zonesContainer = document.getElementById('zonesContainer');
-            this.DOM.workspaceTitle = document.getElementById('workspace-title');
-            this.DOM.addNoteBtn = document.getElementById('addNoteBtn');
-            this.DOM.addZoneBtn = document.getElementById('addZoneBtn');
-            this.DOM.showGeneralBtn = document.getElementById('show-general-btn');
-            this.DOM.saveStatus = document.getElementById('save-status');
-            this.DOM.profileAvatar = document.getElementById('profile-avatar');
-            this.DOM.userName = document.getElementById('user-name');
-            this.DOM.signOutBtn = document.getElementById('signout-btn');
-            this.DOM.alarmSound = document.getElementById('alarm-sound');
-            this.DOM.bottomDashboard = document.getElementById('bottom-dashboard');
-            this.DOM.alertModal = { overlay: document.getElementById('alert-modal-overlay'), title: document.getElementById('alert-modal-title'), message: document.getElementById('alert-modal-message'), closeBtn: document.getElementById('alert-modal-close-btn') };
-            this.DOM.timerModal = { overlay: document.getElementById('set-timer-modal-overlay'), hoursInput: document.getElementById('set-hours'), minutesInput: document.getElementById('set-minutes'), secondsInput: document.getElementById('set-seconds'), saveBtn: document.getElementById('save-timer-btn') };
-            this.DOM.confirmModal = { overlay: document.getElementById('confirm-modal-overlay'), title: document.getElementById('confirm-modal-title'), message: document.getElementById('confirm-modal-message'), confirmBtn: document.getElementById('confirm-modal-confirm-btn'), cancelBtn: document.getElementById('confirm-modal-cancel-btn') };
-            this.DOM.sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
-            this.DOM.mobileSidebar = document.getElementById('mobile-sidebar');
-            this.DOM.sidebarOverlay = document.querySelector('.sidebar-overlay');
-            this.DOM.sidebarContent = document.querySelector('#mobile-sidebar .sidebar-content');
-            this.DOM.closeSidebarBtn = document.getElementById('close-sidebar-btn');
-            this.DOM.dashboardToggle = document.getElementById('dashboard-toggle');
-            this.DOM.fabContainer = document.getElementById('mobile-fab-container');
-            this.DOM.fabToggleBtn = document.getElementById('fab-toggle-btn');
-            this.DOM.fabAddNoteBtn = document.getElementById('fab-add-note');
-            this.DOM.fabAddZoneBtn = document.getElementById('fab-add-zone');
+            // ... (Sin cambios aquí, el código es el mismo que antes) ...
+            this.DOM.body = document.body; this.DOM.app = document.getElementById('app'); this.DOM.signInBtn = document.getElementById('google-signin-btn'); this.DOM.notesContainer = document.getElementById('notesContainer'); this.DOM.zonesContainer = document.getElementById('zonesContainer'); this.DOM.workspaceTitle = document.getElementById('workspace-title'); this.DOM.addNoteBtn = document.getElementById('addNoteBtn'); this.DOM.addZoneBtn = document.getElementById('addZoneBtn'); this.DOM.showGeneralBtn = document.getElementById('show-general-btn'); this.DOM.saveStatus = document.getElementById('save-status'); this.DOM.profileAvatar = document.getElementById('profile-avatar'); this.DOM.userName = document.getElementById('user-name'); this.DOM.signOutBtn = document.getElementById('signout-btn'); this.DOM.alarmSound = document.getElementById('alarm-sound'); this.DOM.bottomDashboard = document.getElementById('bottom-dashboard'); this.DOM.alertModal = { overlay: document.getElementById('alert-modal-overlay'), title: document.getElementById('alert-modal-title'), message: document.getElementById('alert-modal-message'), closeBtn: document.getElementById('alert-modal-close-btn') }; this.DOM.timerModal = { overlay: document.getElementById('set-timer-modal-overlay'), hoursInput: document.getElementById('set-hours'), minutesInput: document.getElementById('set-minutes'), secondsInput: document.getElementById('set-seconds'), saveBtn: document.getElementById('save-timer-btn') }; this.DOM.confirmModal = { overlay: document.getElementById('confirm-modal-overlay'), title: document.getElementById('confirm-modal-title'), message: document.getElementById('confirm-modal-message'), confirmBtn: document.getElementById('confirm-modal-confirm-btn'), cancelBtn: document.getElementById('confirm-modal-cancel-btn') }; this.DOM.sidebarToggleBtn = document.getElementById('sidebar-toggle-btn'); this.DOM.mobileSidebar = document.getElementById('mobile-sidebar'); this.DOM.sidebarOverlay = document.querySelector('.sidebar-overlay'); this.DOM.sidebarContent = document.querySelector('#mobile-sidebar .sidebar-content'); this.DOM.closeSidebarBtn = document.getElementById('close-sidebar-btn'); this.DOM.dashboardToggle = document.getElementById('dashboard-toggle'); this.DOM.fabContainer = document.getElementById('mobile-fab-container'); this.DOM.fabToggleBtn = document.getElementById('fab-toggle-btn'); this.DOM.fabAddNoteBtn = document.getElementById('fab-add-note'); this.DOM.fabAddZoneBtn = document.getElementById('fab-add-zone');
         },
 
-        setupMobileUI() { const widgets = this.DOM.bottomDashboard.querySelectorAll('.dashboard-widget'); widgets.forEach(widget => { const clone = widget.cloneNode(true); this.DOM.sidebarContent.appendChild(clone); }); },
-        initFirebase() { const firebaseApp = initializeApp(firebaseConfig); this.firebase.auth = getAuth(firebaseApp); this.firebase.db = getFirestore(firebaseApp); this.firebase.provider = new GoogleAuthProvider(); onAuthStateChanged(this.firebase.auth, (user) => { if (user) { this.state.currentUser = user; this.updateUserProfile(user); this.DOM.body.classList.remove('logged-out'); this.DOM.body.classList.add('logged-in'); this.loadData(); } else { this.state.currentUser = null; this.DOM.body.classList.add('logged-out'); this.DOM.body.classList.remove('logged-in'); this.clearWorkspace(); } }); },
+        // MODIFICADO: Eliminamos el event listener de 'beforeunload'
         bindEvents() {
             this.DOM.signInBtn.addEventListener('click', () => signInWithPopup(this.firebase.auth, this.firebase.provider).catch(console.error));
             this.DOM.signOutBtn.addEventListener('click', () => signOut(this.firebase.auth));
             this.DOM.addNoteBtn.addEventListener('click', () => this.addNote());
             this.DOM.addZoneBtn.addEventListener('click', () => this.addZone());
-            
             this.DOM.showGeneralBtn.addEventListener('click', () => { this.showGeneralDashboard(); this.closeSidebar(); });
-            
-            this.DOM.workspaceTitle.addEventListener('click', () => {
-                if (window.innerWidth <= 768) {
-                    this.showGeneralDashboard();
-                    this.closeSidebar();
-                }
-            });
-            
+            this.DOM.workspaceTitle.addEventListener('click', () => { if (window.innerWidth <= 768) { this.showGeneralDashboard(); this.closeSidebar(); } });
             const toggleSidebar = () => this.DOM.body.classList.toggle('sidebar-active');
             this.DOM.sidebarToggleBtn.addEventListener('click', toggleSidebar);
             this.DOM.sidebarOverlay.addEventListener('click', toggleSidebar);
@@ -639,243 +604,159 @@
             this.DOM.confirmModal.confirmBtn.addEventListener('click', () => this.handleConfirmAction());
             this.DOM.confirmModal.cancelBtn.addEventListener('click', () => this.closeConfirmModal());
             this.DOM.confirmModal.overlay.addEventListener('click', e => { if (e.target === this.DOM.confirmModal.overlay) this.closeConfirmModal(); });
-            
-            // MODIFICADO: Ahora llamamos a startTimer sin la confirmación desde el restaurado, así que mantenemos la confirmación aquí.
             document.querySelectorAll('#start-timer').forEach(btn => btn.addEventListener('click', () => this.requestConfirm('Iniciar Temporizador', '¿Estás seguro de que quieres iniciar el tiempo?', () => this.startTimer())));
-            
             document.querySelectorAll('#stop-timer').forEach(btn => btn.addEventListener('click', () => this.requestConfirm('Pausar Temporizador', '¿Quieres pausar el tiempo?', this.stopTimer)));
             document.querySelectorAll('#reset-timer').forEach(btn => btn.addEventListener('click', () => this.requestConfirm('Reiniciar Temporizador', 'Esto restablecerá el tiempo a su valor inicial. ¿Continuar?', this.resetTimer)));
             this.DOM.dashboardToggle.addEventListener('click', () => { const isHidden = this.DOM.body.classList.toggle('dashboard-hidden'); localStorage.setItem('dashboardIsHidden', isHidden); });
             this.DOM.fabToggleBtn.addEventListener('click', () => this.DOM.fabContainer.classList.toggle('fab-active'));
             this.DOM.fabAddNoteBtn.addEventListener('click', () => { this.addNote(); this.DOM.fabContainer.classList.remove('fab-active'); });
             this.DOM.fabAddZoneBtn.addEventListener('click', () => { this.addZone(); this.DOM.fabContainer.classList.remove('fab-active'); });
-        
-            // NUEVO: Guardar el estado del cronómetro al cerrar la página
-            window.addEventListener('beforeunload', () => {
-                if (this.state.timerInterval) { // Si el cronómetro está corriendo
-                    localStorage.setItem('timerSeconds', this.state.timerSeconds);
-                    localStorage.setItem('timerExitTimestamp', Date.now());
-                }
-            });
         },
         
         // ... (el resto del código hasta la sección del cronómetro permanece igual) ...
+        // Toda la lógica de Firebase, notas, zonas, etc., se queda como está.
 
-        makeDraggable(element, item) {
-            element.addEventListener('mousedown', e => {
-                const target = e.target;
-                if (target.tagName.toLowerCase() === 'textarea' || target.tagName.toLowerCase() === 'input' || target.classList.contains('delete-btn') || target.classList.contains('resize-handle')) return;
-                element.classList.add('dragging');
-                const offsetX = e.clientX - element.offsetLeft;
-                const offsetY = e.clientY - element.offsetTop;
-                const onMouseMove = (moveEvent) => {
-                    let newX = moveEvent.clientX - offsetX;
-                    let newY = moveEvent.clientY - offsetY;
-                    const appRect = this.DOM.app.getBoundingClientRect();
-                    element.style.left = `${Math.max(0, Math.min(newX, appRect.width - element.offsetWidth))}px`;
-                    element.style.top = `${Math.max(0, Math.min(newY, appRect.height - element.offsetHeight))}px`;
-                };
-                const onMouseUp = () => {
-                    document.removeEventListener('mousemove', onMouseMove);
-                    document.removeEventListener('mouseup', onMouseUp);
-                    element.classList.remove('dragging');
-                    item.x = parseInt(element.style.left);
-                    item.y = parseInt(element.style.top);
-                    if (element.classList.contains('note')) {
-                        const parentZone = this.findParentZone(item);
-                        item.zoneId = parentZone ? parentZone.id : null;
-                    }
-                    this.saveData();
-                };
-                document.addEventListener('mousemove', onMouseMove);
-                document.addEventListener('mouseup', onMouseUp);
-            });
+        // ==================================================================
+        // INICIO DE LA NUEVA Y MEJORADA SECCIÓN DEL CRONÓMETRO
+        // ==================================================================
+        
+        setupAllTimers() { document.querySelectorAll('#timer-widget').forEach(container => this.setupTimer(container)); },
+        
+        setupTimer(container) {
+            const editBtn = container.querySelector('#edit-timer-btn');
+            if (!editBtn) return;
+            editBtn.addEventListener('click', () => this.showTimerModal());
+            this.DOM.timerModal.saveBtn.addEventListener('click', () => this.saveTimerSettings());
+            this.updateTimerDisplay(); // Solo para el render inicial
         },
-        findParentZone(note) {
-            const noteCenterX = note.x + (note.width / 2);
-            const noteCenterY = note.y + (note.height / 2);
-            return this.state.zones.find(zone =>
-                note.date === zone.date &&
-                noteCenterX >= zone.x && noteCenterX <= (zone.x + zone.width) &&
-                noteCenterY >= zone.y && noteCenterY <= (zone.y + zone.height)
-            );
+        
+        updateTimerDisplay() {
+            const h = String(Math.floor(this.state.timerSeconds / 3600)).padStart(2, '0');
+            const m = String(Math.floor((this.state.timerSeconds % 3600) / 60)).padStart(2, '0');
+            const s = String(this.state.timerSeconds % 60).padStart(2, '0');
+            const timeString = `${h}:${m}:${s}`;
+            document.querySelectorAll('#timer-display').forEach(el => el.textContent = timeString);
         },
-        renderWorkspace() {
-            const isMobile = window.innerWidth <= 768;
-            this.DOM.app.innerHTML = ''; 
 
-            if (isMobile) {
-                this.renderMobileLayout();
-            } else {
-                this.renderDesktopLayout();
-            }
-
-            if (this.state.selectedDate) {
-                const [y, m, d] = this.state.selectedDate.split('-');
-                this.DOM.workspaceTitle.textContent = new Date(y, m - 1, d).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
-                this.DOM.body.classList.remove('general-view');
-            } else {
-                this.DOM.workspaceTitle.textContent = 'Tablero General';
-                this.DOM.body.classList.add('general-view');
-            }
-            this.updateStats();
-            this.updateTopControlsVisibility();
+        // NUEVO: Guardamos todo el estado del cronómetro en un único lugar.
+        saveTimerStateToLocalStorage() {
+            const timerData = {
+                state: this.state.timerState,
+                seconds: this.state.timerSeconds,
+                initialDuration: this.state.timerInitialDuration,
+                savedTimestamp: Date.now() // Siempre guardamos cuándo fue la última acción.
+            };
+            localStorage.setItem('timerData', JSON.stringify(timerData));
         },
-        renderDesktopLayout() {
-            this.DOM.app.innerHTML = `<div id="zonesContainer"></div><div id="notesContainer"></div>`;
-            this.cacheDOM(); 
 
-            const notesToShow = this.state.notes.filter(note => note.date === this.state.selectedDate);
-            const zonesToShow = this.state.zones.filter(zone => zone.date === this.state.selectedDate);
+        startTimer() { 
+            if (this.state.timerState === 'running' || this.state.timerSeconds <= 0) return; 
+
+            this.state.timerState = 'running';
+            document.querySelectorAll('#timer-display').forEach(el => { el.classList.add('timer-running'); el.classList.remove('timer-paused'); });
+            document.querySelectorAll('#start-timer').forEach(btn => btn.classList.add('hidden')); 
+            document.querySelectorAll('#stop-timer').forEach(btn => btn.classList.remove('hidden'));
             
-            zonesToShow.forEach(zone => {
-                const zoneEl = this.createZoneElement(zone);
-                this.DOM.zonesContainer.appendChild(zoneEl);
-            });
-
-            notesToShow.forEach(note => {
-                const noteEl = this.createNoteElement(note);
-                this.DOM.notesContainer.appendChild(noteEl);
-            });
-        },
-        renderMobileLayout() {
-            const notesToShow = this.state.notes.filter(note => note.date === this.state.selectedDate);
-            const zonesToShow = this.state.zones.filter(zone => zone.date === this.state.selectedDate);
-            
-            zonesToShow.forEach(zone => {
-                const zoneEl = this.createZoneElement(zone);
-                const mobileNotesContainer = zoneEl.querySelector('.zone-notes-container-mobile');
+            this.state.timerInterval = setInterval(() => { 
+                this.state.timerSeconds--; 
+                this.updateTimerDisplay(); 
                 
-                const notesInThisZone = notesToShow.filter(note => note.zoneId === zone.id);
-                notesInThisZone.forEach(note => {
-                    const noteEl = this.createNoteElement(note);
-                    mobileNotesContainer.appendChild(noteEl);
-                });
+                if (this.state.timerSeconds === 120 && this.state.timerInitialDuration > 120 && !this.state.timerPreAlertShown) { 
+                    this.showAlertModal('Recordatorio', 'Faltan 2 minutos para que termine tu actividad.'); 
+                    this.state.timerPreAlertShown = true; 
+                } 
+                if (this.state.timerSeconds <= 0) { 
+                    this.DOM.alarmSound.play();
+                    this.stopTimer(true); // Finaliza el timer
+                    this.showAlertModal('¡Tiempo Cumplido!', 'Tu actividad programada ha finalizado.'); 
+                } 
+            }, 1000); 
 
-                this.DOM.app.appendChild(zoneEl);
-            });
+            this.saveTimerStateToLocalStorage(); // Guardar el nuevo estado.
+        },
+        
+        stopTimer(isFinished = false) { 
+            clearInterval(this.state.timerInterval); 
+            this.state.timerInterval = null; 
+            
+            this.state.timerState = isFinished ? 'stopped' : 'paused';
 
-            const standaloneNotes = notesToShow.filter(note => !note.zoneId || !zonesToShow.some(z => z.id === note.zoneId));
-            standaloneNotes.forEach(note => {
-                const noteEl = this.createNoteElement(note);
-                this.DOM.app.appendChild(noteEl);
-            });
-        },
-        createNoteElement(note) {
-            const element = document.createElement('div');
-            element.className = 'note';
-            const tabsContainer = document.createElement('div');
-            tabsContainer.className = 'note-tabs';
-            const mainContent = document.createElement('div');
-            mainContent.className = 'note-main-content';
-            const mainHeader = document.createElement('div');
-            mainHeader.className = 'note-header';
-            const tabNameDisplay = document.createElement('h4');
-            tabNameDisplay.className = 'tab-name-display';
-            tabNameDisplay.contentEditable = "true";
-            const deleteBtn = document.createElement('button');
-            deleteBtn.className = 'delete-btn';
-            deleteBtn.innerHTML = '×';
-            const contentPanels = document.createElement('div');
-            contentPanels.className = 'note-content-panels';
-            note.tabs.forEach((tab, index) => {
-                const tabBtn = document.createElement('button');
-                tabBtn.className = 'note-tab-btn';
-                tabBtn.dataset.index = index;
-                tabBtn.title = tab.name;
-                const contentPanel = document.createElement('div');
-                contentPanel.className = 'note-content-panel';
-                contentPanel.dataset.index = index;
-                const textarea = document.createElement('textarea');
-                textarea.placeholder = "Escribe algo...";
-                textarea.value = tab.content || '';
-                contentPanel.appendChild(textarea);
-                if (window.innerWidth <= 768) { this.autoResizeTextarea(textarea); }
-                if (index === note.activeTabIndex) {
-                    tabBtn.classList.add('active');
-                    contentPanel.classList.add('active');
-                    tabNameDisplay.innerText = tab.name;
-                }
-                tabsContainer.appendChild(tabBtn);
-                contentPanels.appendChild(contentPanel);
-            });
-            tabsContainer.addEventListener('click', (e) => {
-                const clickedTab = e.target.closest('.note-tab-btn');
-                if (!clickedTab) return;
-                const newIndex = parseInt(clickedTab.dataset.index);
-                note.activeTabIndex = newIndex;
-                const activeTab = note.tabs[newIndex];
-                tabsContainer.querySelectorAll('.note-tab-btn').forEach(btn => btn.classList.remove('active'));
-                contentPanels.querySelectorAll('.note-content-panel').forEach(panel => panel.classList.remove('active'));
-                clickedTab.classList.add('active');
-                contentPanels.querySelector(`.note-content-panel[data-index="${newIndex}"]`).classList.add('active');
-                tabNameDisplay.innerText = activeTab.name;
-                this.saveData();
-            });
-            tabNameDisplay.addEventListener('input', () => {
-                const activeTab = note.tabs[note.activeTabIndex];
-                activeTab.name = tabNameDisplay.innerText;
-                tabsContainer.querySelector(`.note-tab-btn[data-index="${note.activeTabIndex}"]`).title = activeTab.name;
-                this.saveData();
-            });
-            contentPanels.addEventListener('input', e => {
-                const target = e.target;
-                if (target.tagName.toLowerCase() === 'textarea') {
-                    const panelIndex = parseInt(target.closest('.note-content-panel').dataset.index);
-                    note.tabs[panelIndex].content = target.value;
-                    if (window.innerWidth <= 768) { this.autoResizeTextarea(target); }
-                    this.saveData();
-                }
-            });
-            deleteBtn.addEventListener('click', () => {
-                this.state.notes = this.state.notes.filter(n => n.id !== note.id);
-                this.saveData(); this.renderWorkspace(); this.renderCalendar();
-            });
-            const resizeHandle = document.createElement('div');
-            resizeHandle.className = 'resize-handle';
-            mainHeader.appendChild(tabNameDisplay);
-            mainHeader.appendChild(deleteBtn);
-            mainContent.appendChild(mainHeader);
-            mainContent.appendChild(contentPanels);
-            element.appendChild(tabsContainer);
-            element.appendChild(mainContent);
-            element.appendChild(resizeHandle);
-            if (window.innerWidth > 768) {
-                element.classList.add('draggable');
-                element.style.left = `${note.x || 20}px`;
-                element.style.top = `${note.y || 20}px`;
-                element.style.width = `${note.width}px`;
-                element.style.height = `${note.height}px`;
-                this.makeDraggable(element, note);
-                this.makeResizable(element, note);
+            document.querySelectorAll('#start-timer').forEach(btn => btn.classList.remove('hidden')); 
+            document.querySelectorAll('#stop-timer').forEach(btn => btn.classList.add('hidden')); 
+            document.querySelectorAll('#timer-display').forEach(el => el.classList.remove('timer-running'));
+
+            if (this.state.timerState === 'paused') {
+                document.querySelectorAll('#timer-display').forEach(el => el.classList.add('timer-paused')); 
             }
-            return element;
+            
+            this.saveTimerStateToLocalStorage(); // Guardar el nuevo estado.
         },
-        createZoneElement(zone) {
-            const element = document.createElement('div');
-            element.className = 'zone';
-            element.innerHTML = `
-                <input class="zone-title" value="${zone.title}" placeholder="Título de la Zona">
-                <span class="delete-btn">×</span>
-                <button class="add-note-in-zone-btn" title="Añadir Nota a Zona">+</button>
-                <button class="view-full-zone-btn">Ver Zona</button>
-                <div class="resize-handle"></div>
-                <div class="zone-notes-container-mobile"></div>`;
-            element.querySelector('.zone-title').addEventListener('input', e => { zone.title = e.target.value; this.saveData(); });
-            element.querySelector('.delete-btn').addEventListener('click', () => { this.state.zones = this.state.zones.filter(z => z.id !== zone.id); this.state.notes.forEach(n => { if (n.zoneId === zone.id) n.zoneId = null; }); this.saveData(); this.renderWorkspace(); });
-            element.querySelector('.add-note-in-zone-btn').addEventListener('click', () => { this.addNote(zone.id); });
-            const viewFullBtn = element.querySelector('.view-full-zone-btn');
-            viewFullBtn.addEventListener('click', (e) => { e.stopPropagation(); const isFullscreen = element.classList.toggle('zone-fullscreen'); document.body.classList.toggle('zone-view-active'); viewFullBtn.textContent = isFullscreen ? 'Cerrar' : 'Ver Zona'; if (isFullscreen) { element.scrollTop = 0; } });
-            if(window.innerWidth > 768) {
-               element.classList.add('draggable'); element.style.left = `${zone.x || 50}px`; element.style.top = `${zone.y || 50}px`; element.style.width = `${zone.width || 400}px`; element.style.height = `${zone.height || 300}px`; this.makeDraggable(element, zone); this.makeResizable(element, zone);
+        
+        resetTimer() { 
+            this.stopTimer(true); // Pasa a estado "stopped"
+            this.state.timerSeconds = this.state.timerInitialDuration; 
+            this.state.timerPreAlertShown = false; 
+            this.state.timerState = 'stopped';
+            this.updateTimerDisplay(); 
+            document.querySelectorAll('#timer-display').forEach(el => el.classList.remove('timer-paused', 'timer-running')); 
+            this.saveTimerStateToLocalStorage(); // Guardar el nuevo estado.
+        },
+
+        saveTimerSettings() { 
+            const h = parseInt(this.DOM.timerModal.hoursInput.value) || 0; 
+            const m = parseInt(this.DOM.timerModal.minutesInput.value) || 0; 
+            const s = parseInt(this.DOM.timerModal.secondsInput.value) || 0; 
+            this.state.timerInitialDuration = (h * 3600) + (m * 60) + s; 
+            this.resetTimer(); // Esto ya actualiza y guarda el estado.
+            this.DOM.timerModal.overlay.classList.remove('visible'); 
+        },
+
+        restoreTimerState() {
+            const savedDataJSON = localStorage.getItem('timerData');
+            if (!savedDataJSON) {
+                // Si no hay datos, usa los valores por defecto y actualiza la UI
+                this.updateTimerDisplay();
+                return;
             }
-            return element;
+
+            const data = JSON.parse(savedDataJSON);
+            this.state.timerInitialDuration = data.initialDuration;
+            this.state.timerSeconds = data.seconds;
+            this.state.timerState = data.state;
+            
+            if (this.state.timerState === 'running') {
+                const elapsedSeconds = Math.round((Date.now() - data.savedTimestamp) / 1000);
+                const newSeconds = this.state.timerSeconds - elapsedSeconds;
+
+                if (newSeconds > 0) {
+                    this.state.timerSeconds = newSeconds;
+                    this.startTimer(); // Reanuda la cuenta.
+                } else {
+                    this.state.timerSeconds = 0;
+                    this.stopTimer(true); // Se acabó mientras estabas fuera.
+                    this.showAlertModal('¡Tiempo Cumplido!', 'Tu actividad finalizó mientras la página estaba cerrada.');
+                }
+            } else if (this.state.timerState === 'paused') {
+                this.updateTimerDisplay();
+                document.querySelectorAll('#timer-display').forEach(el => el.classList.add('timer-paused'));
+                document.querySelectorAll('#start-timer').forEach(btn => btn.classList.remove('hidden'));
+                document.querySelectorAll('#stop-timer').forEach(btn => btn.classList.add('hidden'));
+            } else { // 'stopped'
+                this.updateTimerDisplay();
+            }
         },
-        updateTopControlsVisibility() {
-            const isMobile = window.innerWidth <= 768; const generalBtn = document.getElementById('show-general-btn'); const userProfileMenu = document.getElementById('user-profile-menu');
-            if (isMobile) { generalBtn.style.display = this.state.selectedDate ? 'flex' : 'none'; userProfileMenu.style.marginLeft = 'auto';
-            } else { generalBtn.style.display = 'block'; userProfileMenu.style.marginLeft = '0'; }
-        },
+
+        // Resto de funciones auxiliares (modales, etc.) sin cambios...
+        initFirebase() { const firebaseApp = initializeApp(firebaseConfig); this.firebase.auth = getAuth(firebaseApp); this.firebase.db = getFirestore(firebaseApp); this.firebase.provider = new GoogleAuthProvider(); onAuthStateChanged(this.firebase.auth, (user) => { if (user) { this.state.currentUser = user; this.updateUserProfile(user); this.DOM.body.classList.remove('logged-out'); this.DOM.body.classList.add('logged-in'); this.loadData(); } else { this.state.currentUser = null; this.DOM.body.classList.add('logged-out'); this.DOM.body.classList.remove('logged-in'); this.clearWorkspace(); } }); },
+        setupMobileUI() { const widgets = this.DOM.bottomDashboard.querySelectorAll('.dashboard-widget'); widgets.forEach(widget => { const clone = widget.cloneNode(true); this.DOM.sidebarContent.appendChild(clone); }); },
+        makeDraggable(element, item) { element.addEventListener('mousedown', e => { const target = e.target; if (target.tagName.toLowerCase() === 'textarea' || target.tagName.toLowerCase() === 'input' || target.classList.contains('delete-btn') || target.classList.contains('resize-handle')) return; element.classList.add('dragging'); const offsetX = e.clientX - element.offsetLeft; const offsetY = e.clientY - element.offsetTop; const onMouseMove = (moveEvent) => { let newX = moveEvent.clientX - offsetX; let newY = moveEvent.clientY - offsetY; const appRect = this.DOM.app.getBoundingClientRect(); element.style.left = `${Math.max(0, Math.min(newX, appRect.width - element.offsetWidth))}px`; element.style.top = `${Math.max(0, Math.min(newY, appRect.height - element.offsetHeight))}px`; }; const onMouseUp = () => { document.removeEventListener('mousemove', onMouseMove); document.removeEventListener('mouseup', onMouseUp); element.classList.remove('dragging'); item.x = parseInt(element.style.left); item.y = parseInt(element.style.top); if (element.classList.contains('note')) { const parentZone = this.findParentZone(item); item.zoneId = parentZone ? parentZone.id : null; } this.saveData(); }; document.addEventListener('mousemove', onMouseMove); document.addEventListener('mouseup', onMouseUp); }); },
+        findParentZone(note) { const noteCenterX = note.x + (note.width / 2); const noteCenterY = note.y + (note.height / 2); return this.state.zones.find(zone => note.date === zone.date && noteCenterX >= zone.x && noteCenterX <= (zone.x + zone.width) && noteCenterY >= zone.y && noteCenterY <= (zone.y + zone.height) ); },
+        renderWorkspace() { const isMobile = window.innerWidth <= 768; this.DOM.app.innerHTML = ''; if (isMobile) { this.renderMobileLayout(); } else { this.renderDesktopLayout(); } if (this.state.selectedDate) { const [y, m, d] = this.state.selectedDate.split('-'); this.DOM.workspaceTitle.textContent = new Date(y, m - 1, d).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' }); this.DOM.body.classList.remove('general-view'); } else { this.DOM.workspaceTitle.textContent = 'Tablero General'; this.DOM.body.classList.add('general-view'); } this.updateStats(); this.updateTopControlsVisibility(); },
+        renderDesktopLayout() { this.DOM.app.innerHTML = `<div id="zonesContainer"></div><div id="notesContainer"></div>`; this.cacheDOM(); const notesToShow = this.state.notes.filter(note => note.date === this.state.selectedDate); const zonesToShow = this.state.zones.filter(zone => zone.date === this.state.selectedDate); zonesToShow.forEach(zone => { const zoneEl = this.createZoneElement(zone); this.DOM.zonesContainer.appendChild(zoneEl); }); notesToShow.forEach(note => { const noteEl = this.createNoteElement(note); this.DOM.notesContainer.appendChild(noteEl); }); },
+        renderMobileLayout() { const notesToShow = this.state.notes.filter(note => note.date === this.state.selectedDate); const zonesToShow = this.state.zones.filter(zone => zone.date === this.state.selectedDate); zonesToShow.forEach(zone => { const zoneEl = this.createZoneElement(zone); const mobileNotesContainer = zoneEl.querySelector('.zone-notes-container-mobile'); const notesInThisZone = notesToShow.filter(note => note.zoneId === zone.id); notesInThisZone.forEach(note => { const noteEl = this.createNoteElement(note); mobileNotesContainer.appendChild(noteEl); }); this.DOM.app.appendChild(zoneEl); }); const standaloneNotes = notesToShow.filter(note => !note.zoneId || !zonesToShow.some(z => z.id === note.zoneId)); standaloneNotes.forEach(note => { const noteEl = this.createNoteElement(note); this.DOM.app.appendChild(noteEl); }); },
+        createNoteElement(note) { const element = document.createElement('div'); element.className = 'note'; const tabsContainer = document.createElement('div'); tabsContainer.className = 'note-tabs'; const mainContent = document.createElement('div'); mainContent.className = 'note-main-content'; const mainHeader = document.createElement('div'); mainHeader.className = 'note-header'; const tabNameDisplay = document.createElement('h4'); tabNameDisplay.className = 'tab-name-display'; tabNameDisplay.contentEditable = "true"; const deleteBtn = document.createElement('button'); deleteBtn.className = 'delete-btn'; deleteBtn.innerHTML = '×'; const contentPanels = document.createElement('div'); contentPanels.className = 'note-content-panels'; note.tabs.forEach((tab, index) => { const tabBtn = document.createElement('button'); tabBtn.className = 'note-tab-btn'; tabBtn.dataset.index = index; tabBtn.title = tab.name; const contentPanel = document.createElement('div'); contentPanel.className = 'note-content-panel'; contentPanel.dataset.index = index; const textarea = document.createElement('textarea'); textarea.placeholder = "Escribe algo..."; textarea.value = tab.content || ''; contentPanel.appendChild(textarea); if (window.innerWidth <= 768) { this.autoResizeTextarea(textarea); } if (index === note.activeTabIndex) { tabBtn.classList.add('active'); contentPanel.classList.add('active'); tabNameDisplay.innerText = tab.name; } tabsContainer.appendChild(tabBtn); contentPanels.appendChild(contentPanel); }); tabsContainer.addEventListener('click', (e) => { const clickedTab = e.target.closest('.note-tab-btn'); if (!clickedTab) return; const newIndex = parseInt(clickedTab.dataset.index); note.activeTabIndex = newIndex; const activeTab = note.tabs[newIndex]; tabsContainer.querySelectorAll('.note-tab-btn').forEach(btn => btn.classList.remove('active')); contentPanels.querySelectorAll('.note-content-panel').forEach(panel => panel.classList.remove('active')); clickedTab.classList.add('active'); contentPanels.querySelector(`.note-content-panel[data-index="${newIndex}"]`).classList.add('active'); tabNameDisplay.innerText = activeTab.name; this.saveData(); }); tabNameDisplay.addEventListener('input', () => { const activeTab = note.tabs[note.activeTabIndex]; activeTab.name = tabNameDisplay.innerText; tabsContainer.querySelector(`.note-tab-btn[data-index="${note.activeTabIndex}"]`).title = activeTab.name; this.saveData(); }); contentPanels.addEventListener('input', e => { const target = e.target; if (target.tagName.toLowerCase() === 'textarea') { const panelIndex = parseInt(target.closest('.note-content-panel').dataset.index); note.tabs[panelIndex].content = target.value; if (window.innerWidth <= 768) { this.autoResizeTextarea(target); } this.saveData(); } }); deleteBtn.addEventListener('click', () => { this.state.notes = this.state.notes.filter(n => n.id !== note.id); this.saveData(); this.renderWorkspace(); this.renderCalendar(); }); const resizeHandle = document.createElement('div'); resizeHandle.className = 'resize-handle'; mainHeader.appendChild(tabNameDisplay); mainHeader.appendChild(deleteBtn); mainContent.appendChild(mainHeader); mainContent.appendChild(contentPanels); element.appendChild(tabsContainer); element.appendChild(mainContent); element.appendChild(resizeHandle); if (window.innerWidth > 768) { element.classList.add('draggable'); element.style.left = `${note.x || 20}px`; element.style.top = `${note.y || 20}px`; element.style.width = `${note.width}px`; element.style.height = `${note.height}px`; this.makeDraggable(element, note); this.makeResizable(element, note); } return element; },
+        createZoneElement(zone) { const element = document.createElement('div'); element.className = 'zone'; element.innerHTML = ` <input class="zone-title" value="${zone.title}" placeholder="Título de la Zona"> <span class="delete-btn">×</span> <button class="add-note-in-zone-btn" title="Añadir Nota a Zona">+</button> <button class="view-full-zone-btn">Ver Zona</button> <div class="resize-handle"></div> <div class="zone-notes-container-mobile"></div>`; element.querySelector('.zone-title').addEventListener('input', e => { zone.title = e.target.value; this.saveData(); }); element.querySelector('.delete-btn').addEventListener('click', () => { this.state.zones = this.state.zones.filter(z => z.id !== zone.id); this.state.notes.forEach(n => { if (n.zoneId === zone.id) n.zoneId = null; }); this.saveData(); this.renderWorkspace(); }); element.querySelector('.add-note-in-zone-btn').addEventListener('click', () => { this.addNote(zone.id); }); const viewFullBtn = element.querySelector('.view-full-zone-btn'); viewFullBtn.addEventListener('click', (e) => { e.stopPropagation(); const isFullscreen = element.classList.toggle('zone-fullscreen'); document.body.classList.toggle('zone-view-active'); viewFullBtn.textContent = isFullscreen ? 'Cerrar' : 'Ver Zona'; if (isFullscreen) { element.scrollTop = 0; } }); if(window.innerWidth > 768) { element.classList.add('draggable'); element.style.left = `${zone.x || 50}px`; element.style.top = `${zone.y || 50}px`; element.style.width = `${zone.width || 400}px`; element.style.height = `${zone.height || 300}px`; this.makeDraggable(element, zone); this.makeResizable(element, zone); } return element; },
+        updateTopControlsVisibility() { const isMobile = window.innerWidth <= 768; const generalBtn = document.getElementById('show-general-btn'); const userProfileMenu = document.getElementById('user-profile-menu'); if (isMobile) { generalBtn.style.display = this.state.selectedDate ? 'flex' : 'none'; userProfileMenu.style.marginLeft = 'auto'; } else { generalBtn.style.display = 'block'; userProfileMenu.style.marginLeft = '0'; } },
         addNote(zoneId = null) { const newNote = { id: Date.now() + Math.random(), x: 20, y: 20, width: 320, height: 240, date: this.state.selectedDate, zoneId: zoneId, activeTabIndex: 0, tabs: [ { name: 'Nota 1', content: '' }, { name: 'Nota 2', content: '' }, { name: 'Nota 3', content: '' }, { name: 'Nota 4', content: '' }, { name: 'Nota 5', content: '' }, ] }; this.state.notes.push(newNote); this.renderWorkspace(); this.saveData(); this.updateStats(); this.renderCalendar(); },
         addZone() { const newZone = { id: Date.now() + Math.random(), title: 'Nueva Zona', x: 50, y: 50, width: 400, height: 300, date: this.state.selectedDate }; this.state.zones.push(newZone); this.renderWorkspace(); this.saveData(); },
         requestConfirm(title, message, action) { this.DOM.confirmModal.title.textContent = title; this.DOM.confirmModal.message.textContent = message; this.state.pendingTimerAction = action.bind(this); this.DOM.confirmModal.overlay.classList.add('visible'); },
@@ -894,170 +775,16 @@
         setupAllClocks() { document.querySelectorAll('#clock-widget').forEach(container => this.setupClock(container)); },
         setupClock(container) { const timeEl = container.querySelector('#current-time'); const dateEl = container.querySelector('#current-date'); if (!timeEl || !dateEl) return; const updateClock = () => { const now = new Date(); timeEl.textContent = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }); dateEl.textContent = now.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }); }; updateClock(); setInterval(updateClock, 60000); },
         setupAllCalendars() { document.querySelectorAll('#calendar-widget').forEach(container => this.setupCalendar(container)); },
-        setupCalendar(container) {
-            const prevBtn = container.querySelector('#prev-month'); const nextBtn = container.querySelector('#next-month'); const calendarDays = container.querySelector('#calendar-days');
-            if (!prevBtn || !nextBtn || !calendarDays) return;
-            prevBtn.onclick = () => { this.state.calendarDate.setMonth(this.state.calendarDate.getMonth() - 1); this.renderCalendar(); };
-            nextBtn.onclick = () => { this.state.calendarDate.setMonth(this.state.calendarDate.getMonth() + 1); this.renderCalendar(); };
-            calendarDays.addEventListener('click', e => { if (e.target.classList.contains('day') && e.target.dataset.date) { this.state.selectedDate = e.target.dataset.date; this.saveData(); this.renderWorkspace(); this.renderCalendar(); this.closeSidebar(); } });
-            this.renderCalendar();
-        },
+        setupCalendar(container) { const prevBtn = container.querySelector('#prev-month'); const nextBtn = container.querySelector('#next-month'); const calendarDays = container.querySelector('#calendar-days'); if (!prevBtn || !nextBtn || !calendarDays) return; prevBtn.onclick = () => { this.state.calendarDate.setMonth(this.state.calendarDate.getMonth() - 1); this.renderCalendar(); }; nextBtn.onclick = () => { this.state.calendarDate.setMonth(this.state.calendarDate.getMonth() + 1); this.renderCalendar(); }; calendarDays.addEventListener('click', e => { if (e.target.classList.contains('day') && e.target.dataset.date) { this.state.selectedDate = e.target.dataset.date; this.saveData(); this.renderWorkspace(); this.renderCalendar(); this.closeSidebar(); } }); this.renderCalendar(); },
         renderCalendar() { document.querySelectorAll('#calendar-widget').forEach(container => { const calendarDays = container.querySelector('#calendar-days'); const monthYearEl = container.querySelector('#month-year'); if (!calendarDays || !monthYearEl) return; calendarDays.innerHTML = ''; const month = this.state.calendarDate.getMonth(); const year = this.state.calendarDate.getFullYear(); monthYearEl.textContent = new Date(year, month).toLocaleDateString('es-ES', { month: 'long', year: 'numeric' }); const noteDates = new Set(this.state.notes.map(n => n.date).filter(Boolean)); const firstDayIndex = (new Date(year, month, 1).getDay() + 6) % 7; const daysInMonth = new Date(year, month + 1, 0).getDate(); const today = new Date(); ['L', 'M', 'X', 'J', 'V', 'S', 'D'].forEach(day => calendarDays.innerHTML += `<span class="day-name">${day}</span>`); for (let i = 0; i < firstDayIndex; i++) calendarDays.innerHTML += `<span></span>`; for (let i = 1; i <= daysInMonth; i++) { const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`; let classes = 'day'; if (i === today.getDate() && month === today.getMonth() && year === today.getFullYear()) classes += ' current-day'; if (dateString === this.state.selectedDate) classes += ' selected-day'; if (noteDates.has(dateString)) classes += ' has-notes'; calendarDays.innerHTML += `<span class="${classes}" data-date="${dateString}">${i}</span>`; } }); },
         setupAllYoutubePlayers() { this.setupYoutubePlayer(); },
-        setupYoutubePlayer() {
-            const container = document.querySelector('#youtube-widget');
-            const input = container.querySelector('#youtube-url-input');
-            const playerContainer = container.querySelector('#youtube-player-container');
-            if (!input || !playerContainer) return;
-            const loadVideo = (url) => {
-                const videoId = (u => { const m = u.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/); return (m && m[2].length === 11) ? m[2] : null; })(url);
-                if (videoId) {
-                    if (this.state.youtubePlayer && typeof this.state.youtubePlayer.loadVideoById === 'function') { this.state.youtubePlayer.loadVideoById(videoId);
-                    } else { if (typeof YT !== 'undefined' && YT.Player) { this.state.youtubePlayer = new YT.Player('youtube-player', { height: '100%', width: '100%', videoId: videoId, playerVars: { 'playsinline': 1, 'controls': 0, 'modestbranding': 1, 'rel': 0 }, events: { 'onReady': this.onPlayerReady.bind(this), 'onStateChange': this.onPlayerStateChange.bind(this) } }); } }
-                    if (this.state.youtubeUrl !== url) { this.state.youtubeUrl = url; this.saveData(); }
-                }
-            };
-            input.addEventListener('change', e => loadVideo(e.target.value));
-            if (this.state.isDataLoaded && this.state.youtubeUrl) {
-                input.value = this.state.youtubeUrl;
-                window.onYouTubeIframeAPIReady = () => { loadVideo(this.state.youtubeUrl); };
-                if (typeof YT !== 'undefined' && YT.loaded) { window.onYouTubeIframeAPIReady(); }
-            } else if (!this.state.youtubeUrl) { window.onYouTubeIframeAPIReady = () => {}; }
-        },
+        setupYoutubePlayer() { const container = document.querySelector('#youtube-widget'); const input = container.querySelector('#youtube-url-input'); const playerContainer = container.querySelector('#youtube-player-container'); if (!input || !playerContainer) return; const loadVideo = (url) => { const videoId = (u => { const m = u.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/); return (m && m[2].length === 11) ? m[2] : null; })(url); if (videoId) { if (this.state.youtubePlayer && typeof this.state.youtubePlayer.loadVideoById === 'function') { this.state.youtubePlayer.loadVideoById(videoId); } else { if (typeof YT !== 'undefined' && YT.Player) { this.state.youtubePlayer = new YT.Player('youtube-player', { height: '100%', width: '100%', videoId: videoId, playerVars: { 'playsinline': 1, 'controls': 0, 'modestbranding': 1, 'rel': 0 }, events: { 'onReady': this.onPlayerReady.bind(this), 'onStateChange': this.onPlayerStateChange.bind(this) } }); } } if (this.state.youtubeUrl !== url) { this.state.youtubeUrl = url; this.saveData(); } } }; input.addEventListener('change', e => loadVideo(e.target.value)); if (this.state.isDataLoaded && this.state.youtubeUrl) { input.value = this.state.youtubeUrl; window.onYouTubeIframeAPIReady = () => { loadVideo(this.state.youtubeUrl); }; if (typeof YT !== 'undefined' && YT.loaded) { window.onYouTubeIframeAPIReady(); } } else if (!this.state.youtubeUrl) { window.onYouTubeIframeAPIReady = () => {}; } },
         onPlayerReady(event) { document.querySelectorAll('#yt-play-pause-btn').forEach(btn => { btn.innerHTML = this.ICONS.PLAY; btn.onclick = () => { const playerState = this.state.youtubePlayer.getPlayerState(); if (playerState === YT.PlayerState.PLAYING) { this.state.youtubePlayer.pauseVideo(); } else { this.state.youtubePlayer.playVideo(); } }; }); },
         onPlayerStateChange(event) { document.querySelectorAll('#yt-play-pause-btn').forEach(btn => { if (event.data === YT.PlayerState.PLAYING) { btn.innerHTML = this.ICONS.PAUSE; } else { btn.innerHTML = this.ICONS.PLAY; } }); document.querySelectorAll('#youtube-player-container').forEach(container => { if (event.data === YT.PlayerState.PLAYING) { container.classList.remove('paused'); } else { container.classList.add('paused'); } }); },
-        
-        // ==================================================================
-        // INICIO DE LA SECCIÓN MODIFICADA/NUEVA DEL CRONÓMETRO
-        // ==================================================================
-
-        setupAllTimers() { document.querySelectorAll('#timer-widget').forEach(container => this.setupTimer(container)); },
-        setupTimer(container) { const editBtn = container.querySelector('#edit-timer-btn'); if (!editBtn) return; editBtn.addEventListener('click', () => this.showTimerModal()); this.DOM.timerModal.saveBtn.addEventListener('click', () => this.saveTimerSettings()); this.updateTimerDisplay(); },
-        updateTimerDisplay() { const h = String(Math.floor(this.state.timerSeconds / 3600)).padStart(2, '0'); const m = String(Math.floor((this.state.timerSeconds % 3600) / 60)).padStart(2, '0'); const s = String(this.state.timerSeconds % 60).padStart(2, '0'); const timeString = `${h}:${m}:${s}`; document.querySelectorAll('#timer-display').forEach(el => el.textContent = timeString); },
-
-        // MODIFICADO: Añadido 'fromRestore' para evitar la confirmación al restaurar
-        startTimer(fromRestore = false) { 
-            if (this.state.timerInterval || this.state.timerSeconds <= 0) return; 
-
-            document.querySelectorAll('#timer-display').forEach(el => { el.classList.add('timer-running'); el.classList.remove('timer-paused'); });
-            document.querySelectorAll('#start-timer').forEach(btn => btn.classList.add('hidden')); 
-            document.querySelectorAll('#stop-timer').forEach(btn => btn.classList.remove('hidden'));
-
-            localStorage.setItem('timerState', 'running'); // MODIFICADO: Guardar estado
-            
-            this.state.timerInterval = setInterval(() => { 
-                this.state.timerSeconds--; 
-                this.updateTimerDisplay(); 
-                
-                // La alerta de 2 minutos ahora se basa en la duración inicial para evitar falsos positivos
-                if (this.state.timerSeconds === 120 && this.state.timerInitialDuration > 120 && !this.state.timerPreAlertShown) { 
-                    this.showAlertModal('Recordatorio', 'Faltan 2 minutos para que termine tu actividad.'); this.state.timerPreAlertShown = true; 
-                } 
-                if (this.state.timerSeconds <= 0) { 
-                    this.stopTimer(true); 
-                    this.showAlertModal('¡Tiempo Cumplido!', 'Tu actividad programada ha finalizado.'); 
-                    this.DOM.alarmSound.play(); 
-                } 
-            }, 1000); 
-        },
-        
-        // MODIFICADO: Guardar estado en localStorage al pausar o terminar
-        stopTimer(isFinished = false) { 
-            clearInterval(this.state.timerInterval); 
-            this.state.timerInterval = null; 
-            document.querySelectorAll('#start-timer').forEach(btn => btn.classList.remove('hidden')); 
-            document.querySelectorAll('#stop-timer').forEach(btn => btn.classList.add('hidden')); 
-            document.querySelectorAll('#timer-display').forEach(el => el.classList.remove('timer-running'));
-
-            if (!isFinished) {
-                document.querySelectorAll('#timer-display').forEach(el => el.classList.add('timer-paused')); 
-                localStorage.setItem('timerState', 'paused');
-            } else {
-                localStorage.setItem('timerState', 'stopped');
-            }
-            
-            localStorage.setItem('timerSeconds', this.state.timerSeconds);
-            localStorage.removeItem('timerExitTimestamp'); // Limpiar timestamp de salida
-        },
-        
-        // MODIFICADO: Guardar estado en localStorage al reiniciar
-        resetTimer() { 
-            this.stopTimer(true); 
-            this.state.timerSeconds = this.state.timerInitialDuration; 
-            this.state.timerPreAlertShown = false; 
-            this.updateTimerDisplay(); 
-            document.querySelectorAll('#timer-display').forEach(el => el.classList.remove('timer-paused', 'timer-running')); 
-            
-            localStorage.setItem('timerState', 'stopped');
-            localStorage.setItem('timerSeconds', this.state.timerSeconds);
-        },
-
-        showTimerModal() { 
-            const h = Math.floor(this.state.timerInitialDuration / 3600); 
-            const m = Math.floor((this.state.timerInitialDuration % 3600) / 60); 
-            const s = this.state.timerInitialDuration % 60; 
-            this.DOM.timerModal.hoursInput.value = h > 0 ? h : ''; 
-            this.DOM.timerModal.minutesInput.value = m > 0 ? m : ''; 
-            this.DOM.timerModal.secondsInput.value = s > 0 ? s : ''; 
-            this.DOM.timerModal.overlay.classList.add('visible'); 
-        },
-
-        // MODIFICADO: Guardar nueva duración inicial en localStorage
-        saveTimerSettings() { 
-            const h = parseInt(this.DOM.timerModal.hoursInput.value) || 0; 
-            const m = parseInt(this.DOM.timerModal.minutesInput.value) || 0; 
-            const s = parseInt(this.DOM.timerModal.secondsInput.value) || 0; 
-            this.state.timerInitialDuration = (h * 3600) + (m * 60) + s; 
-            this.resetTimer();
-            localStorage.setItem('timerInitialDuration', this.state.timerInitialDuration);
-            this.DOM.timerModal.overlay.classList.remove('visible'); 
-        },
-
-        // NUEVO: Función para restaurar el estado del cronómetro desde localStorage
-        restoreTimerState() {
-            const savedInitialDuration = localStorage.getItem('timerInitialDuration');
-            const savedState = localStorage.getItem('timerState');
-            const savedSeconds = localStorage.getItem('timerSeconds');
-            const exitTimestamp = localStorage.getItem('timerExitTimestamp');
-
-            if (savedInitialDuration) {
-                this.state.timerInitialDuration = parseInt(savedInitialDuration, 10);
-            }
-
-            if (savedState) {
-                this.state.timerSeconds = parseInt(savedSeconds, 10) || this.state.timerInitialDuration;
-
-                if (savedState === 'running' && exitTimestamp) {
-                    const elapsedSeconds = Math.round((Date.now() - parseInt(exitTimestamp, 10)) / 1000);
-                    const newSeconds = this.state.timerSeconds - elapsedSeconds;
-
-                    if (newSeconds > 0) {
-                        this.state.timerSeconds = newSeconds;
-                        this.updateTimerDisplay();
-                        this.startTimer(true); // Restaurar y empezar sin confirmación
-                    } else {
-                        // El tiempo terminó mientras la página estaba cerrada
-                        this.state.timerSeconds = 0;
-                        this.updateTimerDisplay();
-                        this.stopTimer(true);
-                        this.showAlertModal('¡Tiempo Cumplido!', 'Tu actividad programada finalizó mientras no estabas.'); 
-                    }
-                    localStorage.removeItem('timerExitTimestamp');
-                } else if (savedState === 'paused') {
-                    this.updateTimerDisplay();
-                    document.querySelectorAll('#timer-display').forEach(el => el.classList.add('timer-paused')); 
-                } else { // 'stopped'
-                    this.state.timerSeconds = this.state.timerInitialDuration;
-                    this.updateTimerDisplay();
-                }
-            } else {
-                 // Si no hay nada guardado, simplemente asegura que la pantalla se vea bien
-                 this.updateTimerDisplay();
-            }
-        },
-
+        showTimerModal() { const h = Math.floor(this.state.timerInitialDuration / 3600); const m = Math.floor((this.state.timerInitialDuration % 3600) / 60); const s = this.state.timerInitialDuration % 60; this.DOM.timerModal.hoursInput.value = h > 0 ? h : ''; this.DOM.timerModal.minutesInput.value = m > 0 ? m : ''; this.DOM.timerModal.secondsInput.value = s > 0 ? s : ''; this.DOM.timerModal.overlay.classList.add('visible'); },
         showAlertModal(title, message) { this.DOM.alertModal.title.textContent = title; this.DOM.alertModal.message.textContent = message; this.DOM.alertModal.overlay.classList.add('visible'); },
         closeAlertModal() { this.DOM.alertModal.overlay.classList.remove('visible'); }
+
     };
 
     function debounce(func, wait) { let timeout; return function executedFunction(...args) { const later = () => { clearTimeout(timeout); func.apply(this, args); }; clearTimeout(timeout); timeout = setTimeout(later, wait); }; }
