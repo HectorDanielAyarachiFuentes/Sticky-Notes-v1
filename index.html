@@ -230,7 +230,6 @@
        7.1 VISTA DE ESCRITORIO (min-width: 769px)
        -------------------------------------------------------------------------- */
     @media (min-width: 769px) {
-        /* NUEVO: Oculta el título "Tablero General" en escritorio */
         body.general-view #workspace-title {
             visibility: hidden;
         }
@@ -320,7 +319,7 @@
         .note-content-panels {
             flex-grow: 1;
             position: relative;
-            display: flex;
+            /* display: flex; */ /* <<< CORRECCIÓN: Esta línea causaba el error de visualización */
         }
         .note-content-panel {
             display: none;
