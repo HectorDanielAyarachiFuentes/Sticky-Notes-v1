@@ -578,56 +578,26 @@
             this.setupMobileUI();
             this.bindEvents();
             this.setupAllWidgets();
-            this.restoreTimerState(); // NUEVO: Restaurar el estado del cronómetro al iniciar.
+            this.restoreTimerState();
         },
 
-        cacheDOM() {
-            // ... (Sin cambios aquí, el código es el mismo que antes) ...
-            this.DOM.body = document.body; this.DOM.app = document.getElementById('app'); this.DOM.signInBtn = document.getElementById('google-signin-btn'); this.DOM.notesContainer = document.getElementById('notesContainer'); this.DOM.zonesContainer = document.getElementById('zonesContainer'); this.DOM.workspaceTitle = document.getElementById('workspace-title'); this.DOM.addNoteBtn = document.getElementById('addNoteBtn'); this.DOM.addZoneBtn = document.getElementById('addZoneBtn'); this.DOM.showGeneralBtn = document.getElementById('show-general-btn'); this.DOM.saveStatus = document.getElementById('save-status'); this.DOM.profileAvatar = document.getElementById('profile-avatar'); this.DOM.userName = document.getElementById('user-name'); this.DOM.signOutBtn = document.getElementById('signout-btn'); this.DOM.alarmSound = document.getElementById('alarm-sound'); this.DOM.bottomDashboard = document.getElementById('bottom-dashboard'); this.DOM.alertModal = { overlay: document.getElementById('alert-modal-overlay'), title: document.getElementById('alert-modal-title'), message: document.getElementById('alert-modal-message'), closeBtn: document.getElementById('alert-modal-close-btn') }; this.DOM.timerModal = { overlay: document.getElementById('set-timer-modal-overlay'), hoursInput: document.getElementById('set-hours'), minutesInput: document.getElementById('set-minutes'), secondsInput: document.getElementById('set-seconds'), saveBtn: document.getElementById('save-timer-btn') }; this.DOM.confirmModal = { overlay: document.getElementById('confirm-modal-overlay'), title: document.getElementById('confirm-modal-title'), message: document.getElementById('confirm-modal-message'), confirmBtn: document.getElementById('confirm-modal-confirm-btn'), cancelBtn: document.getElementById('confirm-modal-cancel-btn') }; this.DOM.sidebarToggleBtn = document.getElementById('sidebar-toggle-btn'); this.DOM.mobileSidebar = document.getElementById('mobile-sidebar'); this.DOM.sidebarOverlay = document.querySelector('.sidebar-overlay'); this.DOM.sidebarContent = document.querySelector('#mobile-sidebar .sidebar-content'); this.DOM.closeSidebarBtn = document.getElementById('close-sidebar-btn'); this.DOM.dashboardToggle = document.getElementById('dashboard-toggle'); this.DOM.fabContainer = document.getElementById('mobile-fab-container'); this.DOM.fabToggleBtn = document.getElementById('fab-toggle-btn'); this.DOM.fabAddNoteBtn = document.getElementById('fab-add-note'); this.DOM.fabAddZoneBtn = document.getElementById('fab-add-zone');
-        },
-
-        // MODIFICADO: Eliminamos el event listener de 'beforeunload'
-        bindEvents() {
-            this.DOM.signInBtn.addEventListener('click', () => signInWithPopup(this.firebase.auth, this.firebase.provider).catch(console.error));
-            this.DOM.signOutBtn.addEventListener('click', () => signOut(this.firebase.auth));
-            this.DOM.addNoteBtn.addEventListener('click', () => this.addNote());
-            this.DOM.addZoneBtn.addEventListener('click', () => this.addZone());
-            this.DOM.showGeneralBtn.addEventListener('click', () => { this.showGeneralDashboard(); this.closeSidebar(); });
-            this.DOM.workspaceTitle.addEventListener('click', () => { if (window.innerWidth <= 768) { this.showGeneralDashboard(); this.closeSidebar(); } });
-            const toggleSidebar = () => this.DOM.body.classList.toggle('sidebar-active');
-            this.DOM.sidebarToggleBtn.addEventListener('click', toggleSidebar);
-            this.DOM.sidebarOverlay.addEventListener('click', toggleSidebar);
-            this.DOM.closeSidebarBtn.addEventListener('click', toggleSidebar);
-            this.DOM.alertModal.closeBtn.addEventListener('click', () => this.closeAlertModal());
-            this.DOM.alertModal.overlay.addEventListener('click', e => { if (e.target === this.DOM.alertModal.overlay) this.closeAlertModal(); });
-            this.DOM.timerModal.overlay.addEventListener('click', e => { if (e.target === this.DOM.timerModal.overlay) this.DOM.timerModal.overlay.classList.remove('visible'); });
-            this.DOM.confirmModal.confirmBtn.addEventListener('click', () => this.handleConfirmAction());
-            this.DOM.confirmModal.cancelBtn.addEventListener('click', () => this.closeConfirmModal());
-            this.DOM.confirmModal.overlay.addEventListener('click', e => { if (e.target === this.DOM.confirmModal.overlay) this.closeConfirmModal(); });
-            document.querySelectorAll('#start-timer').forEach(btn => btn.addEventListener('click', () => this.requestConfirm('Iniciar Temporizador', '¿Estás seguro de que quieres iniciar el tiempo?', () => this.startTimer())));
-            document.querySelectorAll('#stop-timer').forEach(btn => btn.addEventListener('click', () => this.requestConfirm('Pausar Temporizador', '¿Quieres pausar el tiempo?', this.stopTimer)));
-            document.querySelectorAll('#reset-timer').forEach(btn => btn.addEventListener('click', () => this.requestConfirm('Reiniciar Temporizador', 'Esto restablecerá el tiempo a su valor inicial. ¿Continuar?', this.resetTimer)));
-            this.DOM.dashboardToggle.addEventListener('click', () => { const isHidden = this.DOM.body.classList.toggle('dashboard-hidden'); localStorage.setItem('dashboardIsHidden', isHidden); });
-            this.DOM.fabToggleBtn.addEventListener('click', () => this.DOM.fabContainer.classList.toggle('fab-active'));
-            this.DOM.fabAddNoteBtn.addEventListener('click', () => { this.addNote(); this.DOM.fabContainer.classList.remove('fab-active'); });
-            this.DOM.fabAddZoneBtn.addEventListener('click', () => { this.addZone(); this.DOM.fabContainer.classList.remove('fab-active'); });
-        },
-        
-        // ... (el resto del código hasta la sección del cronómetro permanece igual) ...
-        // Toda la lógica de Firebase, notas, zonas, etc., se queda como está.
+        // ... El resto del código hasta la sección del timer es idéntico y no necesita cambios ...
+        cacheDOM() { this.DOM.body = document.body; this.DOM.app = document.getElementById('app'); this.DOM.signInBtn = document.getElementById('google-signin-btn'); this.DOM.notesContainer = document.getElementById('notesContainer'); this.DOM.zonesContainer = document.getElementById('zonesContainer'); this.DOM.workspaceTitle = document.getElementById('workspace-title'); this.DOM.addNoteBtn = document.getElementById('addNoteBtn'); this.DOM.addZoneBtn = document.getElementById('addZoneBtn'); this.DOM.showGeneralBtn = document.getElementById('show-general-btn'); this.DOM.saveStatus = document.getElementById('save-status'); this.DOM.profileAvatar = document.getElementById('profile-avatar'); this.DOM.userName = document.getElementById('user-name'); this.DOM.signOutBtn = document.getElementById('signout-btn'); this.DOM.alarmSound = document.getElementById('alarm-sound'); this.DOM.bottomDashboard = document.getElementById('bottom-dashboard'); this.DOM.alertModal = { overlay: document.getElementById('alert-modal-overlay'), title: document.getElementById('alert-modal-title'), message: document.getElementById('alert-modal-message'), closeBtn: document.getElementById('alert-modal-close-btn') }; this.DOM.timerModal = { overlay: document.getElementById('set-timer-modal-overlay'), hoursInput: document.getElementById('set-hours'), minutesInput: document.getElementById('set-minutes'), secondsInput: document.getElementById('set-seconds'), saveBtn: document.getElementById('save-timer-btn') }; this.DOM.confirmModal = { overlay: document.getElementById('confirm-modal-overlay'), title: document.getElementById('confirm-modal-title'), message: document.getElementById('confirm-modal-message'), confirmBtn: document.getElementById('confirm-modal-confirm-btn'), cancelBtn: document.getElementById('confirm-modal-cancel-btn') }; this.DOM.sidebarToggleBtn = document.getElementById('sidebar-toggle-btn'); this.DOM.mobileSidebar = document.getElementById('mobile-sidebar'); this.DOM.sidebarOverlay = document.querySelector('.sidebar-overlay'); this.DOM.sidebarContent = document.querySelector('#mobile-sidebar .sidebar-content'); this.DOM.closeSidebarBtn = document.getElementById('close-sidebar-btn'); this.DOM.dashboardToggle = document.getElementById('dashboard-toggle'); this.DOM.fabContainer = document.getElementById('mobile-fab-container'); this.DOM.fabToggleBtn = document.getElementById('fab-toggle-btn'); this.DOM.fabAddNoteBtn = document.getElementById('fab-add-note'); this.DOM.fabAddZoneBtn = document.getElementById('fab-add-zone'); },
+        bindEvents() { this.DOM.signInBtn.addEventListener('click', () => signInWithPopup(this.firebase.auth, this.firebase.provider).catch(console.error)); this.DOM.signOutBtn.addEventListener('click', () => signOut(this.firebase.auth)); this.DOM.addNoteBtn.addEventListener('click', () => this.addNote()); this.DOM.addZoneBtn.addEventListener('click', () => this.addZone()); this.DOM.showGeneralBtn.addEventListener('click', () => { this.showGeneralDashboard(); this.closeSidebar(); }); this.DOM.workspaceTitle.addEventListener('click', () => { if (window.innerWidth <= 768) { this.showGeneralDashboard(); this.closeSidebar(); } }); const toggleSidebar = () => this.DOM.body.classList.toggle('sidebar-active'); this.DOM.sidebarToggleBtn.addEventListener('click', toggleSidebar); this.DOM.sidebarOverlay.addEventListener('click', toggleSidebar); this.DOM.closeSidebarBtn.addEventListener('click', toggleSidebar); this.DOM.alertModal.closeBtn.addEventListener('click', () => this.closeAlertModal()); this.DOM.alertModal.overlay.addEventListener('click', e => { if (e.target === this.DOM.alertModal.overlay) this.closeAlertModal(); }); this.DOM.timerModal.overlay.addEventListener('click', e => { if (e.target === this.DOM.timerModal.overlay) this.DOM.timerModal.overlay.classList.remove('visible'); }); this.DOM.confirmModal.confirmBtn.addEventListener('click', () => this.handleConfirmAction()); this.DOM.confirmModal.cancelBtn.addEventListener('click', () => this.closeConfirmModal()); this.DOM.confirmModal.overlay.addEventListener('click', e => { if (e.target === this.DOM.confirmModal.overlay) this.closeConfirmModal(); }); document.querySelectorAll('#start-timer').forEach(btn => btn.addEventListener('click', () => this.requestConfirm('Iniciar Temporizador', '¿Estás seguro de que quieres iniciar el tiempo?', () => this.startTimer()))); document.querySelectorAll('#stop-timer').forEach(btn => btn.addEventListener('click', () => this.requestConfirm('Pausar Temporizador', '¿Quieres pausar el tiempo?', this.stopTimer))); document.querySelectorAll('#reset-timer').forEach(btn => btn.addEventListener('click', () => this.requestConfirm('Reiniciar Temporizador', 'Esto restablecerá el tiempo a su valor inicial. ¿Continuar?', this.resetTimer))); this.DOM.dashboardToggle.addEventListener('click', () => { const isHidden = this.DOM.body.classList.toggle('dashboard-hidden'); localStorage.setItem('dashboardIsHidden', isHidden); }); this.DOM.fabToggleBtn.addEventListener('click', () => this.DOM.fabContainer.classList.toggle('fab-active')); this.DOM.fabAddNoteBtn.addEventListener('click', () => { this.addNote(); this.DOM.fabContainer.classList.remove('fab-active'); }); this.DOM.fabAddZoneBtn.addEventListener('click', () => { this.addZone(); this.DOM.fabContainer.classList.remove('fab-active'); }); },
 
         // ==================================================================
-        // INICIO DE LA NUEVA Y MEJORADA SECCIÓN DEL CRONÓMETRO
+        // INICIO DE LA SECCIÓN DEL CRONÓMETRO (VERSIÓN FINAL)
         // ==================================================================
         
-        setupAllTimers() { document.querySelectorAll('#timer-widget').forEach(container => this.setupTimer(container)); },
+        setupAllTimers() {
+            document.querySelectorAll('#timer-widget').forEach(container => this.setupTimer(container));
+        },
         
         setupTimer(container) {
             const editBtn = container.querySelector('#edit-timer-btn');
             if (!editBtn) return;
             editBtn.addEventListener('click', () => this.showTimerModal());
             this.DOM.timerModal.saveBtn.addEventListener('click', () => this.saveTimerSettings());
-            this.updateTimerDisplay(); // Solo para el render inicial
         },
         
         updateTimerDisplay() {
@@ -638,41 +608,44 @@
             document.querySelectorAll('#timer-display').forEach(el => el.textContent = timeString);
         },
 
-        // NUEVO: Guardamos todo el estado del cronómetro en un único lugar.
         saveTimerStateToLocalStorage() {
             const timerData = {
                 state: this.state.timerState,
                 seconds: this.state.timerSeconds,
                 initialDuration: this.state.timerInitialDuration,
-                savedTimestamp: Date.now() // Siempre guardamos cuándo fue la última acción.
+                savedTimestamp: Date.now()
             };
             localStorage.setItem('timerData', JSON.stringify(timerData));
         },
 
-        startTimer() { 
-            if (this.state.timerState === 'running' || this.state.timerSeconds <= 0) return; 
+        // NUEVA FUNCIÓN INTERNA: solo se encarga del intervalo
+        _beginTicking() {
+            if (this.state.timerInterval) clearInterval(this.state.timerInterval); // Prevenir intervalos duplicados
 
-            this.state.timerState = 'running';
-            document.querySelectorAll('#timer-display').forEach(el => { el.classList.add('timer-running'); el.classList.remove('timer-paused'); });
-            document.querySelectorAll('#start-timer').forEach(btn => btn.classList.add('hidden')); 
-            document.querySelectorAll('#stop-timer').forEach(btn => btn.classList.remove('hidden'));
-            
             this.state.timerInterval = setInterval(() => { 
                 this.state.timerSeconds--; 
                 this.updateTimerDisplay(); 
                 
-                if (this.state.timerSeconds === 120 && this.state.timerInitialDuration > 120 && !this.state.timerPreAlertShown) { 
-                    this.showAlertModal('Recordatorio', 'Faltan 2 minutos para que termine tu actividad.'); 
-                    this.state.timerPreAlertShown = true; 
-                } 
                 if (this.state.timerSeconds <= 0) { 
                     this.DOM.alarmSound.play();
                     this.stopTimer(true); // Finaliza el timer
                     this.showAlertModal('¡Tiempo Cumplido!', 'Tu actividad programada ha finalizado.'); 
                 } 
             }, 1000); 
+        },
 
-            this.saveTimerStateToLocalStorage(); // Guardar el nuevo estado.
+        // MODIFICADA: Ahora gestiona el estado y LUEGO llama al ticker
+        startTimer() { 
+            if (this.state.timerState === 'running' || this.state.timerSeconds <= 0) return; 
+
+            this.state.timerState = 'running';
+            this.saveTimerStateToLocalStorage(); // Guardamos el estado ANTES de empezar a contar.
+            
+            document.querySelectorAll('#timer-display').forEach(el => { el.classList.add('timer-running'); el.classList.remove('timer-paused'); });
+            document.querySelectorAll('#start-timer').forEach(btn => btn.classList.add('hidden')); 
+            document.querySelectorAll('#stop-timer').forEach(btn => btn.classList.remove('hidden'));
+            
+            this._beginTicking(); // <-- Llamada a la función interna
         },
         
         stopTimer(isFinished = false) { 
@@ -687,19 +660,19 @@
 
             if (this.state.timerState === 'paused') {
                 document.querySelectorAll('#timer-display').forEach(el => el.classList.add('timer-paused')); 
+            } else {
+                 document.querySelectorAll('#timer-display').forEach(el => el.classList.remove('timer-paused')); 
             }
             
-            this.saveTimerStateToLocalStorage(); // Guardar el nuevo estado.
+            this.saveTimerStateToLocalStorage();
         },
         
         resetTimer() { 
             this.stopTimer(true); // Pasa a estado "stopped"
             this.state.timerSeconds = this.state.timerInitialDuration; 
-            this.state.timerPreAlertShown = false; 
             this.state.timerState = 'stopped';
             this.updateTimerDisplay(); 
-            document.querySelectorAll('#timer-display').forEach(el => el.classList.remove('timer-paused', 'timer-running')); 
-            this.saveTimerStateToLocalStorage(); // Guardar el nuevo estado.
+            this.saveTimerStateToLocalStorage();
         },
 
         saveTimerSettings() { 
@@ -707,20 +680,20 @@
             const m = parseInt(this.DOM.timerModal.minutesInput.value) || 0; 
             const s = parseInt(this.DOM.timerModal.secondsInput.value) || 0; 
             this.state.timerInitialDuration = (h * 3600) + (m * 60) + s; 
-            this.resetTimer(); // Esto ya actualiza y guarda el estado.
+            this.resetTimer();
             this.DOM.timerModal.overlay.classList.remove('visible'); 
         },
-
+        
+        // MODIFICADA: Lógica de restauración mejorada
         restoreTimerState() {
             const savedDataJSON = localStorage.getItem('timerData');
             if (!savedDataJSON) {
-                // Si no hay datos, usa los valores por defecto y actualiza la UI
-                this.updateTimerDisplay();
+                this.updateTimerDisplay(); // Si no hay nada, solo muestra el default
                 return;
             }
 
             const data = JSON.parse(savedDataJSON);
-            this.state.timerInitialDuration = data.initialDuration;
+            this.state.timerInitialDuration = data.initialDuration || 25 * 60;
             this.state.timerSeconds = data.seconds;
             this.state.timerState = data.state;
             
@@ -730,10 +703,16 @@
 
                 if (newSeconds > 0) {
                     this.state.timerSeconds = newSeconds;
-                    this.startTimer(); // Reanuda la cuenta.
+                    // Actualizamos la UI para que se vea corriendo inmediatamente
+                    document.querySelectorAll('#timer-display').forEach(el => { el.classList.add('timer-running'); el.classList.remove('timer-paused'); });
+                    document.querySelectorAll('#start-timer').forEach(btn => btn.classList.add('hidden')); 
+                    document.querySelectorAll('#stop-timer').forEach(btn => btn.classList.remove('hidden'));
+                    
+                    this.updateTimerDisplay();
+                    this._beginTicking(); // <-- Llamamos directo al ticker
                 } else {
                     this.state.timerSeconds = 0;
-                    this.stopTimer(true); // Se acabó mientras estabas fuera.
+                    this.stopTimer(true);
                     this.showAlertModal('¡Tiempo Cumplido!', 'Tu actividad finalizó mientras la página estaba cerrada.');
                 }
             } else if (this.state.timerState === 'paused') {
@@ -742,11 +721,15 @@
                 document.querySelectorAll('#start-timer').forEach(btn => btn.classList.remove('hidden'));
                 document.querySelectorAll('#stop-timer').forEach(btn => btn.classList.add('hidden'));
             } else { // 'stopped'
+                this.state.timerSeconds = this.state.timerInitialDuration;
                 this.updateTimerDisplay();
             }
         },
 
-        // Resto de funciones auxiliares (modales, etc.) sin cambios...
+        // ... El resto del código de la aplicación (Firebase, notas, modales, etc.) sigue aquí sin cambios ...
+        showTimerModal() { const h = Math.floor(this.state.timerInitialDuration / 3600); const m = Math.floor((this.state.timerInitialDuration % 3600) / 60); const s = this.state.timerInitialDuration % 60; this.DOM.timerModal.hoursInput.value = h > 0 ? h : ''; this.DOM.timerModal.minutesInput.value = m > 0 ? m : ''; this.DOM.timerModal.secondsInput.value = s > 0 ? s : ''; this.DOM.timerModal.overlay.classList.add('visible'); },
+        showAlertModal(title, message) { this.DOM.alertModal.title.textContent = title; this.DOM.alertModal.message.textContent = message; this.DOM.alertModal.overlay.classList.add('visible'); },
+        closeAlertModal() { this.DOM.alertModal.overlay.classList.remove('visible'); },
         initFirebase() { const firebaseApp = initializeApp(firebaseConfig); this.firebase.auth = getAuth(firebaseApp); this.firebase.db = getFirestore(firebaseApp); this.firebase.provider = new GoogleAuthProvider(); onAuthStateChanged(this.firebase.auth, (user) => { if (user) { this.state.currentUser = user; this.updateUserProfile(user); this.DOM.body.classList.remove('logged-out'); this.DOM.body.classList.add('logged-in'); this.loadData(); } else { this.state.currentUser = null; this.DOM.body.classList.add('logged-out'); this.DOM.body.classList.remove('logged-in'); this.clearWorkspace(); } }); },
         setupMobileUI() { const widgets = this.DOM.bottomDashboard.querySelectorAll('.dashboard-widget'); widgets.forEach(widget => { const clone = widget.cloneNode(true); this.DOM.sidebarContent.appendChild(clone); }); },
         makeDraggable(element, item) { element.addEventListener('mousedown', e => { const target = e.target; if (target.tagName.toLowerCase() === 'textarea' || target.tagName.toLowerCase() === 'input' || target.classList.contains('delete-btn') || target.classList.contains('resize-handle')) return; element.classList.add('dragging'); const offsetX = e.clientX - element.offsetLeft; const offsetY = e.clientY - element.offsetTop; const onMouseMove = (moveEvent) => { let newX = moveEvent.clientX - offsetX; let newY = moveEvent.clientY - offsetY; const appRect = this.DOM.app.getBoundingClientRect(); element.style.left = `${Math.max(0, Math.min(newX, appRect.width - element.offsetWidth))}px`; element.style.top = `${Math.max(0, Math.min(newY, appRect.height - element.offsetHeight))}px`; }; const onMouseUp = () => { document.removeEventListener('mousemove', onMouseMove); document.removeEventListener('mouseup', onMouseUp); element.classList.remove('dragging'); item.x = parseInt(element.style.left); item.y = parseInt(element.style.top); if (element.classList.contains('note')) { const parentZone = this.findParentZone(item); item.zoneId = parentZone ? parentZone.id : null; } this.saveData(); }; document.addEventListener('mousemove', onMouseMove); document.addEventListener('mouseup', onMouseUp); }); },
@@ -780,10 +763,7 @@
         setupAllYoutubePlayers() { this.setupYoutubePlayer(); },
         setupYoutubePlayer() { const container = document.querySelector('#youtube-widget'); const input = container.querySelector('#youtube-url-input'); const playerContainer = container.querySelector('#youtube-player-container'); if (!input || !playerContainer) return; const loadVideo = (url) => { const videoId = (u => { const m = u.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/); return (m && m[2].length === 11) ? m[2] : null; })(url); if (videoId) { if (this.state.youtubePlayer && typeof this.state.youtubePlayer.loadVideoById === 'function') { this.state.youtubePlayer.loadVideoById(videoId); } else { if (typeof YT !== 'undefined' && YT.Player) { this.state.youtubePlayer = new YT.Player('youtube-player', { height: '100%', width: '100%', videoId: videoId, playerVars: { 'playsinline': 1, 'controls': 0, 'modestbranding': 1, 'rel': 0 }, events: { 'onReady': this.onPlayerReady.bind(this), 'onStateChange': this.onPlayerStateChange.bind(this) } }); } } if (this.state.youtubeUrl !== url) { this.state.youtubeUrl = url; this.saveData(); } } }; input.addEventListener('change', e => loadVideo(e.target.value)); if (this.state.isDataLoaded && this.state.youtubeUrl) { input.value = this.state.youtubeUrl; window.onYouTubeIframeAPIReady = () => { loadVideo(this.state.youtubeUrl); }; if (typeof YT !== 'undefined' && YT.loaded) { window.onYouTubeIframeAPIReady(); } } else if (!this.state.youtubeUrl) { window.onYouTubeIframeAPIReady = () => {}; } },
         onPlayerReady(event) { document.querySelectorAll('#yt-play-pause-btn').forEach(btn => { btn.innerHTML = this.ICONS.PLAY; btn.onclick = () => { const playerState = this.state.youtubePlayer.getPlayerState(); if (playerState === YT.PlayerState.PLAYING) { this.state.youtubePlayer.pauseVideo(); } else { this.state.youtubePlayer.playVideo(); } }; }); },
-        onPlayerStateChange(event) { document.querySelectorAll('#yt-play-pause-btn').forEach(btn => { if (event.data === YT.PlayerState.PLAYING) { btn.innerHTML = this.ICONS.PAUSE; } else { btn.innerHTML = this.ICONS.PLAY; } }); document.querySelectorAll('#youtube-player-container').forEach(container => { if (event.data === YT.PlayerState.PLAYING) { container.classList.remove('paused'); } else { container.classList.add('paused'); } }); },
-        showTimerModal() { const h = Math.floor(this.state.timerInitialDuration / 3600); const m = Math.floor((this.state.timerInitialDuration % 3600) / 60); const s = this.state.timerInitialDuration % 60; this.DOM.timerModal.hoursInput.value = h > 0 ? h : ''; this.DOM.timerModal.minutesInput.value = m > 0 ? m : ''; this.DOM.timerModal.secondsInput.value = s > 0 ? s : ''; this.DOM.timerModal.overlay.classList.add('visible'); },
-        showAlertModal(title, message) { this.DOM.alertModal.title.textContent = title; this.DOM.alertModal.message.textContent = message; this.DOM.alertModal.overlay.classList.add('visible'); },
-        closeAlertModal() { this.DOM.alertModal.overlay.classList.remove('visible'); }
+        onPlayerStateChange(event) { document.querySelectorAll('#yt-play-pause-btn').forEach(btn => { if (event.data === YT.PlayerState.PLAYING) { btn.innerHTML = this.ICONS.PAUSE; } else { btn.innerHTML = this.ICONS.PLAY; } }); document.querySelectorAll('#youtube-player-container').forEach(container => { if (event.data === YT.PlayerState.PLAYING) { container.classList.remove('paused'); } else { container.classList.add('paused'); } }); }
 
     };
 
