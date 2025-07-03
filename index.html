@@ -112,6 +112,7 @@
         background-color: var(--note-color);
         overflow: hidden;
         padding: 0;
+        display: flex; /* <-- Importante para la estructura interna */
     }
     .note textarea {
         font-family: 'Caveat', cursive;
@@ -235,7 +236,6 @@
         }
 
         .note {
-            display: flex;
             flex-direction: row;
         }
         .note .resize-handle, .zone .resize-handle {
@@ -319,17 +319,18 @@
         .note-content-panels {
             flex-grow: 1;
             position: relative;
-            /* display: flex; */ /* <<< CORRECCIÓN: Esta línea causaba el error de visualización */
         }
         .note-content-panel {
             display: none;
             width: 100%;
             height: 100%;
         }
-        .note-content-panel.active { display: block; }
-        
+        .note-content-panel.active { 
+            display: block; 
+        }
         .note .note-content-panel textarea {
             height: 100%;
+            resize: none; /* Asegura que no se pueda redimensionar manualmente en escritorio */
         }
     }
 
@@ -363,7 +364,6 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.9);
         }
         
-        /* ESTILOS DEL TÍTULO SOLO PARA MÓVIL */
         #workspace-title { 
             font-size: 16px; 
             text-align: left; 
@@ -376,7 +376,6 @@
             cursor: pointer;
             color: var(--primary-accent);
         }
-        /* FIN DE ESTILOS DE TÍTULO */
 
         #sidebar-toggle-btn { display: block; padding: 8px 12px; font-size: 18px; line-height: 1; }
         .profile-avatar { width: 40px; height: 40px; }
@@ -406,7 +405,6 @@
         .note, .zone { position: relative; width: 100% !important; height: auto !important; transform: none !important; cursor: default !important; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
         .zone { padding: 15px; padding-top: 55px; background: var(--zone-bg); }
         
-        /* Botón de borrar para zonas en móvil */
         .zone .delete-btn {
             position: absolute;
             top: 14px;
@@ -414,7 +412,7 @@
             z-index: 5;
         }
         
-        .note { display: flex; flex-direction: column-reverse; min-height: 180px; }
+        .note { flex-direction: column-reverse; min-height: 180px; }
         .note .delete-btn { position: absolute; top: 8px; right: 8px; z-index: 5; }
         .note-main-content, .note-header { display: contents; }
         .note-tabs { display: flex; flex-direction: row; width: 100%; border-top: 1px solid rgba(0, 0, 0, 0.08); }
@@ -429,7 +427,8 @@
         .note textarea {
             min-height: 80px;
             font-size: 18px;
-            overflow-y: hidden;
+            overflow-y: hidden; /* Para que autoResize funcione bien */
+            resize: none;
         }
         
         .zone .add-note-in-zone-btn { display: flex; align-items: center; justify-content: center; position: absolute; top: 14px; right: 48px; width: 28px; height: 28px; background-color: var(--success-color); color: white; border: none; border-radius: 50%; cursor: pointer; font-size: 22px; line-height: 1; font-weight: 600; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s ease; }
@@ -470,12 +469,6 @@
 
     <button id="google-signin-btn">🚀 Iniciar Sesión con Google</button>
 
-    <!--
-      /// CORRECCIÓN IMPORTANTE ///
-      Todos los elementos de la interfaz de la aplicación, incluyendo el menú lateral móvil
-      y el botón flotante, AHORA ESTÁN DENTRO DE ESTE DIV 'main-content'.
-      Esto asegura que cuando el body tenga la clase 'logged-out', TODO se oculte correctamente.
-    -->
     <div class="main-content">
         <div id="top-controls">
             <button id="sidebar-toggle-btn" class="control-btn">☰</button>
@@ -532,15 +525,14 @@
             <div id="clock-widget" class="dashboard-widget"><h3>Hora</h3><span id="current-time"></span><span id="current-date"></span></div>
         </div>
 
-        <!-- MODALES (pueden quedar aquí dentro, ya que usan position:fixed y no afecta) -->
+        <!-- MODALES -->
         <div id="alert-modal-overlay" class="modal-overlay"><div class="modal-content"><h2 id="alert-modal-title"></h2><p id="alert-modal-message"></p><button id="alert-modal-close-btn" class="action-btn">Entendido</button></div></div>
         <div id="set-timer-modal-overlay" class="modal-overlay"><div class="modal-content"><h2>Configurar Temporizador</h2><p>Define la duración de tu temporizador.</p><div class="set-timer-inputs"><input type="number" id="set-hours" min="0" max="99" placeholder="HH" oninput="this.value = this.value ? Math.min(99, Math.max(0, parseInt(this.value))) : ''"><input type="number" id="set-minutes" min="0" max="59" placeholder="MM" oninput="this.value = this.value ? Math.min(59, Math.max(0, parseInt(this.value))) : ''"><input type="number" id="set-seconds" min="0" max="59" placeholder="SS" oninput="this.value = this.value ? Math.min(59, Math.max(0, parseInt(this.value))) : ''"></div><button id="save-timer-btn" class="action-btn">Guardar</button></div></div>
         <div id="confirm-modal-overlay" class="modal-overlay"><div class="modal-content"><h2 id="confirm-modal-title"></h2><p id="confirm-modal-message"></p><div class="modal-actions"><button id="confirm-modal-cancel-btn" class="action-btn cancel-btn">Cancelar</button><button id="confirm-modal-confirm-btn" class="action-btn confirm-btn">Confirmar</button></div></div></div>
         
-        <!-- MENÚ LATERAL MÓVIL (CORREGIDO - AHORA DENTRO DE MAIN-CONTENT) -->
+        <!-- UI MÓVIL -->
         <div id="mobile-sidebar-container"><div class="sidebar-overlay"></div><aside id="mobile-sidebar"><div class="sidebar-header"><h3>Panel de Control</h3><button id="close-sidebar-btn">×</button></div><div class="sidebar-content"></div></aside></div>
     
-        <!-- BOTÓN DE ACCIÓN FLOTANTE (FAB) (CORREGIDO - AHORA DENTRO DE MAIN-CONTENT) -->
         <div id="mobile-fab-container">
             <div class="fab-actions">
                 <button id="fab-add-note" class="fab-action" title="Añadir Nota">
@@ -629,7 +621,6 @@
             
             this.DOM.showGeneralBtn.addEventListener('click', () => { this.showGeneralDashboard(); this.closeSidebar(); });
             
-            // CORRECCIÓN: El clic en el título solo funciona en móvil
             this.DOM.workspaceTitle.addEventListener('click', () => {
                 if (window.innerWidth <= 768) {
                     this.showGeneralDashboard();
@@ -800,7 +791,11 @@
                 textarea.value = tab.content || '';
                 contentPanel.appendChild(textarea);
                 
-                this.autoResizeTextarea(textarea);
+                // *** CORRECCIÓN CLAVE ***
+                // Solo auto-ajustar en móvil. En escritorio, el CSS se encarga.
+                if (window.innerWidth <= 768) {
+                    this.autoResizeTextarea(textarea);
+                }
 
                 if (index === note.activeTabIndex) {
                     tabBtn.classList.add('active');
@@ -840,7 +835,11 @@
                     const panelIndex = parseInt(target.closest('.note-content-panel').dataset.index);
                     note.tabs[panelIndex].content = target.value;
                     
-                    this.autoResizeTextarea(target);
+                    // *** CORRECCIÓN CLAVE ***
+                    // Solo auto-ajustar en móvil al escribir.
+                    if (window.innerWidth <= 768) {
+                        this.autoResizeTextarea(target);
+                    }
                     
                     this.saveData();
                 }
@@ -859,6 +858,8 @@
             mainContent.appendChild(mainHeader);
             mainContent.appendChild(contentPanels);
             
+            // La estructura base de la nota siempre es la misma.
+            // El CSS se encargará de cambiar la dirección a fila/columna.
             element.appendChild(tabsContainer);
             element.appendChild(mainContent);
             element.appendChild(resizeHandle);
