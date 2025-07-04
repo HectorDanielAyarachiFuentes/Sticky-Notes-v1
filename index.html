@@ -7,9 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <link id="dynamic-favicon" rel="icon" type="image/x-icon" href="#">
-    <meta name="description" content="Organiza tus tareas, gestiona tu tiempo y aumenta tu enfoque con este dashboard de productividad personal. Incluye notas, zonas de trabajo, temporizador y más.">
-    <meta name="author" content="Hector Daniel Ayarachi Fuentes">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3CradialGradient id='g' cx='50%25' cy='40%25' r='60%25' fx='50%25' fy='40%25'%3E%3Cstop offset='0%25' style='stop-color:%238da4ea'/%3E%3Cstop offset='100%25' style='stop-color:%234e6ab7'/%3E%3C/radialGradient%3E%3Cfilter id='s'%3E%3CfeOffset dx='1' dy='1'/%3E%3CfeGaussianBlur stdDeviation='1' result='b'/%3E%3CfeComposite operator='out' in='SourceGraphic' in2='b' result='i'/%3E%3CfeFlood flood-color='%23000' flood-opacity='.3' result='c'/%3E%3CfeComposite operator='in' in='c' in2='i' result='sh'/%3E%3CfeComposite operator='over' in='sh' in2='SourceGraphic'/%3E%3C/filter%3E%3C/defs%3E%3Cpath fill='url(%23g)' d='M83.2,16.8C75.1,8.7,66.2,2,50,2S24.9,8.7,16.8,16.8C8.7,24.9,2,33.8,2,50s6.7,25.1,14.8,33.2 c8.1,8.1,17,14.8,33.2,14.8s25.1-6.7,33.2-14.8C91.3,75.1,98,66.2,98,50S91.3,24.9,83.2,16.8z'/%3E%3Cpath fill='%23fff' filter='url(%23s)' d='M72.2,38.1L57.5,52.8 c-2.5,2.5-5.8,3.7-9.2,3.7s-6.7-1.2-9.2-3.7L24.5,38.1c-1-1-1.5-2.2-1.5-3.5s0.5-2.5,1.5-3.5c2-2,5.1-2,7.1,0l12.4,12.4V22.2 c0-2.8,2.3-5.1,5.1-5.1s5.1,2.3,5.1,5.1v21.3l12.4-12.4c2-2,5.1-2,7.1,0C74.2,33,74.2,36.1,72.2,38.1z M68.5,75.7 c0,1.4-0.5,2.7-1.5,3.7c-2,2-5.1,2-7.1,0L50,69.5l-9.9,9.9c-2,2-5.1,2-7.1,0c-1-1-1.5-2.3-1.5-3.7c0-1.4,0.5-2.7,1.5-3.7L43,62.1 c2.5-2.5,5.8-3.7,9.2-3.7s6.7,1.2,9.2,3.7l9.9,9.9C68,73,68.5,74.3,68.5,75.7z'/%3E%3C/svg%3E">    
+<meta name="author" content="Hector Daniel Ayarachi Fuentes">
     <meta name="theme-color" content="#5a7dcb"> 
     <meta property="og:title" content="Dashboard de Productividad | Impulsa tu Enfoque">
     <meta property="og:description" content="Organiza tus tareas, gestiona tu tiempo y aumenta tu enfoque con este dashboard de productividad personal.">
@@ -707,130 +706,7 @@
     
     <audio id="alarm-sound" src="audio/cat-meow-8-fx-306184.mp3"></audio>   
     
-    <script>
-        // --- CÓDIGO AUTOCONTENIDO PARA EL FAVICON DINÁMICO 3D ---
-
-        // 1. CONFIGURACIÓN INICIAL
-        const faviconLink = document.getElementById('dynamic-favicon');
-        const faviconCanvas = document.createElement('canvas');
-        const faviconSize = 64; // El tamaño del lienzo para el favicon
-        faviconCanvas.width = faviconSize;
-        faviconCanvas.height = faviconSize;
-        const ctx = faviconCanvas.getContext('2d');
-
-        // Variables para controlar la animación
-        let rotationAngle = 0; // Ángulo de rotación del objeto 3D
-        let pulseTime = 0;     // Variable para controlar el movimiento interno de las flechas
-        let lastFrameTime = 0;
-        let isTabActive = true; // La pestaña está activa por defecto
-
-        // Constantes para ajustar la velocidad de la animación
-        const ROTATION_SPEED = 0.002; // Más lento o rápido según prefieras
-        const PULSE_SPEED = 0.005;    // Velocidad del movimiento de las flechas
-
-        // 2. LÓGICA DE DIBUJO
-        function drawFavicon() {
-            // Limpia el lienzo en cada fotograma
-            ctx.clearRect(0, 0, faviconSize, faviconSize);
-
-            // Guardamos el estado del lienzo para no afectar otros dibujos
-            ctx.save();
-            
-            // Centramos el punto de origen para rotar desde el centro
-            ctx.translate(faviconSize / 2, faviconSize / 2);
-            // Aplicamos la rotación principal
-            ctx.rotate(rotationAngle);
-
-            // Dibujamos el círculo de fondo
-            ctx.beginPath();
-            ctx.arc(0, 0, faviconSize * 0.45, 0, Math.PI * 2);
-            ctx.fillStyle = '#5a7dcb'; // Color del SVG original
-            ctx.fill();
-
-            // Calculamos el movimiento oscilante de las flechas
-            const pulseOffset = Math.sin(pulseTime) * (faviconSize * 0.15);
-
-            // Dibujamos ambas flechas con efecto de perspectiva
-            drawArrow(pulseOffset, false); // Flecha de arriba (se mueve hacia abajo)
-            drawArrow(-pulseOffset, true);  // Flecha de abajo (se mueve hacia arriba)
-
-            // Restauramos el estado del lienzo
-            ctx.restore();
-
-            // Actualizamos el href del favicon con la nueva imagen generada
-            faviconLink.href = faviconCanvas.toDataURL('image/png');
-        }
-
-        // Función auxiliar para dibujar una flecha con perspectiva
-        function drawArrow(yOffset, isUpArrow) {
-            // El factor de perspectiva: de 0 (atrás) a 1 (adelante)
-            const perspective = (yOffset / (faviconSize * 0.15) + 1) / 2;
-            
-            ctx.beginPath();
-            const size = faviconSize * 0.1 + (perspective * faviconSize * 0.1); // El tamaño cambia con la perspectiva
-            const yPos = yOffset;
-
-            // Dibuja un triángulo como flecha
-            if (isUpArrow) {
-                ctx.moveTo(0, yPos - size / 2);
-                ctx.lineTo(size, yPos + size / 2);
-                ctx.lineTo(-size, yPos + size / 2);
-            } else {
-                ctx.moveTo(0, yPos + size / 2);
-                ctx.lineTo(size, yPos - size / 2);
-                ctx.lineTo(-size, yPos - size / 2);
-            }
-            ctx.closePath();
-            
-            // La opacidad también cambia con la perspectiva para mayor realismo
-            ctx.fillStyle = `rgba(255, 255, 255, ${0.4 + perspective * 0.6})`;
-            ctx.fill();
-        }
-
-        // 3. EL BUCLE DE ANIMACIÓN PROFESIONAL
-        function animationLoop(currentTime) {
-            // Solicita al navegador que ejecute esta función de nuevo en el próximo fotograma
-            requestAnimationFrame(animationLoop);
-
-            // Si la pestaña no está activa, no hacemos nada para ahorrar recursos
-            if (!isTabActive) {
-                return;
-            }
-
-            // Calculamos el tiempo transcurrido desde el último fotograma (deltaTime)
-            if (lastFrameTime === 0) {
-                lastFrameTime = currentTime;
-            }
-            const deltaTime = currentTime - lastFrameTime;
-
-            // Actualizamos los ángulos y tiempos basados en el tiempo, no en los fotogramas
-            rotationAngle += ROTATION_SPEED * deltaTime;
-            pulseTime += PULSE_SPEED * deltaTime;
-            
-            // Dibujamos el nuevo estado
-            drawFavicon();
-
-            // Guardamos el tiempo actual para el próximo ciclo
-            lastFrameTime = currentTime;
-        }
-
-        // 4. MANEJO DE LA VISIBILIDAD DE LA PESTAÑA
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                isTabActive = false;
-            } else {
-                isTabActive = true;
-                // Al volver, reseteamos el tiempo del último fotograma para evitar un gran "salto"
-                lastFrameTime = performance.now();
-                // Aseguramos que la animación se reanude
-                requestAnimationFrame(animationLoop);
-            }
-        });
-        
-        // 5. INICIAMOS TODO
-        requestAnimationFrame(animationLoop);
-
-    </script>
+    
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
