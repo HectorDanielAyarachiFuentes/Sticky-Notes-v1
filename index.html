@@ -713,14 +713,15 @@
     import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
     const firebaseConfig = {
-        apiKey: "AIzaSyCptS0stYpYu5GGLNXgtjNJD8NFzKZdEj0",
-        authDomain: "mi-dashboard-de-notas.firebaseapp.com",
-        projectId: "mi-dashboard-de-notas",
-        storageBucket: "mi-dashboard-de-notas.appspot.com",
-        messagingSenderId: "829232928135",
-        appId: "1:829232928135:web:04e2043af0d7f79d916f22",
-        measurementId: "G-T89JSJ7DEN"
-    };
+  // Estos son los marcadores que el robot buscará
+  apiKey: "__API_KEY__",
+  authDomain: "__AUTH_DOMAIN__",
+  projectId: "__PROJECT_ID__",
+  storageBucket: "__STORAGE_BUCKET__",
+  messagingSenderId: "__MESSAGING_SENDER_ID__",
+  appId: "__APP_ID__",
+  measurementId: "__MEASUREMENT_ID__"
+};
     
     const App = {
         firebase: {},
