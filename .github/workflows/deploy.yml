@@ -1,23 +1,27 @@
 name: Deploy to GitHub Pages
 
 on:
-  # Se ejecuta cada vez que haces un push a la rama 'main'
   push:
     branches:
       - main
-  # Te permite ejecutarlo manually desde la pestaña de Actions
   workflow_dispatch:
+
+# ============================================
+# ESTA ES LA LÍNEA NUEVA Y FUNDAMENTAL
+# ============================================
+permissions:
+  contents: write
+# ============================================
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      # 1. Descarga el código de tu repositorio (este paso se queda igual)
+      # 1. Descarga el código
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2. Reemplaza los marcadores con una herramienta más potente (PERL)
-      #    Esta es la única sección que ha cambiado.
+      # 2. Reemplaza los marcadores
       - name: Replace Firebase config placeholders
         run: |
           for secret_name in API_KEY AUTH_DOMAIN PROJECT_ID STORAGE_BUCKET MESSAGING_SENDER_ID APP_ID MEASUREMENT_ID; do
@@ -34,7 +38,7 @@ jobs:
           APP_ID: ${{ secrets.APP_ID }}
           MEASUREMENT_ID: ${{ secrets.MEASUREMENT_ID }}
 
-      # 3. Despliega la carpeta a la rama 'gh-pages' (este paso se queda igual)
+      # 3. Despliega la carpeta a la rama 'gh-pages'
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v3
         with:
