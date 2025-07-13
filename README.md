@@ -30,6 +30,7 @@ Diseñado para ofrecer un amplio espacio visual y un acceso rápido a todas las 
 | **Organizador Visual de Tareas (Tablero General)** | ![Tablero general con notas](img/Tablero%20general.jpeg) |
 | **Creación Intuitiva de Zonas y Notas** | ![Añadir zona y nota](img/Añadir%20zona%20y%20nota.jpeg) |
 | **Gestión de Tiempo con el Temporizador** | ![Temporizador corriendo](img/temporizador%20corriendo.jpeg) |
+| **Cierre de Sesión Accesible** | ![Cierre de sesión desde el escritorio](img/Cerrar%20sesion.jpeg) |
 
 ### Experiencia Móvil Optimizada
 Lleva tu productividad contigo. Todas las funciones, adaptadas a la palma de tu mano.
