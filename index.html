@@ -771,31 +771,7 @@
         handleConfirmAction() { if (typeof this.state.pendingTimerAction === 'function') { this.state.pendingTimerAction(); } this.closeConfirmModal(); },
         autoResizeTextarea(element) { element.style.height = 'auto'; element.style.height = (element.scrollHeight) + 'px'; },
         updateUserProfile(user) { if (user) { this.DOM.userName.textContent = user.displayName; this.DOM.profileAvatar.src = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName)}&background=random&color=fff`; } },
-        
-        // ====================================================================
-        // MODIFICACIÓN CRÍTICA AQUÍ: Cambiar `saveData` por un método interno
-        // ====================================================================
-        _saveDataToFirestore: async function() { // Nuevo método interno para guardar en Firestore
-            if (!this.state.currentUser || !this.state.isDataLoaded) return;
-            this.DOM.saveStatus.textContent = 'Guardando...';
-            try {
-                const userDocRef = doc(this.firebase.db, 'user_data', this.state.currentUser.uid);
-                const dataToSave = { notes: this.state.notes, zones: this.state.zones, youtubeUrl: this.state.youtubeUrl };
-                await setDoc(userDocRef, dataToSave);
-                this.DOM.saveStatus.textContent = 'Guardado ✓';
-                setTimeout(() => this.DOM.saveStatus.textContent = '', 2000);
-            } catch (error) {
-                console.error("Error al guardar datos:", error);
-                this.DOM.saveStatus.textContent = 'Error al guardar';
-                throw error; // Propagar el error para que `offlineSync.js` pueda manejarlo
-            }
-        }.bind(this), // Asegurarse de que `this` se refiere a `App`
-
-        // `saveData` ahora simplemente llama al método interno (debounced)
-        saveData: debounce(function() {
-            this._saveDataToFirestore();
-        }, 1500),
-
+        saveData: debounce(async function() { if (!this.state.currentUser || !this.state.isDataLoaded) return; this.DOM.saveStatus.textContent = 'Guardando...'; try { const userDocRef = doc(this.firebase.db, 'user_data', this.state.currentUser.uid); const dataToSave = { notes: this.state.notes, zones: this.state.zones, youtubeUrl: this.state.youtubeUrl }; await setDoc(userDocRef, dataToSave); this.DOM.saveStatus.textContent = 'Guardado ✓'; setTimeout(() => this.DOM.saveStatus.textContent = '', 2000); } catch (error) { console.error("Error al guardar datos:", error); this.DOM.saveStatus.textContent = 'Error al guardar'; } }, 1500),
         async loadData() { if (!this.state.currentUser) return; const userDocRef = doc(this.firebase.db, 'user_data', this.state.currentUser.uid); try { const docSnap = await getDoc(userDocRef); if (docSnap.exists()) { const data = docSnap.data(); let loadedNotes = data.notes || []; loadedNotes.forEach(note => { if (note.content !== undefined && !note.tabs) { note.tabs = [ { name: 'Nota 1', content: note.content }, { name: 'Nota 2', content: '' }, { name: 'Nota 3', content: '' }, { name: 'Nota 4', content: '' }, { name: 'Nota 5', content: '' }, ]; note.activeTabIndex = 0; delete note.content; } if (note.width === undefined) { note.width = 320; } if (note.height === undefined) { note.height = 240; } }); this.state.notes = loadedNotes; this.state.zones = data.zones || []; this.state.youtubeUrl = data.youtubeUrl || ''; } else { this.state.notes = []; this.state.zones = []; this.state.youtubeUrl = ''; } this.state.isDataLoaded = true; this.renderWorkspace(); this.renderCalendar(); this.setupAllYoutubePlayers(); } catch (error) { console.error("Error al cargar datos:", error); } },        
         clearWorkspace() { this.DOM.app.innerHTML = ''; this.DOM.workspaceTitle.textContent = ''; this.state.isDataLoaded = false; },
         updateStats() { const notesInView = this.state.notes.filter(n => n.date === this.state.selectedDate).length; document.querySelectorAll('#note-count').forEach(el => el.textContent = notesInView); },
@@ -815,14 +791,8 @@
 
     };
 
-    // EXPOSICIÓN GLOBAL DEL OBJETO APP
-    window.App = App; // ¡Agrega esta línea!
-
     function debounce(func, wait) { let timeout; return function executedFunction(...args) { const later = () => { clearTimeout(timeout); func.apply(this, args); }; clearTimeout(timeout); timeout = setTimeout(later, wait); }; }
     document.addEventListener('DOMContentLoaded', () => App.init());
 </script>
-
-<script type="module" src="offlineSync.js"></script>
-
 </body>
 </html>
